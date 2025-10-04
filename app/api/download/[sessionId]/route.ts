@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-// We need to access the generated results from the result API
-// Since they're in-memory, we'll need to make them accessible
-
-// For now, let's create a simple file download handler
-// In production, this would use persistent storage
+import { generatedResults } from '@/lib/storage'
 
 export async function GET(
   request: NextRequest,
@@ -20,11 +15,7 @@ export async function GET(
   }
 
   try {
-    // Import the generatedResults from the result API
-    // This is a temporary solution - in production use proper storage
-    const { generatedResults } = await import('../result/[sessionId]/route')
-    
-    // Access the shared results Map
+    // Look up the cached result
     const result = generatedResults.get(sessionId)
     
     if (!result) {
@@ -35,7 +26,10 @@ export async function GET(
     }
 
     // Return the PDF as a downloadable file
-    return new NextResponse(result.buffer, {
+    const buffer = result.buffer as Buffer
+    const uint8Array = new Uint8Array(buffer)
+    
+    return new NextResponse(uint8Array, {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="internet-streets-${sessionId}.pdf"`,

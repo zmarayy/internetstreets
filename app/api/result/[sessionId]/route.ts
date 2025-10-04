@@ -16,19 +16,7 @@ function getOpenAI() {
   })
 }
 
-// In-memory storage for generated results (in production, use Netlify Blob store)
-export const generatedResults: Map<string, { buffer: Buffer; serviceName: string; timestamp: number }> = new Map()
-
-// Clean up old results every hour
-setInterval(() => {
-  const oneHourAgo = Date.now() - (60 * 60 * 1000)
-  const entries = Array.from(generatedResults.entries())
-  for (const [sessionId, result] of entries) {
-    if (result.timestamp < oneHourAgo) {
-      generatedResults.delete(sessionId)
-    }
-  }
-}, 60 * 60 * 1000) // Run every hour
+import { generatedResults } from '@/lib/storage'
 
 export async function GET(
   request: NextRequest,
