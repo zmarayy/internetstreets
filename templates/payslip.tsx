@@ -1,5 +1,5 @@
 import React from 'react'
-import { pdfGenerate as jsPDF } from 'jspdf'
+import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import { generateServiceBrand } from '@/lib/brand'
 
@@ -110,7 +110,7 @@ export default function PayslipTemplate({ data, sanitizedInputs }: PayslipProps)
     ['Employee ID:', data.employee_id],
     ['Tax Code:', data.tax_code],
     ['Pay Period:', `${data.pay_period_start} to ${data.pay_period_end}`]
-']
+  ]
 
   employeeInfo.forEach((row, i) => {
     doc.text(row[0], 25, 45 + (i * 4))
@@ -154,7 +154,7 @@ export default function PayslipTemplate({ data, sanitizedInputs }: PayslipProps)
     ['TOTAL GROSS EARNINGS', '', '', `£${data.gross_pay.toFixed(2)}`, `£${data.year_to_date_totals.gross_pay.toFixed(2)}`]
   ]
 
-  doc.autoTable({
+  ;(doc as any).autoTable({
     startY: 85,
     body: earningsData,
     theme: 'grid',
@@ -204,7 +204,7 @@ export default function PayslipTemplate({ data, sanitizedInputs }: PayslipProps)
     ['TOTAL DEDUCTIONS', `£${(data.income_tax + data.national_insurance + data.pension_contribution + data.student_loan + data.other_deductions).toFixed(2)}`, '', '']
   ]
 
-  doc.autoTable({
+  ;(doc as any).autoTable({
     startY: earningsTableEnd + 12,
     body: deductionsData,
     theme: 'grid',

@@ -1,5 +1,5 @@
 import React from 'react'
-import { pdfGenerate as jsPDF } from 'jspdf'
+import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import { generateServiceBrand } from '@/lib/brand'
 
@@ -198,7 +198,7 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
                      data.threat_assessment.overall_threat_level === 'medium' ? [253, 126, 20] :
                      data.threat_assessment.overall_threat_level === 'low' ? [40, 167, 69] : [111, 66, 178]
   
-  doc.setFillColor(...threatColor)
+  doc.setFillColor(threatColor[0], threatColor[1], threatColor[2])
   doc.rect(140, 68, 25, 8, 'F')
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(7)
@@ -242,7 +242,7 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
                  level === 'Medium' ? [253, 126, 20] :
                  level === 'High' ? [220, 53, 69] : [111, 66, 178]
     
-    doc.setFillColor(...color)
+    doc.setFillColor(color[0], color[1], color[2])
     doc.circle(145, 120 + (i * 3), 1.5, 'F')
     doc.setTextColor(75, 85, 99)
     doc.text(level, 150, 121 + (i * 3))
@@ -270,7 +270,7 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
     `EV-2025-${String(i + 1).padStart(3, '0')}`
   ])
 
-  doc.autoTable({
+  ;(doc as any).autoTable({
     startY: 30,
     head: [['Timestamp', 'Location', 'Activity Description', 'Assessment', 'Evidence Ref']],
     body: tableData,

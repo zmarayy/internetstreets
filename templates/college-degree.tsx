@@ -1,5 +1,5 @@
 import React from 'react'
-import { pdfGenerate as jsPDF } from 'jspdf'
+import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import { generateServiceBrand } from '@/lib/brand'
 
@@ -247,7 +247,7 @@ export default function CollegeDegreeTemplate({ data, sanitizedInputs }: College
     ['Cumulative GPA', `${data.transcript_summary.cumulative_gpa}/4.0`, 'Final', 'Verified']
   ]
 
-  doc.autoTable({
+  ;(doc as any).autoTable({
     startY: 70,
     body: perfData,
     theme: 'grid',
@@ -299,7 +299,7 @@ export default function CollegeDegreeTemplate({ data, sanitizedInputs }: College
     ])
   ]
 
-  doc.autoTable({
+  ;(doc as any).autoTable({
     startY: perfTableEnd + 25,
     body: year1Data,
     theme: 'grid',
@@ -348,7 +348,7 @@ export default function CollegeDegreeTemplate({ data, sanitizedInputs }: College
       ])
     ]
 
-    doc.autoTable({
+    ;(doc as any).autoTable({
       startY: year1End + 10,
       body: year2Data,
       theme: 'grid',

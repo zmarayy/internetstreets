@@ -1,5 +1,5 @@
 import React from 'react'
-import { pdfGenerate as jsPDF } from 'jspdf'
+import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import { generateServiceBrand } from '@/lib/brand'
 
@@ -166,7 +166,7 @@ export default function CriminalRecordTemplate({ data, sanitizedInputs }: Crimin
   const riskColor = data.risk_assessment.threat_level === 'high' ? [220, 53, 69] :
                    data.risk_assessment.threat_level === 'medium' ? [253, 126, 20] : [40, 167, 69]
   
-  doc.setFillColor(...riskColor)
+  doc.setFillColor(riskColor[0], riskColor[1], riskColor[2])
   doc.rect(150, 74, 20, 8, 'F')
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(7)
@@ -195,7 +195,7 @@ export default function CriminalRecordTemplate({ data, sanitizedInputs }: Crimin
     doc.setTextColor(75, 85, 99)
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8)
-    data.legal_restrictions.forEach((restriction, all) => {
+    data.legal_restrictions.forEach((restriction, i) => {
       doc.text(`• ${restriction}`, 25, 140 + (i * 4))
     })
   }
@@ -224,7 +224,7 @@ export default function CriminalRecordTemplate({ data, sanitizedInputs }: Crimin
     ])
   ]
 
-  doc.autoTable({
+  ;(doc as any).autoTable({
     startY: 30,
     body: historyData,
     theme: 'grid',
@@ -267,12 +267,12 @@ export default function CriminalRecordTemplate({ data, sanitizedInputs }: Crimin
   const invData = [
     ['Investigation Type', 'Status', 'Details', 'Date Completed'],
     ['Employment Background Checks', `${data.background_checks.employment_checks} References Contacted`, 'Standard Procedure', new Date().toISOString().split('T')[0]],
-    ['Education Verification', data.background_checks.eduction_verification ? 'Verified' : 'Not Completed', 'Academic Records', new Date().toISOString().split('T')[0]],
+    ['Education Verification', data.background_checks.education_verification ? 'Verified' : 'Not Completed', 'Academic Records', new Date().toISOString().split('T')[0]],
     ['Financial Investigation', `${data.background_checks.financial_investigations.length} Accounts Checked`,'Financial Crime Unit', new Date().toISOString().split('T')[0]],
     ['Travel History Analysis', `${data.background_checks.foreign_travel_log.length} Countries Visited`, 'Immigration Records', new Date().toISOString().split('T')[0]]
   ]
 
-  doc.autoTable({
+  ;(doc as any).autoTable({
     startY: historyEnd + 18,
     body: invData,
     theme: 'grid',

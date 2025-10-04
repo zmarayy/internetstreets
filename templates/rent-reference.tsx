@@ -1,5 +1,5 @@
 import React from 'react'
-import { pdfGenerate as jsPDF } from 'jspdf'
+import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import { generateServiceBrand } from '@/lib/brand'
 
@@ -69,7 +69,7 @@ export default function RentReferenceTemplate({ data, sanitizedInputs }: RentRef
 
   // HEADER WITH COMPANY BRANDING
   // Header background (dark blue-green for estate agents)
-  doc.setFillColor(34, 139,<｜tool▁calls▁end｜> 34) // Forest green
+  doc.setFillColor(34, 139, 34) // Forest green
   doc.rect(0, 0, 210, 25, 'F')
   
   // Company logo
@@ -205,7 +205,7 @@ export default function RentReferenceTemplate({ data, sanitizedInputs }: RentRef
     ])
   ]
 
-  doc.autoTable({
+  ;(doc as any).autoTable({
     startY: 135,
     body: paymentData,
     theme: 'grid',
@@ -258,7 +258,7 @@ export default function RentReferenceTemplate({ data, sanitizedInputs }: RentRef
     ['Final Refund', '£' + data.property_condition.total_deposit_return.toFixed(2), 'Net Deposit Return', 'Total']
   ]
 
-  doc.autoTable({
+  ;(doc as any).autoTable({
     startY: 30,
     body: conditionData,
     theme: 'grid',
@@ -317,7 +317,7 @@ export default function RentReferenceTemplate({ data, sanitizedInputs }: RentRef
   behaviorMetrics.forEach((row, i) => {
     const color = i === 4 ? (data.behavior_assessment.recommended_for_future_tenancy ? [40, 167, 69] : [220, 53, 69]) : [34, 139, 34]
     
-    doc.setTextColor(...color)
+    doc.setTextColor(color[0], color[1], color[2])
     doc.text(row[0], 25, conditionEnd + 30 + (i * 5))
     doc.setTextColor(75, 85, 99)
     doc.text(row[1], 100, conditionEnd + 30 + (i * 5))
