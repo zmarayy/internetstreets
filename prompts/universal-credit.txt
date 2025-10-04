@@ -1,22 +1,71 @@
-Create a fictional Universal Credit assessment letter (entertainment only).
-STRICT JSON. Formal tone with light humour. No real DWP branding.
+Create a detailed fictional Universal Credit assessment letter for entertainment purposes.
+STRICT JSON. Realistic but not claiming to be real DWP documents.
 
-Placeholders: {{fullName}}, {{dateOfBirth}}, {{nationalInsurance}}, {{address}}
+Constraints:
+- Generate detailed assessment content that fills 1-2 pages
+- Each string ≤ 140 chars for readability
+- Financial assessment: detailed breakdown with realistic figures
+- Include comprehensive applicant assessment and eligibility review
+
+Placeholders: {{name}}, {{dob}}, {{status}}, {{city}}
 
 JSON schema:
 {
-  "document_title": "Universal Credit Assessment (Fictional)",
-  "applicant": { "name": "{{fullName}}", "dob": "{{dateOfBirth}}", "ni_number": "{{nationalInsurance}}", "address": "{{address}}" },
-  "case_ref": "<alnum>",
-  "financial_overview": {
-    "assessed_income_gbp": "<number as string>",
-    "spending_commentary": "<short line>"
+  "document_title": "Universal Credit Assessment Report (Fictional)",
+  "applicant": { 
+    "name": "{{name}}", 
+    "dob": "{{dob}}", 
+    "status": "{{status}}",
+    "city": "{{city}}",
+    "ni_number": "<realistic NI number>",
+    "address": "<realistic UK address>",
+    "phone": "<phone number>",
+    "email": "<email address>",
+    "family_composition": "<single|couple|family with children>"
   },
-  "eligibility_result": "<Approved|Declined|Needs Review>",
-  "recommended_allowance_gbp": "<number as string>",
-  "notes": ["<short>", "..."],
+  "case_ref": "<UC-10-char-alnum>",
+  "assessment_type": "<initial|review|change_of_circumstances>",
+  "financial_overview": {
+    "monthly_income": "<amount in GBP>",
+    "earnings_threshold": "<threshold amount>",
+    "benefits_received": ["<benefit name>: <amount>", "<benefit name>: <amount>"],
+    "housing_costs": "<monthly rent/mortgage>",
+    "childcare_costs": "<monthly costs if applicable>",
+    "other_deductions": ["<deduction type>: <amount>"]
+  },
+  "eligibility_result": "<approved|declined|needs_review|pending_documents>",
+  "assessment_findings": {
+    "work_requirements": "<work_search|no_requirements|intensive_work_search>",
+    "capability_assessment": "<fit_for_work|limited_capability|support_group>",
+    "sanction_status": "<no_sanctions|warning|sanction_active>",
+    "vulnerability_factors": ["<factor>", "<factor>"]
+  },
+  "calculated_awards": {
+    "standard_allowance": "<amount>",
+    "housing_element": "<amount>",
+    "carers_element": "<amount if applicable>",
+    "children_element": "<amount if applicable>",
+    "transitional_protection": "<amount if applicable>",
+    "total_monthly_award": "<sum of elements>"
+  },
+  "assessment_notes": [
+    "<detailed assessment note about applicant circumstances>",
+    "<detailed note about work capacity and requirements>",
+    "<detailed note about housing situation and costs>"
+  ],
+  "next_steps": [
+    "<step 1: Next action required>",
+    "<step 2: Follow-up requirement>",
+    "<step 3: Review timing>"
+  ],
+  "assessment_authority": {
+    "assessor_name": "<fictitious assessor>",
+    "assessor_id": "<assessor ID>",
+    "department": "<assessment centre>",
+    "location": "<city>"
+  },
   "issued_at": "<ISO date>",
-  "disclaimer": "FOR ENTERTAINMENT ONLY. NOT OFFICIAL."
+  "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"
 }
 
 Temperature 0.4. JSON only.
