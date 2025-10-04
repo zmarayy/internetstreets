@@ -36,6 +36,7 @@ async function processDocumentGeneration(
   const traceId = generateTraceId()
   
   try {
+    console.log(`[${traceId}] Starting document generation for session ${sessionId}, service: ${slug}`)
     logger.generationStart(traceId, sessionId, slug)
     
     // Store initial status
@@ -47,11 +48,14 @@ async function processDocumentGeneration(
     })
 
     // Build and validate prompt
+    console.log(`[${traceId}] Building prompt for service: ${slug}`)
     const promptResult = await buildPrompt(slug, inputs, traceId)
     if (!promptResult.success) {
+      console.error(`[${traceId}] Prompt validation failed: ${promptResult.error}`)
       throw new Error(`Prompt validation failed: ${promptResult.error}`)
     }
 
+    console.log(`[${traceId}] Prompt built successfully for ${slug}`)
     logger.generationStep('Prompt built and validated', traceId, GenerationStep.PROMPT_BUILT, sessionId, slug)
     
     // Log sanitization if occurred
@@ -67,6 +71,7 @@ async function processDocumentGeneration(
     }
 
     // Call OpenAI with retry logic
+    console.log(`[${traceId}] Starting JSON validation for ${slug}`)
     const generationResult = await validateAndGenerateJson(
       promptResult.prompt!,
       promptResult.metadata!.temperature,
@@ -211,6 +216,13 @@ export async function POST(request: NextRequest) {
       processDocumentGeneration(session.id, slug, inputs, customerEmail || undefined)
         .catch(error => {
           console.error(`Background generation failed for session ${session.id}:`, error)
+          // Update status to error so frontend knows
+          generationStatus.set(session.id, {
+            status: 'error',
+            sessionId: session.id,
+            traceId: 'error-trace',
+            error: error instanceof Error ? error.message : 'Unknown error'
+          })
         })
       
       // Return success immediately (Stripe expects quick response)
