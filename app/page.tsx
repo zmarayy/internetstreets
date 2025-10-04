@@ -1,4 +1,3 @@
-'use client'
 
 import Link from 'next/link'
 import { 
@@ -41,19 +40,19 @@ const colorMap = {
   'college-degree': { color: 'text-neon-yellow', borderColor: 'border-neon-yellow' },
 }
 
-const servicesConfig = loadServicesConfig()
-const services = Object.entries(servicesConfig).map(([id, service]) => ({
-  id,
-  name: service.name,
-  description: service.description,
-  icon: iconMap[id as keyof typeof iconMap],
-  color: colorMap[id as keyof typeof colorMap].color,
-  borderColor: colorMap[id as keyof typeof colorMap].borderColor,
-  href: `/services/${id}`,
-  price: service.price
-}))
-
 export default function HomePage() {
+  // Load services data
+  const servicesConfig = loadServicesConfig()
+  const services = Object.entries(servicesConfig).map(([id, service]) => ({
+    id,
+    name: service.name,
+    description: service.description,
+    icon: iconMap[id as keyof typeof iconMap],
+    color: colorMap[id as keyof typeof colorMap].color,
+    borderColor: colorMap[id as keyof typeof colorMap].borderColor,
+    href: `/services/${id}`,
+    price: service.price
+  }))
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
