@@ -175,6 +175,7 @@ async function processDocumentGeneration(
 }
 
 export async function POST(request: NextRequest) {
+  console.log('🔔 Webhook received - processing request')
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')!
 
@@ -186,6 +187,7 @@ export async function POST(request: NextRequest) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     )
+    console.log(`🔔 Webhook event type: ${event.type}`)
   } catch (err) {
     console.error('Webhook signature verification failed:', err)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
