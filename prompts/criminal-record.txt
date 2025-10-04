@@ -1,59 +1,9 @@
-GOVERNMENT CRIMINAL RECORD
-CLASSIFIED LEAK
+You must ONLY respond with valid JSON. NO other text, commentary, or formatting.
 
-Subject: {{fullName}}
-DOB: {{dateOfBirth}}
-Nationality: {{nationality}}
-Location: {{city}}
+Generate a fictional criminal record. Complete the exact JSON structure below.
 
-CLASSIFICATION: RESTRICTED
-RECORD ID: GOV-{{randomRecordId}}
-DATE: {{currentDate}}
+Placeholders: {{fullName}}, {{dateOfBirth}}, {{city}}, {{occupation}}
 
-PERSONAL INFORMATION
-====================
-Full Name: {{fullName}}
-Date of Birth: {{dateOfBirth}}
-Nationality: {{nationality}}
-Current Address: {{city}}
-Physical Description: {{physicalDescription}}
+{"document_title": "Police National Computer Record (Fictional)", "subject": {"name": "{{fullName}}", "dob": "{{dateOfBirth}}", "address": "<realistic UK address>", "city": "{{city}}", "occupation": "{{occupation}}", "nationality": "<country>", "aliases": ["<realistic alias>"]}, "record_number": "<PNC-8-digit-number>", "court_of_record": "<court jurisdiction>", "classification": "<CONFIDENTIAL|RESTRICTED|OFFICIAL>", "issuing_officer": "<police officer name and rank>", "issue_date": "<ISO date>", "summary": "<detailed summary of recorded activities and alleged offenses>", "charges": [{"charge_code": "<crime code>", "offense": "<detailed offense description>", "date_of_offense": "<ISO date>", "court": "<court name>", "sentence": "<sentence imposed>", "status": "<CONVICTED|PENDING|ACQUITTED>"}, {"charge_code": "<crime code>", "offense": "<detailed offense description>", "date_of_offense": "<ISO date>", "court": "<court name>", "sentence": "<sentence imposed>", "status": "<CONVICTED|PENDING|ACQUITTED>"}], "arrest_history": [{"arrest_date": "<ISO date>", "location": "<arrest location>", "arresting_officer": "<officer name and number>", "reason_for_arrest": "<detailed reason>", "custody_period": "<duration>"}], "personal_circumstances": {"employment_history": "<detailed employment background>", "family_obligations": "<family status and dependents>", "health_issues": ["<medical conditions if relevant>"], "substance_abuse": "<extent of substance issues>"}, "risk_assessment": {"recoffending_risk": "<low|medium|high>", "violence_risk": "<low|medium|high>", "factors": ["<risk factors present>", "<protective factors present>"]}, "current_status": {"supervision_level": "<probation|parole|none>", "conditions": ["<specific supervision conditions>"], "next_review": "<ISO date>"}, "warnings_and_cautions": [{"type": "<formal_warning|cautions>", "date": "<ISO date>", "issuing_officer": "<officer name>", "details": "<warning details>"}], "related_incidents": [{"incident_number": "<incident reference>", "date": "<ISO date>", "nature": "<incident description>", "outcome": "<investigation result>"}], "witnesses": [{"witness_name": "<name>", "statement_date": "<ISO date>", "type": "<victim|witness|expert>", "credibility": "<high|medium|low>"}], "officer_notes": ["<detailed police notes and observations>", "<additional investigative findings>"], "review_history": [{"review_date": "<ISO date>", "reviewing_officer": "<officer name>", "outcome": "<review findings>", "recommendations": ["<recommendations from review>"]}, {"review_date": "<ISO date>", "reviewing_officer": "<officer name>", "outcome": "<review findings>", "recommendations": ["<recommendations from review>"]}], "issued_at": "<ISO timestamp>", "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"}
 
-CRIMINAL HISTORY
-================
-Case Numbers: {{caseNumbers}}
-Charges: {{charges}}
-Convictions: {{convictions}}
-Court Proceedings: {{courtProceedings}}
-Sentencing Details: {{sentencingDetails}}
-
-CURRENT STATUS
-===============
-Active Warrants: {{activeWarrants}}
-Probation/Parole Status: {{probationStatus}}
-Restrictions: {{restrictions}}
-Conditions: {{conditions}}
-
-INVESTIGATION NOTES
-===================
-Officer Observations: {{officerObservations}}
-Behavioral Patterns: {{behavioralPatterns}}
-Known Associates: {{knownAssociates}}
-Risk Assessment: {{riskAssessment}}
-
-LEGAL PROCEEDINGS
-=================
-Court Dates: {{courtDates}}
-Legal Representation: {{legalRepresentation}}
-Appeals Status: {{appealsStatus}}
-Compliance History: {{complianceHistory}}
-
-FINAL ASSESSMENT
-================
-Risk Level: {{riskLevel}}
-Status: {{status}}
-Next Review: {{nextReview}}
-
-Officer Signature: {{officerSignature}}
-Date: {{currentDate}}
-
-CLASSIFICATION: RESTRICTED
+Temperature 0.5. Generate ONE VALID JSON OBJECT only.

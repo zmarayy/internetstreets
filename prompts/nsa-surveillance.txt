@@ -1,64 +1,9 @@
-You are producing a fictional NSA surveillance activity log for entertainment only.
-Return STRICT JSON, no commentary.
+You must ONLY respond with valid JSON. NO other text, commentary, or formatting.
 
-Constraints:
-- Generate detailed surveillance content that looks like intelligence monitoring
-- Each string ≤ 140 chars for readability
-- Activity log: 5-8 entries with realistic surveillance activities
-- Create credible technical details and communication intercepts
+Generate a fictional NSA surveillance log. Complete the exact JSON structure below.
 
 Placeholders: {{fullName}}, {{city}}, {{email}}, {{phoneNumber}}
 
-JSON schema:
-{
-  "document_title": "NSA Surveillance Activity Log (Fictional)",
-  "subject": { 
-    "name": "{{fullName}}", 
-    "location": "{{city}}",
-    "email": "{{email}}",
-    "phone": "{{phoneNumber}}",
-    "aliases": ["<realistic alias>", "<another alias>"],
-    "nationality": "<country>",
-    "device_count": <2-5>,
-    "ip_addresses": ["<realistic IP>", "<another IP>"]
-  },
-  "logDate": "<ISO date>",
-  "logId": "<NSA-LOG-8-char-alnum>",
-  "classification": "<CONFIDENTIAL|SECRET|TOP-SECEST>",
-  "entries": [
-    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" },
-    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" },
-    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" },
-    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" },
-    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" },
-    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" },
-    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" }
-  ],
-  "communicationAnalysis": {
-    "email_sentiment": "<neutral|concerning|flagged>",
-    "call_patterns": "<normal|irregular|suspicious>",
-    "social_media_activity": "<high|medium|low>",
-    "encrypted_communications": "<percentage>%",
-    "foreign_contacts": <number>
-  },
-  "flags": [
-    "<specific flag like: Frequent VPN usage detected>",
-    "<specific flag like: Communication with foreign nationals>",
-    "<specific flag like: Access to encryption software>",
-    "<specific flag like: Unusual browsing patterns>"
-  ],
-  "technicalDetails": {
-    "devices_tracked": ["<device type>: <identifier>", "<device type>: <identifier>"],
-    "data_collected_gb": "<realistic amount>",
-    "encryption_detected": ["<method>", "<method>"],
-    "location_points": ["<city>, <country>", "<city>, <country>"]
-  },
-  "overall_conern": "<low|moderate|high|critical>",
-  "surveillance_status": "<active|escalated|terminated>",
-  "analyst_summary": "<detailed summary of surveillance findings and behavior patterns>",
-  "nextAction": "<surveillance recommendation>",
-  "issued_at": "<ISO date>",
-  "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"
-}
+{"document_title": "NSA Surveillance Activity Log (Fictional)", "subject": {"name": "{{fullName}}", "location": "{{city}}", "email": "{{email}}", "phone": "{{phoneNumber}}", "aliases": ["<realistic alias>", "<another alias>"], "nationality": "<country>", "device_count": "<2-5>", "ip_addresses": ["<realistic IP>", "<another IP>"]}, "report_id": "<NSA-10-char-alnum>", "classification": "<TOP SECRET|CONFIDENTIAL|UNCLASSIFIED>", "analyst": "<fictitious analyst name>", "report_date": "<ISO date>", "summary": "<detailed summary of surveillance findings, 3-5 sentences>", "activity_log": [{"timestamp": "<ISO datetime>", "type": "<Communication Intercept|Digital Footprint Analysis|Physical Surveillance|Financial Monitoring>", "details": "<detailed activity description>", "outcome": "<outcome: Identified new contact|Detected suspicious transaction>"}, {"timestamp": "<ISO datetime>", "type": "<Communication Intercept|Digital Footprint Analysis|Physical Surveillance|Financial Monitoring>", "details": "<detailed activity description>", "outcome": "<outcome: Identified new contact|Detected suspicious transaction>"}, {"timestamp": "<ISO datetime>", "type": "<Communication Intercept|Digital Footprint Analysis|Physical Surveillance|Financial Monitoring>", "details": "<detailed activity description>", "outcome": "<outcome: Identified new contact|Detected suspicious transaction>"}], "communication_intercepts": [{"date": "<ISO date>", "platform": "<WhatsApp|Signal|Email|Phone Call>", "participants": "<names>", "keywords": ["<keyword1>", "<keyword2>"], "summary": "<brief summary of communication>"}, {"date": "<ISO date>", "platform": "<WhatsApp|Signal|Email|Phone Call>", "participants": "<names>", "keywords": ["<keyword1>", "<keyword2>"], "summary": "<brief summary of communication>"}], "digital_footprint": {"social_media_presence": ["<platform: Twitter, Facebook>", "<platform: Instagram, LinkedIn>"], "dark_web_activity": "<Yes|No>", "known_websites_visited": ["<URL>", "<URL>"], "cloud_storage_accounts": ["<provider: Dropbox, Google Drive>", "<provider: OneDrive>"]}, "recommendations": ["<recommendation: Increase monitoring frequency>", "<recommendation: Initiate targeted phishing campaign>", "<recommendation: Collaborate with international partners>"], "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"}
 
-Temperature: 0.6. Output JSON only.
+Temperature 0.7. Generate ONE VALID JSON OBJECT only.
