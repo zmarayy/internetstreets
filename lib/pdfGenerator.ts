@@ -1164,99 +1164,213 @@ function addCreditScoreDetails(doc: jsPDF, json: any, startY: number) {
 function addPayslipDetails(doc: jsPDF, json: any, startY: number) {
   let yPos = startY
   
-  // Header Section with borders
-  doc.setDrawColor(0, 0, 0)
-  doc.setLineWidth(0.5)
-  doc.rect(20, yPos - 5, 170, 35)
+  // ULTRA REALISTIC COMPANY HEADER
+  doc.setDrawColor(40, 80, 120)
+  doc.setLineWidth(2)
+  doc.setFillColor(240, 248, 255)
+  doc.rect(20, yPos - 8, 170, 22, 'F')
   
-  // Company Header
-  doc.setFontSize(18)
-  doc.setFont('helvetica', 'bold')
-  doc.text(json.document_title || 'PAYSLIP', 95, yPos + 8, { align: 'center' })
-  
-  if (json.employer && json.employer.company) {
-    doc.setFontSize(14)
-    doc.text(json.employer.company, 95, yPos + 15, { align: 'center' })
-  }
-  
-  if (json.pay_period && json.pay_period.pay_date) {
-    doc.setFontSize(12)
-    doc.setFont('helvetica', 'normal')
-    doc.text(`Payment Date: ${json.pay_period.pay_date}`, 95, yPos + 22, { align: 'center' })
-  }
-  
-  yPos += 40
-  
-  // Employee Information Table
-  doc.setFontSize(14)
-  doc.setFont('helvetica', 'bold')
-  doc.text('EMPLOYEE INFORMATION', 20, yPos)
-  yPos += 15
-  
-  const empData = [
-    ['Employee Name', json.employee?.name || 'REDACTED'],
-    ['Job Title', json.employee?.job_title || 'REDACTED'],
-    ['Employee Number', json.references?.employee_no || 'REDACTED'],
-    ['Payslip Number', json.references?.slip_no || 'REDACTED']
-  ]
-  
-  empData.forEach(([field, value]) => {
-    drawTableRow(doc, field, value, yPos)
-    yPos += 10
-  })
-  
-  yPos += 15
-  
-  // Payment Details with proper table styling
+  // Company branding
   doc.setFontSize(16)
   doc.setFont('helvetica', 'bold')
-  doc.text('PAYMENT SUMMARY', 95, yPos, { align: 'center' })
+  doc.setTextColor(40, 80, 120)
+  doc.text('★', 25, yPos + 2)
+  doc.text(json.employer?.company || 'COMPANY NAME', 35, yPos + 2)
+  
+  // Professional payslip banner
+  doc.setFontSize(12)
+  doc.setFont('helvetica', 'normal')
+  doc.text('PAYSLIP', 175, yPos - 2, { align: 'right' })
+  
   yPos += 15
   
-  // Draw payment table
-  doc.setFillColor(240, 240, 240)
-  doc.rect(20, yPos - 5, 170, 8, 'F')
-  doc.setFontSize(12)
-  doc.setFont('helvetica', 'bold')
-  doc.text('Description', 25, yPos + 2)
-  doc.text('Amount (£)', 140, yPos + 2)
-  yPos += 8
+  // Date and reference formatting  
+  const payDate = json.pay_period?.pay_date || new Date().toISOString().split('T')[0]
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
+  }
   
-  // Payment details
-  doc.setFont('helvetica', 'normal')
+  doc.setTextColor(0, 0, 0)
   doc.setFontSize(11)
-  
-  const paymentDetails = [
-    ['Basic Pay', json.amounts?.gross_pay_gbp || '0.00'],
-    ['Gross Pay', json.amounts?.gross_pay_gbp || '0.00'],
-    ['Tax Deduction', `-${json.amounts?.tax_amount_gbp || '0.00'}`],
-    ['National Insurance', `-${json.amounts?.ni_amount_gbp || '0.00'}`]
-  ]
-  
-  paymentDetails.forEach(([desc, amount]) => {
-    doc.text(desc, 25, yPos + 2)
-    doc.text(amount, 140, yPos + 2)
-    yPos += 8
-  })
-  
-  // Net Pay - highlighted
-  yPos += 5
-  doc.setFillColor(220, 220, 220)
-  doc.rect(20, yPos - 5, 170, 12, 'F')
-  doc.setFontSize(14)
   doc.setFont('helvetica', 'bold')
-  doc.text('Net Pay', 25, yPos + 2)
-  doc.text(`£${json.amounts?.net_pay_gbp || '0.00'}`, 140, yPos + 2)
+  doc.text(`Pay Period: ${json.pay_period?.period_start ? formatDate(json.pay_period.period_start) : 'XX/XX/XXXX'} - ${formatDate(payDate)}`, 30, yPos)
+  doc.text(`Pay Date: ${formatDate(payDate)}`, 30, yPos + 8)
+  doc.text(`Pay No: ${json.references?.slip_no || 'PS' + Math.floor(Math.random() * 999999).toString().padStart(6, '0')}`, 150, yPos)
   
   yPos += 20
   
-  // Additional info
-  if (json.amounts) {
-    doc.setFontSize(10)
-    doc.setFont('helvetica', 'normal')
-    doc.text(`Tax Rate: ${(json.amounts.tax_rate * 100).toFixed(1)}%`, 20, yPos)
-    doc.text(`NI Rate: ${(json.amounts.ni_rate * 100).toFixed(1)}%`, 120, yPos)
+  // EMPLOYEE SECTION - PROFESSIONAL STYLING
+  doc.setDrawColor(0, 0, 0)
+  doc.setLineWidth(1)
+  doc.setFillColor(248, 249, 250)
+  doc.rect(20, yPos - 3, 170, 28, 'F')
+  
+  doc.setFontSize(13)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(0, 0, 0)
+  doc.text('PAYEE INFORMATION', 25, yPos + 1)
+  
+  // Employee name - LARGE AND PROMINENT
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.text(json.employee?.name || 'EMPLOYEE NAME', 25, yPos + 10)
+  
+  // Professional details in two columns
+  doc.setFontSize(11)
+  doc.setFont('helvetica', 'normal')
+  doc.text(`Position: ${json.employee?.job_title || 'JOB TITLE'}`, 25, yPos + 18)
+  doc.text(`Employee ID: ${json.employee?.employee_id || 'EMP' + String(Math.floor(Math.random() * 9999)).padStart(4, '0')}`, 25, yPos + 24)
+  
+  // Company registration
+  if (json.employer?.registration) {
+    doc.text(`Company Reg: ${json.employer.registration}`, 120, yPos + 18)
   }
+  
+  yPos += 35
+  
+  // MAIN PAYMENT TABLE - BANK-STYLE REALISM
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(0, 0, 0)
+  doc.text('EARNINGS & DEDUCTIONS', 20, yPos)
+  yPos += 10
+  
+  // Professional table with borders
+  doc.setDrawColor(200, 200, 200)
+  doc.setLineWidth(0.5)
+  
+  // Table header styling
+  doc.setFillColor(235, 245, 255)
+  doc.rect(20, yPos - 3, 170, 10, 'F')
+  
+  doc.setFontSize(11)
+  doc.setFont('helvetica', 'bold')
+  doc.text('Description', 25, yPos + 1)
+  doc.text('Current Period', 130, yPos + 1)
+  doc.text('Year to Date', 165, yPos + 1)
+  
+  // Border lines
+  doc.setDrawColor(0, 0, 0)
+  doc.line(20, yPos - 3, 190, yPos - 3) // Top
+  doc.line(20, yPos + 7, 190, yPos + 7) // Bottom
+  doc.line(125, yPos - 3, 125, yPos + 7) // Vertical 1
+  doc.line(160, yPos - 3, 160, yPos + 7) // Vertical 2
+  
+  yPos += 12
+  
+  // PAYMENT CALCULATIONS - DYNAMIC AND REALISTIC
+  const amounts = json.amounts || {}
+  const annualSalary = parseFloat(amounts.annual_salary_gbp || amounts.gross_pay_gbp || 0)
+  const monthlyGross = annualSalary > 1000 ? annualSalary / 12 : parseFloat(amounts.monthly_gross_gbp || amounts.gross_pay_gbp || 0)
+  const taxAmount = parseFloat(amounts.tax_amount_gbp || 0) || Math.round(monthlyGross * 0.20 * 100) / 100
+  const niAmount = parseFloat(amounts.ni_amount_gbp || 0) || Math.round(monthlyGross * 0.12 * 100) / 100
+  const pensionAmount = parseFloat(amounts.pension_deduction_gbp || 0) || Math.round(monthlyGross * 0.03 * 100) / 100 // 3% pension
+  const netPay = monthlyGross - taxAmount - niAmount - pensionAmount
+  
+  // EARNINGS SECTION
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(10)
+  
+  // Basic salary - CLEARLY LABELED
+  doc.text('Basic Salary', 25, yPos + 1)
+  doc.text(`£${monthlyGross.toFixed(2)}`, 130, yPos + 1)
+  doc.text(`£${(monthlyGross * 12).toFixed(2)}`, 165, yPos + 1)
+  yPos += 8
+  
+  // Additional earnings
+  if (amounts?.bonus_gbp && parseFloat(amounts.bonus_gbp) > 0) {
+    doc.text('Performance Bonus', 25, yPos + 1)
+    doc.text(`£${amounts.bonus_gbp}`, 130, yPos + 1)
+    doc.text(`£${(parseFloat(amounts.bonus_gbp) * 12).toFixed(2)}`, 165, yPos + 1)
+    yPos += 8
+  }
+  
+  if (amounts?.overtime_gbp && parseFloat(amounts.overtime_gbp) > 0) {
+    doc.text('Overtime Pay', 25, yPos + 1)
+    doc.text(`£${amounts.overtime_gbp}`, 130, yPos + 1)
+    doc.text(`£${(parseFloat(amounts.overtime_gbp) * 12).toFixed(2)}`, 165, yPos + 1)
+    yPos += 8
+  }
+  
+  // TOTAL GROSS - HIGHLIGHTED
+  yPos += 2
+  doc.setFillColor(220, 255, 220)
+  doc.rect(20, yPos - 3, 170, 10, 'F')
+  doc.setFontSize(11)
+  doc.setFont('helvetica', 'bold')
+  doc.text('GROSS PAY', 25, yPos + 1)
+  doc.text(`£${monthlyGross.toFixed(2)}`, 130, yPos + 1)
+  doc.text(`£${(monthlyGross * 12).toFixed(2)}`, 165, yPos + 1)
+  yPos += 15
+  
+  // DEDUCTIONS SECTION HEADER
+  doc.setFontSize(12)
+  doc.setFont('helvetica', 'bold')
+  doc.text('DEDUCTIONS', 25, yPos)
+  yPos += 8
+  
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(10)
+  
+  // Income Tax (PAYE)
+  doc.text('Income Tax (PAYE)', 25, yPos + 1)
+  doc.text(`£${taxAmount.toFixed(2)}`, 130, yPos + 1)
+  doc.text(`£${(taxAmount * 12).toFixed(2)}`, 165, yPos + 1)
+  yPos += 8
+  
+  // National Insurance
+  doc.text('National Insurance', 25, yPos + 1)
+  doc.text(`£${niAmount.toFixed(2)}`, 130, yPos + 1)
+  doc.text(`£${(niAmount * 12).toFixed(2)}`, 165, yPos + 1)
+  yPos += 8
+  
+  // Pension contribution
+  doc.text('Pension Contribution', 25, yPos + 1)
+  doc.text(`£${pensionAmount.toFixed(2)}`, 130, yPos + 1)
+  doc.text(`£${(pensionAmount * 12).toFixed(2)}`, 165, yPos + 1)
+  yPos += 8
+  
+  yPos += 8
+  
+  // NET PAY - PROMINENT FINAL AMOUNT
+  doc.setFillColor(220, 245, 255)
+  doc.rect(20, yPos - 3, 170, 14, 'F')
+  doc.setFontSize(15)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(0, 50, 150)
+  doc.text('NET PAY', 25, yPos + 2)
+  doc.text(`£${netPay.toFixed(2)}`, 130, yPos + 2)
+  doc.text(`£${(netPay * 12).toFixed(2)}`, 165, yPos + 2)
+  
+  // Payment method info
+  doc.setFontSize(9)
+  doc.setFont('helvetica', 'normal')
+  doc.setTextColor(0, 0, 0)
+  doc.text('Will be paid to your nominated bank account', 25, yPos + 12)
+  
+  yPos += 25
+  
+  // PAYMENT INFO PANEL - BANKING STYLE
+  doc.setDrawColor(150, 150, 150)
+  doc.setFillColor(248, 248, 248)
+  doc.rect(20, yPos - 3, 170, 18, 'F')
+  
+  doc.setFontSize(10)
+  doc.setFont('helvetica', 'normal')
+  doc.text('Payment Information:', 25, yPos + 1)
+  doc.text(`Tax Code: ${json.tax_code || '1257L'}`, 25, yPos + 8)
+  doc.text(`NI Number: ${json.employee?.ni_number || '** ** ** A'}`, 100, yPos + 8)
+  doc.text(`Payroll Contact: payroll@company.co.uk`, 25, yPos + 15)
+  
+  yPos += 20
+  
+  // LEGAL FOOTER - FINE PRINT
+  doc.setFontSize(8)
+  doc.setFont('helvetica', 'normal')
+  doc.setTextColor(120, 120, 120)
+  doc.text('This payslip is computer generated and does not require a signature.', 95, yPos, { align: 'center' })
+  doc.text('For queries contact HR Department. This document is for entertainment purposes only.', 95, yPos + 5, { align: 'center' })
 }
 
 function addJobRejectionDetails(doc: jsPDF, json: any, startY: number) {
