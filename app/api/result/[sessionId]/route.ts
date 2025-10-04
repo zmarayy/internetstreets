@@ -114,10 +114,11 @@ export async function GET(
 
   } catch (error) {
     console.error('Error generating result for session:', sessionId, error)
+    const err = error as Error
     console.error('Error details:', {
-      message: error.message,
-      stack: error.stack,
-      name: error.name
+      message: err.message,
+      stack: err.stack,
+      name: err.name
     })
     return NextResponse.json(
       { 
