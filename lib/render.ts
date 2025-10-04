@@ -57,9 +57,10 @@ export async function renderServiceToPdf(slug: string, json: any): Promise<Buffe
       throw new Error(`No template found for service: ${slug}`)
   }
 
-  // Generate PDF using Puppeteer
+  // Generate PDF using Puppeteer with Netlify-specific configuration
   const browser = await puppeteer.launch({
     headless: true,
+    executablePath: '/usr/bin/google-chrome-stable', // Netlify's Chrome path
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -68,7 +69,9 @@ export async function renderServiceToPdf(slug: string, json: any): Promise<Buffe
       '--no-first-run',
       '--no-zygote',
       '--single-process',
-      '--disable-gpu'
+      '--disable-gpu',
+      '--disable-web-security',
+      '--disable-features=VizDisplayCompositor'
     ]
   })
 
