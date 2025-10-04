@@ -77,14 +77,26 @@ export default function ResultPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-dark-bg text-white">
         <div className="text-center p-8 bg-dark-card rounded-lg border border-red-500 shadow-lg max-w-md">
-          <h1 className="text-3xl font-bold text-red-500 mb-4">Error</h1>
-          <p className="text-lg text-gray-300 mb-6">{resultStatus.error}</p>
-          <button
-            onClick={() => router.push('/')}
-            className="bg-neon-pink hover:bg-neon-pink/80 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 neon-glow"
-          >
-            Try Another Service
-          </button>
+          <h1 className="text-3xl font-bold text-red-500 mb-4">Generation Failed</h1>
+          <p className="text-lg text-gray-300 mb-4">{resultStatus.error}</p>
+          <p className="text-sm text-gray-400 mb-6">
+            Reference ID: {sessionId}<br/>
+            You will not be charged for this failed generation.
+          </p>
+          <div className="space-y-3">
+            <button
+              onClick={() => {navigator.clipboard.writeText(sessionId); alert('Reference ID copied!')}}
+              className="bg-neon-blue hover:bg-neon-blue/80 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 mr-3"
+            >
+              Copy Reference ID
+            </button>
+            <button
+              onClick={() => router.push('/contact')}
+              className="bg-neon-pink hover:bg-neon-pink/80 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300"
+            >
+              Contact Support
+            </button>
+          </div>
         </div>
       </div>
     )

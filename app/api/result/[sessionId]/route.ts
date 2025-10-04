@@ -113,11 +113,16 @@ export async function GET(
     })
 
   } catch (error) {
-    console.error('Error generating result:', error)
+    console.error('Error generating result for session:', sessionId, error)
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    })
     return NextResponse.json(
       { 
         status: 'error',
-        error: 'Failed to generate result. Please try again or contact support.'
+        error: 'Document generation failed. Please contact support with your payment reference.'
       },
       { status: 500 }
     )

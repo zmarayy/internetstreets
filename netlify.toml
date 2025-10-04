@@ -13,3 +13,9 @@
 [functions]
   node_bundler = "esbuild"
   external_node_modules = ["puppeteer"]
+
+[functions."api/result/[sessionId]"]
+  timeout = 30
+
+[functions."api/download/[sessionId]"]
+  timeout = 10
