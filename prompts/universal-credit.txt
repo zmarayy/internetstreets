@@ -1,71 +1,121 @@
-Create a detailed fictional Universal Credit assessment letter for entertainment purposes.
+Create an extremely detailed fictional Universal Credit assessment letter for entertainment purposes.
 STRICT JSON. Realistic but not claiming to be real DWP documents.
 
 Constraints:
-- Generate detailed assessment content that fills 1-2 pages
+- Generate comprehensive assessment content that fills 2-3 pages
 - Each string ≤ 140 chars for readability
-- Financial assessment: detailed breakdown with realistic figures
-- Include comprehensive applicant assessment and eligibility review
+- Financial assessment: detailed breakdown with realistic UK figures and calculations
+- Include thorough applicant assessment, work coach interactions, and eligibility analysis
 
 Placeholders: {{name}}, {{dob}}, {{status}}, {{city}}
 
 JSON schema:
 {
-  "document_title": "Universal Credit Assessment Report (Fictional)",
+  "document_title": "UNIVERSAL CREDIT ASSESSMENT REPORT",
+  "logo": "DWP-OFFICIAL-SEAL",
+  "letterhead": "Department for Work and Pensions",
   "applicant": { 
     "name": "{{name}}", 
     "dob": "{{dob}}", 
     "status": "{{status}}",
     "city": "{{city}}",
-    "ni_number": "<realistic NI number>",
-    "address": "<realistic UK address>",
-    "phone": "<phone number>",
+    "ni_number": "<realistic NI format: AB123456C>",
+    "address": "<realistic UK address with postcode>",
+    "phone": "<realistic UK mobile: 07XXX XXX XXX>",
     "email": "<email address>",
-    "family_composition": "<single|couple|family with children>"
+    "family_composition": "<single|couple|family with children>",
+    "claim_date": "<ISO date when claim started>",
+    "nationality": "<nationality>"
   },
-  "case_ref": "<UC-10-char-alnum>",
-  "assessment_type": "<initial|review|change_of_circumstances>",
-  "financial_overview": {
-    "monthly_income": "<amount in GBP>",
-    "earnings_threshold": "<threshold amount>",
-    "benefits_received": ["<benefit name>: <amount>", "<benefit name>: <amount>"],
-    "housing_costs": "<monthly rent/mortgage>",
+  "case_ref": "<UC-10-char-alnum like UC123456789>",
+  "assessment_period": {
+    "period_start": "<ISO date>",
+    "period_end": "<ISO date>",
+    "assessment_type": "<initial|review|change_of_circumstances|mandatory_reconsideration>"
+  },
+  "financial_assessment": {
+    "income_sources": [
+      { "source": "<salary|self_employment|pension|benefits>", "amount": "<monthly amount>", "frequency": "<weekly|monthly|annually>" },
+      { "source": "<salary|self_employment|pension|benefits>", "amount": "<monthly amount>", "frequency": "<weekly|monthly|annually>" }
+    ],
+    "total_monthly_income": "<total calculated amount>",
+    "work_allowance": "<threshold amount>",
+    "earnings_threshold_exceeded": "<true|false>",
+    "housing_costs": "<monthly rent/mortgage including service charges>",
     "childcare_costs": "<monthly costs if applicable>",
-    "other_deductions": ["<deduction type>: <amount>"]
+    "other_deductions": [
+      { "type": "<overpayment|advance|sanction|third_party_debt>", "amount": "<deduction amount>", "reason": "<explanation>" },
+      { "type": "<overpayment|advance|sanction|third_party_debt>", "amount": "<deduction amount>", "reason": "<explanation>" }
+    ]
   },
-  "eligibility_result": "<approved|declined|needs_review|pending_documents>",
+  "eligibility_result": "<approved|declined|needs_review|pending_documents|appeal_in_progress>",
   "assessment_findings": {
-    "work_requirements": "<work_search|no_requirements|intensive_work_search>",
-    "capability_assessment": "<fit_for_work|limited_capability|support_group>",
-    "sanction_status": "<no_sanctions|warning|sanction_active>",
-    "vulnerability_factors": ["<factor>", "<factor>"]
+    "work_requirements": "<work_search_and_availability|work_preparation|no_requirements|intensive_work_search>",
+    "capability_assessment": "<fit_for_work|limited_capability_for_work|limited_capability_for_work_and_work_related_activity|support_group>",
+    "sanction_status": "<no_sanctions|warning|low_level_sanction|medium_level_sanction|high_level_sanction>",
+    "vulnerability_factors": [
+      "<mental_health_support_required>",
+      "<domestic_violence_survivor>",
+      "<learning_disability>",
+      "<homelessness_risk>"
+    ],
+    "work_coach_interactions": [
+      { "date": "<ISO date>", "type": "<appointment|phone_call|home_visit>", "outcome": "<detailed outcome>" },
+      { "date": "<ISO date>", "type": "<appointment|phone_call|home_visit>", "outcome": "<detailed outcome>" }
+    ]
   },
   "calculated_awards": {
-    "standard_allowance": "<amount>",
-    "housing_element": "<amount>",
-    "carers_element": "<amount if applicable>",
-    "children_element": "<amount if applicable>",
-    "transitional_protection": "<amount if applicable>",
-    "total_monthly_award": "<sum of elements>"
+    "monthly_elements": {
+      "standard_allowance": "<single_amount|couple_amount>",
+      "housing_element": "<full_rent_or_65_percent_if_over_room_rate>",
+      "carers_element": "<amount_if_applicable>",
+      "children_element": "<amount_per_child>",
+      "childcare_element": "<85_percent_of_costs>",
+      "transitional_protection": "<amount_if_applicable>"
+    },
+    "income_reduction": "<amount_deducted_from_income>",
+    "total_monthly_award_before_deductions": "<sum_of_all_elements>",
+    "total_deductions": "<sum_of_all_deductions>",
+    "final_monthly_payment": "<final_amount_after_all_deductions>"
   },
-  "assessment_notes": [
-    "<detailed assessment note about applicant circumstances>",
-    "<detailed note about work capacity and requirements>",
-    "<detailed note about housing situation and costs>"
+  "detailed_assessment_notes": [
+    "<comprehensive note: Applicant demonstrates good engagement with work coach requirements and shows commitment to improving employment prospects>",
+    "<comprehensive note: Housing costs verified through landlord correspondence, no discrepancies identified in tenancy agreement>",
+    "<comprehensive note: Mental health support services engaged, applicant attending counselling sessions regularly with positive outcomes noted>",
+    "<comprehensive note: Work search activities consist of 10 applications submitted this period, jobcentre attendance regular and punctual>",
+    "<comprehensive note: Financially struggling with budget deficits, recommended money advice service engagement for debt management>"
+  ],
+  "recommendations": [
+    "<detailed_recommendation: Maintain current work search activities and increase weekly job applications to minimum of 15>",
+    "<detailed_recommendation: Consider additional training courses available through Flexible Support Fund to improve employability>",
+    "<detailed_recommendation: Regular check-ins required due to vulnerability factors identified, support worker referral beneficial>"
   ],
   "next_steps": [
-    "<step 1: Next action required>",
-    "<step 2: Follow-up requirement>",
-    "<step 3: Review timing>"
+    "<specific_next_step: Submit required documentation for housing element verification by [specific date]>",
+    "<specific_next_step: Attend work capability assessment appointment scheduled for [specific date and time]>",
+    "<specific_next_step: Complete mandatory universal jobsearch profile updates within 7 days>",
+    "<specific_next_step: Next payment due on [date], regular reviews scheduled every [period]>"
   ],
   "assessment_authority": {
-    "assessor_name": "<fictitious assessor>",
-    "assessor_id": "<assessor ID>",
-    "department": "<assessment centre>",
-    "location": "<city>"
+    "assessment_centre": "<realistic centre name>",
+    "work_coach": {
+      "name": "<fictitious assessor name>",
+      "employee_id": "<employee ID>",
+      "signature_date": "<ISO date>"
+    },
+    "location": "{{city}}",
+    "contact_details": {
+      "phone": "<work coach direct line>",
+      "email": "<work coach email>"
+    }
+  },
+  "payment_schedule": {
+    "next_payment_date": "<ISO date>",
+    "payment_method": "<bank_transfer|prepaid_card>",
+    "account_reference": "<last 4 digits or card number>"
   },
   "issued_at": "<ISO date>",
   "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"
 }
 
-Temperature 0.4. JSON only.
+Temperature 0.5. JSON only.

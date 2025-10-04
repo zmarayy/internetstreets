@@ -62,6 +62,9 @@ export function generatePDFfromJSON(slug: string, json: any): Buffer {
     case 'criminal-record':
       addCriminalRecordDetails(doc, json, yPos)
       break
+    case 'universal-credit':
+      addUniversalCreditDetails(doc, json, yPos)
+      break
     case 'payslip':
       addPayslipDetails(doc, json, yPos)
       break
@@ -72,10 +75,10 @@ export function generatePDFfromJSON(slug: string, json: any): Buffer {
       addGenericDetails(doc, json, yPos)
   }
   
-  // Add disclaimer at bottom
-  doc.setFontSize(8)
-  doc.setTextColor(150, 150, 150)
-  doc.text('FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT', doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 15, { align: 'center' })
+  // Add minimal disclaimer at bottom
+  doc.setFontSize(6)
+  doc.setTextColor(180, 180, 180)
+  doc.text('Internet Streets Entertainment – Not a Real Document', doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 8, { align: 'center' })
   
   // Convert to Buffer
   return Buffer.from(doc.output('arraybuffer'))
@@ -596,6 +599,308 @@ function addCriminalRecordDetails(doc: jsPDF, json: any, startY: number) {
     doc.setFont('helvetica', 'normal')
     const summaryLines = doc.splitTextToSize(json.summary, 170)
     doc.text(summaryLines as string[], 20, yPos)
+  }
+}
+
+function addUniversalCreditDetails(doc: jsPDF, json: any, startY: number) {
+  let yPos = startY
+  
+  // Add logo/header simulation
+  doc.setFontSize(12)
+  doc.setFont('helvetica', 'bold')
+  doc.text(json.logo || '╔═══ GOVERNMENT OFFICIAL', 20, yPos)
+  doc.text(json.letterhead || 'Department for Work and Pensions', 20, yPos + 8)
+  
+  // Official border
+  doc.setDrawColor(0, 0, 0)
+  doc.setLineWidth(0.8)
+  doc.rect(15, yPos - 8, 165, 25)
+  
+  yPos += 30
+  
+  // Case Reference
+  if (json.case_ref) {
+    doc.setFontSize(18)
+    doc.setFont('helvetica', 'bold')
+    doc.text(`CASE REFERENCE: ${json.case_ref}`, 20, yPos)
+    yPos += 15
+  }
+  
+  // Applicant Information Table
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.text('APPLICANT INFORMATION', 20, yPos)
+  yPos += 15
+  
+  drawTableHeader(doc, 'FIELD', 'DETAILS', yPos)
+  yPos += 8
+  
+  const applicantData = [
+    ['Full Name', json.applicant?.name || 'REDACTED'],
+    ['Date of Birth', json.applicant?.dob || 'REDACTED'],
+    ['National Insurance', json.applicant?.ni_number || 'REDACTED'],
+    ['Address', json.applicant?.address || 'REDACTED'],
+    ['Phone', json.applicant?.phone || 'REDACTED'],
+    ['Claim Date', json.applicant?.claim_date || 'REDACTED']
+  ]
+  
+  applicantData.forEach(([field, value]) => {
+    drawTableRow(doc, field, value, yPos)
+    yPos += 10
+  })
+  
+  yPos += 10
+  
+  // Assessment Period
+  if (json.assessment_period) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('ASSESSMENT PERIOD', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    doc.text(`Period: ${json.assessment_period.period_start || 'N/A'} to ${json.assessment_period.period_end || 'N/A'}`, 25, yPos)
+    doc.text(`Assessment Type: ${json.assessment_period.assessment_type || 'N/A'}`, 25, yPos + 8)
+    yPos += 25
+  }
+  
+  // Financial Assessment Table
+  if (json.financial_assessment) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('FINANCIAL ASSESSMENT', 20, yPos)
+    yPos += 15
+    
+    const financial = json.financial_assessment
+    
+    // Income Summary
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'bold')
+    doc.text('MONTHLY INCOME SUMMARY', 25, yPos)
+    yPos += 10
+    
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    if (financial.total_monthly_income) {
+      doc.text(`Total Monthly Income: £${financial.total_monthly_income}`, 30, yPos)
+      yPos += 8
+    }
+    if (financial.work_allowance) {
+      doc.text(`Work Allowance: £${financial.work_allowance}`, 30, yPos)
+      yPos += 8
+    }
+    if (financial.housing_costs) {
+      doc.text(`Housing Costs: £${financial.housing_costs}`, 30, yPos)
+      yPos += 8
+    }
+    yPos += 5
+    
+    // Income Sources Table
+    if (financial.income_sources && Array.isArray(financial.income_sources)) {
+      doc.setFillColor(240, 240, 240)
+      doc.rect(25, yPos - 5, 165, 12, 'F')
+      doc.setFontSize(11)
+      doc.setFont('helvetica', 'bold')
+      doc.text('Source', 30, yPos + 2)
+      doc.text('Amount', 100, yPos + 2)
+      doc.text('Frequency', 140, yPos + 2)
+      yPos += 10
+      
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(9)
+      financial.income_sources.forEach((source: any) => {
+        doc.text(source.source || 'REDACTED', 30, yPos + 2)
+        doc.text(`£${source.amount || '0'}`, 100, yPos + 2)
+        doc.text(source.frequency || 'N/A', 140, yPos + 2)
+        yPos += 8
+      })
+      yPos += 10
+    }
+  }
+  
+  // Calculated Awards Section
+  if (json.calculated_awards) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('CALCULATED AWARDS', 20, yPos)
+    yPos += 15
+    
+    const awards = json.calculated_awards.monthly_elements
+    
+    // Create awards table
+    doc.setFillColor(220, 235, 255)
+    doc.rect(20, yPos - 5, 170, 8, 'F')
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Element', 25, yPos + 2)
+    doc.text('Amount (£)', 140, yPos + 2)
+    yPos += 8
+    
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    
+    const awardDetails = [
+      ['Standard Allowance', awards?.standard_allowance || '0'],
+      ['Housing Element', awards?.housing_element || '0'],
+      ['Carers Element', awards?.carers_element || '0'],
+      ['Children Element', awards?.children_element || '0'],
+      ['Childcare Element', awards?.childcare_element || '0']
+    ]
+    
+    awardDetails.forEach(([element, amount]) => {
+      doc.text(element, 25, yPos + 2)
+      doc.text(`£${amount}`, 140, yPos + 2)
+      yPos += 8
+    })
+    
+    // Total calculation
+    yPos += 5
+    doc.setFillColor(200, 255, 200)
+    doc.rect(20, yPos - 5, 170, 12, 'F')
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'bold')
+    doc.text('TOTAL MONTHLY AWARD (BEFORE DEDUCTIONS)', 25, yPos + 2)
+    doc.text(`£${json.calculated_awards.total_monthly_award_before_deductions || '0'}`, 140, yPos + 2)
+    
+    yPos += 15
+    doc.setFontSize(11)
+    doc.text(`Income Reduction: £${json.calculated_awards.income_reduction || '0'}`, 25, yPos)
+    yPos += 8
+    doc.text(`Total Deductions: £${json.calculated_awards.total_deductions || '0'}`, 25, yPos)
+    yPos += 8
+    
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text(`FINAL MONTHLY PAYMENT: £${json.calculated_awards.final_monthly_payment || '0'}`, 25, yPos)
+    yPos += 20
+  }
+  
+  // Assessment Findings
+  if (json.assessment_findings) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('ASSESSMENT FINDINGS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    const findings = json.assessment_findings
+    
+    if (findings.work_requirements) {
+      doc.text(`Work Requirements: ${findings.work_requirements.toUpperCase()}`, 25, yPos)
+      yPos += 8
+    }
+    if (findings.capability_assessment) {
+      doc.text(`Capability Assessment: ${findings.capability_assessment.toUpperCase()}`, 25, yPos)
+      yPos += 8
+    }
+    if (findings.sanction_status) {
+      doc.text(`Sanction Status: ${findings.sanction_status.toUpperCase()}`, 25, yPos)
+      yPos += 8
+    }
+    yPos += 10
+  }
+  
+  // Detailed Assessment Notes
+  if (json.detailed_assessment_notes && Array.isArray(json.detailed_assessment_notes)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('DETAILED ASSESSMENT NOTES', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    json.detailed_assessment_notes.forEach((note: string, index: number) => {
+      doc.text(`${index + 1}. ${note}`, 25, yPos)
+      yPos += 12
+    })
+    yPos += 10
+  }
+  
+  // Recommendations
+  if (json.recommendations && Array.isArray(json.recommendations)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('RECOMMENDATIONS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    json.recommendations.forEach((rec: string, index: number) => {
+      doc.text(`${index + 1}. ${rec}`, 25, yPos)
+      yPos += 12
+    })
+    yPos += 10
+  }
+  
+  // Next Steps
+  if (json.next_steps && Array.isArray(json.next_steps)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('NEXT STEPS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    json.next_steps.forEach((step: string, index: number) => {
+      doc.text(`• ${step}`, 25, yPos)
+      yPos += 8
+    })
+    yPos += 15
+  }
+  
+  // Assessment Authority
+  if (json.assessment_authority) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('ASSESSMENT AUTHORITY', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    const authority = json.assessment_authority
+    
+    if (authority.assessment_centre) {
+      doc.text(`Assessment Centre: ${authority.assessment_centre}`, 25, yPos)
+      yPos += 8
+    }
+    if (authority.work_coach?.name) {
+      doc.text(`Work Coach: ${authority.work_coach.name}`, 25, yPos)
+      yPos += 8
+    }
+    if (authority.work_coach?.employee_id) {
+      doc.text(`Employee ID: ${authority.work_coach.employee_id}`, 25, yPos)
+      yPos += 8
+    }
+    if (authority.location) {
+      doc.text(`Location: ${authority.location}`, 25, yPos)
+      yPos += 8
+    }
+  }
+  
+  // Success/Failure stamp simulation
+  if (json.eligibility_result) {
+    yPos += 20
+    const result = json.eligibility_result.toLowerCase()
+    
+    if (result === 'approved') {
+      doc.setTextColor(0, 150, 0) // Green
+      doc.setFontSize(16)
+      doc.setFont('helvetica', 'bold')
+      doc.text('✓ CLAIM APPROVED', 95, yPos, { align: 'center' })
+    } else if (result === 'declined') {
+      doc.setTextColor(200, 0, 0) // Red
+      doc.setFontSize(16)
+      doc.setFont('helvetica', 'bold')
+      doc.text('✗ CLAIM DECLINED', 95, yPos, { align: 'center' })
+    } else {
+      doc.setTextColor(200, 100, 0) // Orange
+      doc.setFontSize(16)
+      doc.setFont('helvetica', 'bold')
+      doc.text('◐ UNDER REVIEW', 95, yPos, { align: 'center' })
+    }
+    doc.setTextColor(0, 0, 0) // Reset
   }
 }
 
