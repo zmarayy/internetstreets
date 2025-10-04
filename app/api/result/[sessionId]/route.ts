@@ -1,167 +1,76 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
-import { getService } from '@/lib/services'
-import { loadPrompt, buildPromptWithUserData, extractJSONFromResponse } from '@/lib/promptLoader'
-import { renderServiceToPdf } from '@/lib/render'
-import OpenAI from 'openai'
+import { generationStatus } from '../../stripe-webhook/route'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',
-})
-
-// Initialize OpenAI client lazily to avoid build-time issues
-function getOpenAI() {
-  return new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  })
-}
-
-import { generatedResults } from '@/lib/storage'
-
+/**
+ * Get generation result for a session
+ * Used by result page for polling
+ */
 export async function GET(
   request: NextRequest,
   { params }: { params: { sessionId: string } }
 ) {
-  const { sessionId } = params
-
-  if (!sessionId) {
-    return NextResponse.json(
-      { error: 'Session ID required' },
-      { status: 400 }
-    )
-  }
-
   try {
-    // Check if result is already generated and cached
-    const cachedResult = generatedResults.get(sessionId)
-    if (cachedResult) {
-      // Return URL that serves the cached PDF
+    const { sessionId } = params
+
+    if (!sessionId) {
+      return NextResponse.json({ error: 'Session ID required' }, { status: 400 })
+    }
+
+    const status = generationStatus.get(sessionId)
+
+    if (!status) {
       return NextResponse.json({
-        status: 'ready',
-        url: `/api/download/${sessionId}`,
-        serviceName: cachedResult.serviceName,
-        expiresAt: new Date(cachedResult.timestamp + (60 * 60 * 1000)).toISOString()
+        status: 'processing',
+        message: 'Document is being generated...'
       })
     }
 
-    // Retrieve the session to verify payment
-    const session = await stripe.checkout.sessions.retrieve(sessionId)
-    
-    if (!session || session.payment_status !== 'paid') {
-      return NextResponse.json(
-        { error: 'Payment not completed' },
-        { status: 400 }
-      )
-    }
-
-    // Extract service data from session metadata
-    const slug = session.metadata?.slug
-    const inputs = JSON.parse(session.metadata?.inputs || '{}')
-
-    if (!slug) {
-      throw new Error('No service slug in session metadata')
-    }
-
-    // Get service configuration
-    console.log(`Getting service for slug: ${slug}`)
-    const service = getService(slug)
-    if (!service) {
-      throw new Error(`Service not found: ${slug}`)
-    }
-    console.log(`Found service: ${service.name}, prompt_file: ${service.prompt_file}`)
-
-    // Generate the document
-    console.log(`Loading prompt file: ${service.prompt_file}`)
-    const basePrompt = await loadPrompt(service.prompt_file)
-    console.log(`Loaded prompt (${basePrompt.length} chars): ${basePrompt.substring(0, 100)}...`)
-    
-    const builtPrompt = buildPromptWithUserData(basePrompt, inputs)
-    console.log(`Built prompt with inputs: ${JSON.stringify(inputs)}`)
-
-    // Check OpenAI API key
-    console.log(`OpenAI API Key present: ${!!process.env.OPENAI_API_KEY}`)
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OpenAI API key is missing')
-    }
-
-    // Generate JSON content with OpenAI
-    console.log(`Calling OpenAI API...`)
-    const openai = getOpenAI()
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: builtPrompt
-        }
-      ],
-      max_tokens: 450,
-      temperature: getTemperatureForService(service.prompt_file),
-    })
-
-    console.log(`OpenAI response received! Tokens used: ${completion.usage?.total_tokens || 'unknown'}`)
-    const response = completion.choices[0].message.content || ''
-    console.log(`Response length: ${response.length} chars`)
-    
-    // Extract JSON from response
-    console.log(`Extracting JSON from response...`)
-    const jsonData = extractJSONFromResponse(response)
-    console.log(`JSON extracted successfully: ${Object.keys(jsonData).join(', ')}`)
-
-    // Generate PDF from JSON data using the render system
-    console.log(`Generating PDF with renderServiceToPdf...`)
-    const pdfBuffer = await renderServiceToPdf(slug, jsonData)
-    console.log(`PDF generated successfully! Size: ${pdfBuffer.length} bytes`)
-
-    // Cache the result
-    generatedResults.set(sessionId, {
-      buffer: pdfBuffer,
-      serviceName: service.name,
-      timestamp: Date.now()
-    })
-
-    // Return the PDF directly via streaming response
-    // Don't use URL.createObjectURL on server side
-
-    // Return a URL that serves the PDF directly from our API
-    return NextResponse.json({
-      status: 'ready',
-      url: `/api/download/${sessionId}`,
-      serviceName: service.name,
-      expiresAt: new Date(Date.now() + (60 * 60 * 1000)).toISOString()
-    })
+    return NextResponse.json(status)
 
   } catch (error) {
-    console.error('Error generating result for session:', sessionId, error)
-    const err = error as Error
-    console.error('Error details:', {
-      message: err.message,
-      stack: err.stack,
-      name: err.name
-    })
+    console.error('Error retrieving result status:', error)
     return NextResponse.json(
       { 
-        status: 'error',
-        error: 'Document generation failed. Please contact support with your payment reference.'
+        status: 'error' as const,
+        error: 'Failed to retrieve generation status',
+        message: 'Please contact support'
       },
       { status: 500 }
     )
   }
 }
 
-function getTemperatureForService(promptFile: string): number {
-  const temperatureMap: Record<string, number> = {
-    'fbi-file.txt': 0.6,
-    'nsa-log.txt': 0.5,
-    'gov-criminal.txt': 0.5,
-    'universal-credit.txt': 0.4,
-    'trap-credit.txt': 0.5,
-    'payslip.txt': 0.2,
-    'rejection-letter.txt': 0.3,
-    'rent-reference.txt': 0.3,
-    'school-report.txt': 0.4,
-    'college-degree.txt': 0.3,
+/**
+ * Manual retry endpoint (admin only)
+ */
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { sessionId: string } }
+) {
+  try {
+    const { sessionId } = params
+    const body = await request.json()
+    const { action } = body
+
+    if (action === 'regenerate') {
+      // TODO: Re-implement generation for this session
+      // For now, just return not implemented
+      return NextResponse.json({
+        success: false,
+        message: 'Regeneration not yet implemented'
+      })
+    }
+
+    return NextResponse.json({
+      success: false,
+      error: 'Invalid action'
+    })
+
+  } catch (error) {
+    console.error('Error in result POST:', error)
+    return NextResponse.json(
+      { success: false, error: 'Request failed' },
+      { status: 500 }
+    )
   }
-  
-  return temperatureMap[promptFile] || 0.5
 }

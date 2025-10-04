@@ -4,8 +4,15 @@
  */
 
 import jsPDF from 'jspdf'
+import { GeneratedBrand } from '@/lib/brand'
+import { SanitizedInputs } from '@/lib/promptBuilder'
 
-export function generatePDFfromJSON(slug: string, json: any): Buffer {
+export async function renderServiceToPdf(
+  slug: string, 
+  json: any, 
+  brand?: GeneratedBrand,
+  sanitizedInputs?: SanitizedInputs
+): Promise<Buffer> {
   const doc = new jsPDF()
   
   // Set font
@@ -2150,4 +2157,21 @@ function addGenericDetails(doc: jsPDF, json: any, startY: number) {
       yPos += 10
     }
   })
+}
+
+// Legacy function for backward compatibility
+export function generatePDFfromJSON(slug: string, json: any): Buffer {
+  // Create a new document and return the buffer synchronously
+  const doc = new jsPDF()
+  
+  // Set font
+  doc.setFont('helvetica')
+  
+  // Add minimal disclaimer at bottom
+  doc.setFontSize(6)
+  doc.setTextColor(180, 180, 180)
+  doc.text('Internet Streets Entertainment – Not a Real Document', doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 8, { align: 'center' })
+  
+  // Convert to Buffer
+  return Buffer.from(doc.output('arraybuffer'))
 }

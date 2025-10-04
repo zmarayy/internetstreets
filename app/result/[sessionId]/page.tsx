@@ -7,9 +7,11 @@ import { Loader2, Download, Share2, FileText } from 'lucide-react'
 
 interface ResultStatus {
   status: 'processing' | 'ready' | 'error'
-  url?: string
+  previewUrl?: string
+  downloadUrl?: string
   error?: string
   serviceName?: string
+  sessionId?: string
 }
 
 export default function ResultPage() {
@@ -18,7 +20,7 @@ export default function ResultPage() {
   const sessionId = params.sessionId as string
   const [resultStatus, setResultStatus] = useState<ResultStatus>({ status: 'processing' })
   const [isLoading, setIsLoading] = useState(true)
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
+  const [pollInterval, setPollInterval] = useState(2000) // Start with 2 seconds
 
   useEffect(() => {
     if (!sessionId) return
@@ -28,33 +30,41 @@ export default function ResultPage() {
         const response = await fetch(`/api/result/${sessionId}`)
         const data = await response.json()
 
-        if (data.status === 'ready' && data.url) {
-          setResultStatus({ status: 'ready', url: data.url, serviceName: data.serviceName })
-          setDownloadUrl(data.url)
+        if (data.status === 'ready' && data.previewUrl && data.downloadUrl) {
+          setResultStatus({ 
+            status: 'ready', 
+            previewUrl: data.previewUrl, 
+            downloadUrl: data.downloadUrl,
+            serviceName: data.documentTitle || data.serviceName,
+            sessionId: data.sessionId 
+          })
           setIsLoading(false)
         } else if (data.status === 'error') {
-          setResultStatus({ status: 'error', error: data.error })
+          setResultStatus({ status: 'error', error: data.error || data.message })
           setIsLoading(false)
         } else {
-          // Still processing, poll again in 3 seconds
-          setTimeout(pollResult, 3000)
+          // Still processing, poll again with exponential backoff
+          const nextInterval = Math.min(pollInterval * 1.5, 5000) // Cap at 5 seconds
+          setPollInterval(nextInterval)
+          setTimeout(pollResult, nextInterval)
         }
       } catch (error) {
         console.error('Error polling result:', error)
-        setResultStatus({ status: 'error', error: 'Unable to retrieve your document. Please try again or contact support.' })
+        setResultStatus({ status: 'error', error: 'Unable to retrieve your document. Please refresh the page or contact support.' })
         setIsLoading(false)
       }
     }
 
     // Start polling immediately
     pollResult()
-  }, [sessionId])
+  }, [sessionId, pollInterval])
 
   const handleDownload = () => {
-    if (downloadUrl) {
+    if (resultStatus.downloadUrl) {
       const link = document.createElement('a')
-      link.href = downloadUrl
+      link.href = resultStatus.downloadUrl
       link.download = `internet-streets-${sessionId}.pdf`
+      link.target = '_blank'
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
@@ -62,14 +72,18 @@ export default function ResultPage() {
   }
 
   const handleShare = async () => {
-    if (downloadUrl) {
-      try {
-        await navigator.clipboard.writeText(window.location.href)
-        alert('Link copied to clipboard!')
-      } catch (error) {
-        console.error('Failed to copy link:', error)
-        alert('Failed to copy link. Please copy manually.')
-      }
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      alert('Link copied to clipboard! Share it with others.')
+    } catch (error) {
+      console.error('Failed to copy link:', error)
+      alert('Failed to copy link. Please copy manually.')
+    }
+  }
+
+  const handlePreviewInNewTab = () => {
+    if (resultStatus.previewUrl) {
+      window.open(resultStatus.previewUrl, '_blank')
     }
   }
 
@@ -150,16 +164,42 @@ export default function ResultPage() {
             </div>
           </div>
           
-          {downloadUrl && (
-            <div className="bg-white rounded-lg overflow-hidden">
+          {resultStatus.previewUrl ? (
+            <div className="bg-white rounded-lg overflow-hidden relative">
               <iframe
-                src={downloadUrl}
+                src={`${resultStatus.previewUrl}?preview=true`}
                 className="w-full h-[600px] border-none"
                 title="Generated Document Preview"
+                onError={() => {
+                  // Fallback if iframe fails
+                  const fallbackDiv = document.createElement('div')
+                  fallbackDiv.innerHTML = `
+                    <div class="text-center p-8">
+                      <h3 class="text-red-600 mb-4">Preview not available</h3>
+                      <p class="mb-4">You can still download the document using the button below</p>
+                      <button onclick="window.open('${resultStatus.previewUrl}', '_blank')" 
+                              class="bg-blue-500 text-white px-4 py-2 rounded">Open in New Tab</button>
+                    </div>
+                  `
+                  document.querySelector('.relative')?.appendChild(fallbackDiv)
+                }}
               />
+              <div className="absolute top-2 right-2 z-10">
+                <button
+                  onClick={handlePreviewInNewTab}
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm opacity-80 hover:opacity-100"
+                >
+                  Open in New Tab
+                </button>
+              </div>
               <div className="result-note">
                 This PDF/image is novelty content for entertainment purposes. Document available for 1 hour.
               </div>
+            </div>
+          ) : (
+            <div className="bg-gray-100 text-gray-600 p-8 rounded-lg text-center">
+              <FileText size={48} className="mx-auto mb-4 opacity-50" />
+              <p>Preview will appear when document is ready...</p>
             </div>
           )}
         </div>
