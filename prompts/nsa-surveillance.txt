@@ -7,14 +7,16 @@ Constraints:
 - Activity log: 5-8 entries with realistic surveillance activities
 - Create credible technical details and communication intercepts
 
-Placeholders: {{name}}, {{city}}
+Placeholders: {{fullName}}, {{city}}, {{email}}, {{phoneNumber}}
 
 JSON schema:
 {
   "document_title": "NSA Surveillance Activity Log (Fictional)",
   "subject": { 
-    "name": "{{name}}", 
+    "name": "{{fullName}}", 
     "location": "{{city}}",
+    "email": "{{email}}",
+    "phone": "{{phoneNumber}}",
     "aliases": ["<realistic alias>", "<another alias>"],
     "nationality": "<country>",
     "device_count": <2-5>,

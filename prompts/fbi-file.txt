@@ -7,14 +7,14 @@ Constraints:
 - Surveillance logs: 3-5 entries with realistic activities
 - Create credible allegations and risk factors
 
-Placeholders: {{name}}, {{dob}}, {{city}}
+Placeholders: {{fullName}}, {{dateOfBirth}}, {{city}}, {{occupation}}
 
 JSON schema:
 {
   "document_title": "FBI Intelligence Dossier (Fictional)",
   "subject": { 
-    "name": "{{name}}", 
-    "dob": "{{dob}}", 
+    "name": "{{fullName}}", 
+    "dob": "{{dateOfBirth}}", 
     "city": "{{city}}",
     "aliases": ["<realistic alias>", "<another alias>"],
     "nationality": "<country>",
