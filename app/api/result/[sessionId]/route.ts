@@ -17,7 +17,7 @@ function getOpenAI() {
 }
 
 // In-memory storage for generated results (in production, use Netlify Blob store)
-const generatedResults: Map<string, { buffer: Buffer; serviceName: string; timestamp: number }> = new Map()
+export const generatedResults: Map<string, { buffer: Buffer; serviceName: string; timestamp: number }> = new Map()
 
 // Clean up old results every hour
 setInterval(() => {
@@ -47,14 +47,10 @@ export async function GET(
     // Check if result is already generated and cached
     const cachedResult = generatedResults.get(sessionId)
     if (cachedResult) {
-      // Create a temporary download URL
-      const uint8Array = new Uint8Array(cachedResult.buffer)
-      const blob = new Blob([uint8Array], { type: 'application/pdf' })
-      const url = URL.createObjectURL(blob)
-      
+      // Return URL that serves the cached PDF
       return NextResponse.json({
         status: 'ready',
-        url: url,
+        url: `/api/download/${sessionId}`,
         serviceName: cachedResult.serviceName,
         expiresAt: new Date(cachedResult.timestamp + (60 * 60 * 1000)).toISOString()
       })
@@ -117,14 +113,13 @@ export async function GET(
       timestamp: Date.now()
     })
 
-    // Create a temporary download URL
-    const uint8Array = new Uint8Array(pdfBuffer)
-    const blob = new Blob([uint8Array], { type: 'application/pdf' })
-    const url = URL.createObjectURL(blob)
+    // Return the PDF directly via streaming response
+    // Don't use URL.createObjectURL on server side
 
+    // Return a URL that serves the PDF directly from our API
     return NextResponse.json({
       status: 'ready',
-      url: url,
+      url: `/api/download/${sessionId}`,
       serviceName: service.name,
       expiresAt: new Date(Date.now() + (60 * 60 * 1000)).toISOString()
     })
