@@ -1,52 +1,9 @@
-You are producing a fictional, FBI-style dossier for entertainment only.
-Return STRICT JSON, no commentary.
+You must ONLY respond with valid JSON. NO other text, commentary, or formatting.
 
-Constraints:
-- Generate detailed, realistic intelligence content that fills 1-2 pages
-- Each string ≤ 140 chars to maintain readability
-- Surveillance logs: 3-5 entries with realistic activities
-- Create credible allegations and risk factors
+Generate a fictional FBI intelligence dossier. Complete the exact JSON structure below.
 
 Placeholders: {{fullName}}, {{dateOfBirth}}, {{city}}, {{occupation}}
 
-JSON schema:
-{
-  "document_title": "FBI Intelligence Dossier (Fictional)",
-  "subject": { 
-    "name": "{{fullName}}", 
-    "dob": "{{dateOfBirth}}", 
-    "city": "{{city}}",
-    "aliases": ["<realistic alias>", "<another alias>"],
-    "nationality": "<country>",
-    "employment": "<occupation>"
-  },
-  "caseNumber": "<random 8-char alnum like A1B2C3D4>",
-  "threatLevel": "<LOW|MEDIUM|HIGH|CRITICAL>",
-  "summary": "<detailed intelligence assessment, 2-3 sentences describing subject's activities and patterns>",
-  "allegations": [
-    "<specific allegation like: Frequent communication with foreign contacts>",
-    "<specific allegation like: Financial transactions with flagged entities>",
-    "<specific allegation like: Suspicious travel patterns to sensitive regions>",
-    "<specific allegation like: Encrypted communication devices>",
-    "<specific allegation like: Access to restricted technology>"
-  ],
-  "surveillanceLogs": [
-    { "timestamp": "<recent date/time>", "activity": "<detailed surveillance activity>", "severity": "<Low|Medium|High>" },
-    { "timestamp": "<recent date/time>", "activity": "<detailed surveillance activity>", "severity": "<Low|Medium|High>" },
-    { "timestamp": "<recent date/time>", "activity": "<detailed surveillance activity>", "severity": "<Low|Medium|High>" },
-    { "timestamp": "<recent date/time>", "activity": "<detailed surveillance activity>", "severity": "<Low|Medium|High>" },
-    { "timestamp": "<recent date/time>", "activity": "<detailed surveillance activity>", "severity": "<Low|Medium|High>" }
-  ],
-  "riskFactors": [
-    "<specific risk like: High financial activity in cryptocurrency>",
-    "<specific risk like: International travel patterns>",
-    "<specific risk like: Technical sophistication>",
-    "<specific risk like: Anti-surveillance measures>"
-  ],
-  "analystNotes": "<detailed analyst commentary about subject's behavior patterns, communication methods, and overall assessment based on surveillance data.",
-  "recommendation": "<specific operational recommendation>",
-  "issued_at": "<ISO date>",
-  "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"
-}
+{"document_title": "FBI Intelligence Dossier (Fictional)", "document_classification": "CONFIDENTIAL", "case_number": "<FB-case-alphanum-8-chars>", "dossier_id": "<DOS-case-alphanum-6-chars>", "subject": {"name": "{{fullName}}", "dob": "{{dateOfBirth}}", "city": "{{city}}", "occupation": "{{occupation}}", "aliases": ["<realistic alias>", "<another alias>"], "nationality": "<country>", "address": "<realistic address>", "known_associates": ["<person name>"]}, "case_status": {"investigation_status": "<active|pending|closed>", "priority_level": "<low|medium|high>", "jurisdiction": "<field_office_assignment>", "case_officer": "<agent name>", "supervisor": "<supervisory agent name>", "opened_date": "<ISO date>"}, "threat_assessment": {"overall_threat_level": "<green|yellow|orange|red>", "terrorism_risk": "<low|moderate|high>", "criminal_activity_indicators": ["<specific indicator>", "<another indicator>"], "weapons_monitoring": "<status>", "financial_monitoring": "<status>"}, "surveillance_logs": [{"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"}, {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"}], "evidence_summary": {"physical_evidence": [{"type": "<evidence type>", "description": "<details>", "discovery_date": "<ISO date>"}], "digital_evidence": [{"source": "<device/platform>", "content": "<brief description>", "date_recovered": "<ISO date>"}]}, "analyst_assessment": {"behavioral_profile": "<detailed behavioral analysis>", "motivational_factors": ["<factors driving subject behavior>"], "communication_patterns": "<analysis of communication style>"}, "recommendations": ["<specific operational recommendation with justification>", "<resource allocation recommendation>"], "next_actions": ["<immediate action item with assigned responsibility>", "<surveillance enhancement with operational parameters>"], "legal_status": {"outstanding_warrants": ["<warrant_details>"], "prosecution_recommendation": "<federal|state|local>", "charges_under_consideration": ["<criminal_charges>"]}, "issued_at": "<ISO timestamp>", "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"}
 
-Temperature: 0.7. Output JSON only.
+Temperature 0.3. Generate ONE VALID JSON OBJECT only.
