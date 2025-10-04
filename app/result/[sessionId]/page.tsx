@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { Loader2, Download, Share2, FileText } from 'lucide-react'
 
 interface ResultStatus {
@@ -13,7 +14,8 @@ interface ResultStatus {
 
 export default function ResultPage() {
   const router = useRouter()
-  const { sessionId } = router.query
+  const params = useParams()
+  const sessionId = params.sessionId as string
   const [resultStatus, setResultStatus] = useState<ResultStatus>({ status: 'processing' })
   const [isLoading, setIsLoading] = useState(true)
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
