@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://internetstreets.uk'),
   title: 'Internet Streets - The AI Black Market | Novelty Document Generator',
   description: 'Generate realistic FBI files, payslips, degrees, and official documents for novelty purposes. AI-powered document creation with professional templates. Entertainment only.',
   keywords: 'AI document generator, novelty documents, FBI file generator, fake payslip, fake degree, entertainment documents, AI black market',
