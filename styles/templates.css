@@ -1,0 +1,370 @@
+/* Professional Document Template Styles */
+@import url('https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&family=Roboto:wght@300;400;700&family=Courier+New:wght@400;700&display=swap');
+
+.document-container {
+  font-family: 'Roboto', 'Arial', sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #333;
+  background-color: #fff;
+  min-height: 297mm; /* A4 height */
+  padding: 25mm; /* 1 inch margins */
+  box-sizing: border-box;
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.02) 1px, transparent 0);
+  background-size: 20px 20px; /* Subtle paper texture */
+  page-break-inside: avoid;
+}
+
+.document-header {
+  background: linear-gradient(135deg, #1a2951 0%, #2c3e73 100%);
+  color: white;
+  padding: 15px 20px;
+  margin: -25mm -25mm 20px -25mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: calc(100% + 50mm);
+}
+
+.document-header .seal-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.document-seal {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #2c3e73, #1a2951);
+  border: 3px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+.document-seal::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, rgba(255,255,255,0.2), transparent);
+  pointer-events: none;
+}
+
+.document-seal .seal-text {
+  font-size: 8px;
+  transform: rotate(-12deg);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.document-header .title-section {
+  flex: 1;
+  text-align: center;
+}
+
+.document-header .title-section h1 {
+  font-family: 'Georgia', serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 5px 0;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  letter-spacing: 1px;
+}
+
+.document-header .title-section .subtitle {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+.document-header .metadata-section {
+  text-align: right;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.classification-stamp {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  transform: rotate(-12deg);
+  background: rgba(220, 53, 69, 0.12);
+  padding: 8px 12px;
+  border: 2px solid #dc3545;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 10px;
+  color: #dc3545;
+}
+
+.section-header {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a2951;
+  margin: 25px 0 10px 0;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #1a2951;
+}
+
+.metadata-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.metadata-table td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  vertical-align: top;
+}
+
+.metadata-table tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.metadata-table .field-label {
+  font-weight: 700;
+  color: #1a2951;
+  width: 35%;
+  text-align: right;
+  padding-right: 15px;
+}
+
+.metadata-table .field-value {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: #333;
+}
+
+.threat-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.threat-badge.low { background: #28a745; color: white; }
+.threat-badge.medium { background: #fd7e14; color: white; }
+.threat-badge.high { background: #dc3545; color: white; }
+.threat-badge.critical { background: #6f42c1; color: white; }
+
+.surveillance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  font-size: 10px;
+}
+
+.surveillance-table th {
+  background: #1a2951;
+  color: white;
+  padding: 8px 6px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.surveillance-table td {
+  padding: 6px;
+  border: 1px solid #ddd;
+  vertical-align: top;
+}
+
+.surveillance-table tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.surveillance-table .timestamp {
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.surveillance-table .evidence-ref {
+  font-family: 'Courier New', monospace;
+  font-size: 8px;
+  color: #666;
+  font-style: italic;
+}
+
+.risk-matrix {
+  display: inline-block;
+  margin: 10px 0;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+}
+
+.risk-matrix .risk-dots {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.risk-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid #333;
+}
+
+.risk-dot.low { background: #28a745; }
+.risk-dot.medium { background: #fd7e14; }
+.risk-dot.high { background: #dc3545; }
+.risk-dot.critical { background: #6f42c1; }
+
+.analyst-section {
+  margin: 20px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-left: 4px solid #1a2951;
+}
+
+.analyst-section h3 {
+  font-family: 'Georgia', serif;
+  font-size: 14px;
+  color: #1a2951;
+  margin: 0 0 10px 0;
+}
+
+.analyst-section .notes {
+  margin-bottom: 15px;
+}
+
+.analyst-section .notes p {
+  margin: 8px 0;
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: justify;
+}
+
+.recommendation-list {
+  list-style: none;
+  padding: 0;
+}
+
+.recommendation-list li {
+  margin: 6px 0;
+  padding: 4px 0 4px 15px;
+  position: relative;
+  font-size: 11px;
+}
+
+.recommendation-list li::before {
+  content: '▶';
+  position: absolute;
+  left: 0;
+  color: #1a2951;
+  font-size: 8px;
+}
+
+.signature-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin: 30px 0;
+  padding: 15px 0;
+  border-top: 1px solid #ddd;
+}
+
+.signature-section {
+  text-align: left;
+}
+
+.signature-line {
+  width: 120px;
+  height: 1px;
+  background: #333;
+  margin: 15px 0 5px 0;
+}
+
+.signature-text {
+  font-size: 10px;
+  color: #666;
+}
+
+.qr-code {
+  width: 60px;
+  height: 60px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 8px;
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.document-footer {
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+  font-size: 9px;
+  color: #666;
+  text-align: center;
+}
+
+.document-footer .microtext {
+  font-size: 8px;
+  color: #999;
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.page-break {
+  page-break-before: always;
+}
+
+/* Avoid breaking tables across pages */
+.surveillance-table, .metadata-table {
+  break-inside: avoid;
+}
+
+.surveillance-table tr {
+  break-inside: avoid;
+}
+
+/* Print optimizations */
+@media print {
+  .document-container {
+    margin: 0;
+    padding: 20mm;
+    page-break-after: avoid;
+  }
+  
+  .document-header {
+    margin: -20mm -20mm 15px -20mm;
+    width: calc(100% + 40mm);
+  }
+  
+  .classification-stamp {
+    top: 40mm;
+    right: 40mm;
+  }
+}
