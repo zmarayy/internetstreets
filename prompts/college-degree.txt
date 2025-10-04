@@ -1,21 +1,185 @@
-Create a fictional degree certificate text payload.
-STRICT JSON. Prestigious tone. No real seals/logos.
+Create an extremely detailed fictional university degree certificate for entertainment purposes.
+STRICT JSON. Realistic but not claiming to be real academic credentials.
+
+Constraints:
+- Generate comprehensive degree certificate content that fills 2-3 pages
+- Each string ≤ 140 chars for readability
+- Include detailed academic achievements, course modules, and certification details
+- Create realistic university styling and academic verification information
 
 Placeholders: {{fullName}}, {{dateOfBirth}}, {{universityName}}, {{degreeType}}, {{subject}}, {{graduationYear}}
 
 JSON schema:
 {
-  "document_title": "Degree Certificate (Fictional)",
-  "recipient": { "name": "{{fullName}}", "dob": "{{dateOfBirth}}" },
-  "degree": { "title": "{{degreeType}} in {{subject}}", "classification": "<First|Upper Second|Lower Second|Third>" },
-  "awarding_body": "{{universityName}}",
-  "graduation_date": "{{graduationYear}}",
-  "certificate_no": "<alnum>",
-  "signatories": [
-    { "name": "<fake registrar>", "title": "Registrar" },
-    { "name": "<fake dean>", "title": "Dean" }
+  "document_title": "DEGREE CERTIFICATE & ACADEMIC TRANSCRIPT",
+  "logo": "UNIVERSITY-OFFICIAL-SEAL",
+  "letterhead": "Academic Registry & Certification Services",
+  "university_details": {
+    "official_name": "{{universityName}}",
+    "address": "<realistic UK university address with postcode>",
+    "telephone": "<university main phone>",
+    "email": "<registry email>",
+    "website": "<university website>",
+    "royal_charter_year": "<year university was chartered>",
+    "degree_awarding_powers": "<confirmation of degree awarding status>"
+  },
+  "student_information": {
+    "full_name": "{{fullName}}",
+    "date_of_birth": "{{dateOfBirth}}",
+    "student_number": "<8-digit student ID>",
+    "university_card_number": "<university ID>",
+    "enrollment_campus": "<main campus location>",
+    "mode_of_study": "<full_time|part_time|distance_learning>",
+    "immigration_status": "<UK/EU/International student>"
+  },
+  "degree_details": {
+    "degree_title": "{{degreeType}}",
+    "subject_area": "{{subject}}",
+    "degree_classification": "<First_Class_Honours|Upper_Second_Class|Lower_Second_Class|Third_Class_Honours|Pass|Distinction|Merit>",
+    "graduation_year": "{{graduationYear}}",
+    "graduation_date": "<ISO date>",
+    "degree_level": "<Foundation|Bachelor|Master|Doctorate>",
+    "credits_achieved": "<total credits: 120|240|360|480>",
+    "duration_of_programme": "<duration in years/months>",
+    "mode_of_study": "<full_time|part_time>"
+  },
+  "academic_records": {
+    "registration_date": "<ISO date when started course>",
+    "graduation_date": "<ISO date>",
+    "study_period": "<start date to end date>",
+    "course_length": "<standard course duration>",
+    "total_credits": "<credits required/achieved>",
+    "credit_system": "<UK credits: 120|ECTS: 240>"
+  },
+  "module_results": [
+    {
+      "module_title": "<Introduction to [Subject]>",
+      "module_code": "<code like COMP1001>",
+      "credits": "<credit_value: 15|20|30>",
+      "semester": "<Semester 1|Semester 2|Year 1|Year 2|Year 3>",
+      "assessment_type": "<Examination|Coursework|Practical|Portfolio>",
+      "mark_achieved": "<numerical_mark: 65-95>",
+      "grade": "<A+|A|B+|B|C+|C|D+|D|E|F>",
+      "status": "<Passed|Failed|Resit|Deferred>",
+      "tutor": "<module tutor name>",
+      "remarks": "<outstanding|excellent|good|satisfactory|pass|fail>"
+    },
+    {
+      "module_title": "<Advanced [Subject] Theory>",
+      "module_code": "<code like COMP2001>",
+      "credits": "<credit_value: 15|20|30>",
+      "semester": "<Semester 1|Semester 2|Year 1|Year 2|Year 3>",
+      "assessment_type": "<Examination|Coursework|Practical|Portfolio>",
+      "mark_achieved": "<numerical_mark: 65-95>",
+      "grade": "<A+|A|B+|B|C+|C|D+|D|E|F>",
+      "status": "<Passed|Failed|Resit|Deferred>",
+      "tutor": "<module tutor name>",
+      "remarks": "<outstanding|excellent|good|satisfactory|pass|fail>"
+    },
+    {
+      "module_title": "<[Subject] Research Methods>",
+      "module_code": "<code like COMP3001>",
+      "credits": "<credit_value: 15|20|30>",
+      "semester": "<Semester 1|Semester 2|Year 1|Year 2|Year 3>",
+      "assessment_type": "<Examination|Coursework|Practical|Portfolio>",
+      "mark_achieved": "<numerical_mark: 65-95>",
+      "grade": "<A+|A|B+|B|C+|C|D+|D|E|F>",
+      "status": "<Passed|Failed|Resit|Deferred>",
+      "tutor": "<module tutor name>",
+      "remarks": "<outstanding|excellent|good|satisfactory|pass|fail>"
+    },
+    {
+      "module_title": "<Dissertation in [Subject]>",
+      "module_code": "<code like COMP4001>",
+      "credits": "<credit_value: 40|60|80>",
+      "semester": "<Final Year Project|Dissertation Period>",
+      "assessment_type": "<Dissertation|Thesis|Major Project>",
+      "mark_achieved": "<numerical_mark: 70-95>",
+      "grade": "<A+|A|B+|B|C+|C|D+|D|E|F>",
+      "status": "<Passed|Distinction|Merit|Pass>",
+      "tutor": "<dissertation supervisor>",
+      "remarks": "<exceptional|excellent|very good|good>"
+    }
   ],
-  "disclaimer": "FOR ENTERTAINMENT ONLY. NOT AN OFFICIAL CREDENTIAL."
+  "final_results": {
+    "overall_classification": "<First Class Honours|Upper Second Class|Lower Second Class|Third Class Honours>",
+    "final_average": "<percentage: 70-85>",
+    "grade_point_average": "<GPA if calculated>",
+    "distinctions_achieved": "<number of distinctions>",
+    "honours_status": "<With Honours|Without Honours|Pass>",
+    "placement_in_year": "<academic ranking if applicable>"
+  },
+  "special_achievements": [
+    "<achievement: Dean's List Recognition for Academic Excellence>",
+    "<achievement: Outstanding Performance in Final Year Project>",
+    "<achievement: Student Representative for Course Development>",
+    "<achievement: Participated in International Conference Presentation>",
+    "<achievement: Leadership Role in Student Society>"
+  ],
+  "progression_details": {
+    "course_duration": "<actual/completed duration>",
+    "completed_on_time": "<yes|delayed but completed|accelerated>",
+    "transfer_history": "<any transfers between courses/institutions>",
+    "recognition_of_prior_learning": "<any RPL given>",
+    "work_placement": "<mandatory/optional placement completed>",
+    "study_abroad": "<any international study periods>"
+  },
+  "verification_information": {
+    "certificate_number": "<CERT-12-char-alnum>",
+    "verification_code": "<8-digit verification code>",
+    "watermark_reference": "<security watermark identifier>",
+    "issuance_authority": "Academic Registry",
+    "digital_signature": "<verification signature hash>",
+    "secure_features": ["<degree verification features>"]
+  },
+  "accreditation": {
+    "professional_body_approval": "<if degree accredited by professional body>",
+    "quality_assurance": "<university quality assurance confirmation>",
+    "external_examiners": ["<external examiner validation>"],
+    "review_status": "<recent quality review status>",
+    "accreditation_valid_until": "<if applicable>"
+  },
+  "student_services_engagement": {
+    "careers_service_usage": "<register level with careers service>",
+    "student_union_participation": ["<student activities engagement>"],
+    "sports_club_membership": ["<sports participation>"],
+    "volunteering_activities": ["<volunteering recognition>"],
+    "work_experience": ["<relevant work experience>"]
+  },
+  "signatories": {
+    "vice_chancellor": {
+      "name": "<fictional vice chancellor name>",
+      "title": "Vice-Chancellor",
+      "signature_line": "<signature placement>",
+      "date": "<ISO date>"
+    },
+    "dean": {
+      "name": "<fictional dean name>",
+      "title": "Dean of Faculty",
+      "signature_line": "<signature placement>",
+      "date": "<ISO date>"
+    },
+    "registrar": {
+      "name": "<fictional registrar name>",
+      "title": "University Registrar",
+      "signature_line": "<signature placement>",
+      "date": "<ISO date>"
+    }
+  },
+  "copyright_and_reproduction": {
+    "copyright_notice": "<university copyright statement>",
+    "reproduction_rights": "<reproduction limitations>",
+    "official_copy_verification": "<how to verify authenticity>",
+    "replacement_policy": "<policy for replacement certificates>"
+  },
+  "alumni_services": {
+    "graduates_association": "<information about alumni network>",
+    "ongoing_support": "<continuing student services available>",
+    "certificate_updates": "<policy for certificate updates>",
+    "contact_information": "<alumni contact details>"
+  },
+  "issued_at": "<ISO date>",
+  "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"
 }
 
-Temperature 0.3. JSON only.
+Temperature 0.4. JSON only.

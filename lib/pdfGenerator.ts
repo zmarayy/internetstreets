@@ -77,6 +77,12 @@ export function generatePDFfromJSON(slug: string, json: any): Buffer {
     case 'rent-reference':
       addRentReferenceDetails(doc, json, yPos)
       break
+    case 'school-report':
+      addSchoolReportDetails(doc, json, yPos)
+      break
+    case 'college-degree':
+      addCollegeDegreeDetails(doc, json, yPos)
+      break
     default:
       addGenericDetails(doc, json, yPos)
   }
@@ -1579,6 +1585,442 @@ function addRentReferenceDetails(doc: jsPDF, json: any, startY: number) {
     doc.text(`Reference valid until: ${json.reference_validity.valid_until || 'N/A'}`, 20, yPos)
     yPos += 8
     doc.text(`For verification contact: ${json.reference_validity.contact_for_verification || 'N/A'}`, 20, yPos)
+  }
+}
+
+function addSchoolReportDetails(doc: jsPDF, json: any, startY: number) {
+  let yPos = startY
+  
+  // Add logo/header simulation
+  doc.setFontSize(12)
+  doc.setFont('helvetica', 'bold')
+  doc.text(json.logo || '╔═══ EDUCATION DEPARTMENT', 20, yPos)
+  doc.text(json.letterhead || 'School Behavioural Services Department', 20, yPos + 8)
+  
+  // Official border
+  doc.setDrawColor(0, 0, 0)
+  doc.setLineWidth(0.8)
+  doc.rect(15, yPos - 8, 165, 25)
+  
+  yPos += 30
+  
+  // School and Student Information Table
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.text('STUDENT BEHAVIOURAL ASSESSMENT', 20, yPos)
+  yPos += 15
+  
+  drawTableHeader(doc, 'FIELD', 'DETAILS', yPos)
+  yPos += 8
+  
+  const studentData = [
+    ['Student Name', json.student_information?.full_name || 'REDACTED'],
+    ['Date of Birth', json.student_information?.date_of_birth || 'REDACTED'],
+    ['Student ID', json.student_information?.student_id || 'REDACTED'],
+    ['Year Group', json.student_information?.year_group || 'REDACTED'],
+    ['Form Class', json.student_information?.form_class || 'REDACTED'],
+    ['School', json.school_details?.name || 'REDACTED']
+  ]
+  
+  studentData.forEach(([field, value]) => {
+    drawTableRow(doc, field, value, yPos)
+    yPos += 10
+  })
+  
+  yPos += 10
+  
+  // Academic Performance Section
+  if (json.academic_performance) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('ACADEMIC PERFORMANCE', 20, yPos)
+    yPos += 15
+    
+    const academic = json.academic_performance
+    
+    doc.setFillColor(220, 235, 255)
+    doc.rect(20, yPos - 5, 170, 8, 'F')
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Assessment Category', 25, yPos + 2)
+    doc.text('Grade/Score', 140, yPos + 2)
+    yPos += 8
+    
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    
+    const academicDetails = [
+      ['Overall Grade', academic.overall_grade || 'N/A'],
+      ['Attendance', `${academic.attendance_percentage || 0}%`],
+      ['Punctuality', academic.punctuality_record || 'N/A']
+    ]
+    
+    academicDetails.forEach(([category, score]) => {
+      doc.text(category, 25, yPos + 2)
+      doc.text(score, 140, yPos + 2)
+      yPos += 8
+    })
+    
+    yPos += 15
+  }
+  
+  // Behavioural Assessment Section
+  if (json.behavioural_assessment) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('BEHAVIOURAL ASSESSMENT', 20, yPos)
+    yPos += 15
+    
+    const behavioural = json.behavioural_assessment
+    
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(11)
+    
+    const behaviourData = [
+      ['Overall Behaviour Grade', behavioural.overall_behaviour_grade || 'N/A'],
+      ['Classroom Conduct', behavioural.classroom_conduct || 'N/A'],
+      ['Respect for Authority', behavioural.respect_for_authority || 'N/A'],
+      ['Peer Relationships', behavioural.peer_relationships || 'N/A'],
+      ['Following Rules', behavioural.following_rules || 'N/A']
+    ]
+    
+    behaviourData.forEach(([category, assessment]) => {
+      doc.text(`${category}: ${assessment}`, 25, yPos)
+      yPos += 8
+    })
+    
+    yPos += 15
+  }
+  
+  // Incident Records Table
+  if (json.incident_records && Array.isArray(json.incident_records)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('INCIDENT RECORDS', 20, yPos)
+    yPos += 15
+    
+    // Table headers
+    doc.setFillColor(240, 240, 240)
+    doc.rect(20, yPos - 5, 170, 12, 'F')
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Date', 25, yPos + 2)
+    doc.text('Type', 60, yPos + 2)
+    doc.text('Location', 90, yPos + 2)
+    doc.text('Status', 140, yPos + 2)
+    yPos += 10
+    
+    // Incident entries
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(9)
+    json.incident_records.forEach((incident: any) => {
+      if (yPos > 250) return
+      doc.text(incident.date || 'REDACTED', 25, yPos + 2)
+      doc.text(incident.type || 'REDACTED', 60, yPos + 2)
+      doc.text(incident.location || 'REDACTED', 90, yPos + 2)
+      
+      // Color-code status
+      const status = incident.resolution_status || 'unknown'
+      if (status === 'resolved') doc.setTextColor(0, 150, 0) // Green
+      else if (status === 'ongoing') doc.setTextColor(200, 100, 0) // Orange
+      else if (status === 'escalated') doc.setTextColor(200, 0, 0) // Red
+      
+      doc.text(status.toUpperCase(), 140, yPos + 2)
+      doc.setTextColor(0, 0, 0) // Reset color
+      
+      yPos += 8
+    })
+    
+    yPos += 15
+  }
+  
+  // Positive Behaviours
+  if (json.positive_behaviours && Array.isArray(json.positive_behaviours)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('POSITIVE BEHAVIOURS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    json.positive_behaviours.forEach((behaviour: string, index: number) => {
+      doc.text(`${index + 1}. ${behaviour}`, 25, yPos)
+      yPos += 8
+    })
+    yPos += 10
+  }
+  
+  // Areas for Improvement
+  if (json.areas_for_improvement && Array.isArray(json.areas_for_improvement)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('AREAS FOR IMPROVEMENT', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    json.areas_for_improvement.forEach((area: string, index: number) => {
+      doc.text(`${index + 1}. ${area}`, 25, yPos)
+      yPos += 8
+    })
+    yPos += 10
+  }
+  
+  // Recommendations
+  if (json.recommendations && Array.isArray(json.recommendations)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('RECOMMENDATIONS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    json.recommendations.forEach((rec: string, index: number) => {
+      doc.text(`${index + 1}. ${rec}`, 25, yPos)
+      yPos += 12
+    })
+    yPos += 10
+  }
+  
+  // Report Authority
+  if (json.report_authority) {
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'normal')
+    doc.text(`Assessment conducted by: ${json.report_authority.assessor_name || 'N/A'}`, 20, yPos)
+    yPos += 8
+    doc.text(`Department: ${json.report_authority.department || 'N/A'}`, 20, yPos)
+  }
+}
+
+function addCollegeDegreeDetails(doc: jsPDF, json: any, startY: number) {
+  let yPos = startY
+  
+  // Add logo/header simulation
+  doc.setFontSize(12)
+  doc.setFont('helvetica', 'bold')
+  doc.text(json.logo || '╔═══ UNIVERSITY OFFICIAL', 20, yPos)
+  doc.text(json.letterhead || 'Academic Registry & Certification Services', 20, yPos + 8)
+  
+  // Official border with thicker lines
+  doc.setDrawColor(0, 0, 0)
+  doc.setLineWidth(1.2)
+  doc.rect(15, yPos - 8, 165, 35)
+  
+  yPos += 40
+  
+  // Certificate Title
+  doc.setFontSize(20)
+  doc.setFont('helvetica', 'bold')
+  doc.text(json.document_title || 'DEGREE CERTIFICATE', 95, yPos, { align: 'center' })
+  yPos += 20
+  
+  // Student Information Table
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.text('GRADUATE INFORMATION', 20, yPos)
+  yPos += 15
+  
+  drawTableHeader(doc, 'FIELD', 'DETAILS', yPos)
+  yPos += 8
+  
+  const graduateData = [
+    ['Full Name', json.student_information?.full_name || 'REDACTED'],
+    ['Student Number', json.student_information?.student_number || 'REDACTED'],
+    ['Date of Birth', json.student_information?.date_of_birth || 'REDACTED'],
+    ['University', json.university_details?.official_name || 'REDACTED'],
+    ['Mode of Study', json.student_information?.mode_of_study || 'REDACTED']
+  ]
+  
+  graduateData.forEach(([field, value]) => {
+    drawTableRow(doc, field, value, yPos)
+    yPos += 10
+  })
+  
+  yPos += 10
+  
+  // Degree Details Section
+  if (json.degree_details) {
+    doc.setFontSize(16)
+    doc.setFont('helvetica', 'bold')
+    const degree = json.degree_details.degree_title || 'Degree'
+    const subject = json.degree_details.subject_area || 'Subject'
+    const classification = json.degree_details.degree_classification || 'Pass'
+    
+    doc.text(`${degree} in ${subject}`, 95, yPos, { align: 'center' })
+    yPos += 15
+    
+    doc.setFontSize(18)
+    
+    // Color-code classification
+    if (classification.includes('First') || classification.includes('Distinction')) doc.setTextColor(0, 150, 0) // Green
+    else if (classification.includes('Second') || classification.includes('Merit')) doc.setTextColor(200, 200, 0) // Yellow
+    else doc.setTextColor(100, 100, 100) // Grey
+    
+    doc.text(`${classification.toUpperCase()}`, 95, yPos, { align: 'center' })
+    doc.setTextColor(0, 0, 0) // Reset
+    
+    yPos += 25
+  }
+  
+  // Module Results Table
+  if (json.module_results && Array.isArray(json.module_results)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('ACADEMIC TRANSCRIPT', 20, yPos)
+    yPos += 15
+    
+    // Table headers
+    doc.setFillColor(240, 240, 240)
+    doc.rect(20, yPos - 5, 170, 12, 'F')
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Module', 25, yPos + 2)
+    doc.text('Code', 80, yPos + 2)
+    doc.text('Credits', 105, yPos + 2)
+    doc.text('Mark', 125, yPos + 2)
+    doc.text('Grade', 145, yPos + 2)
+    doc.text('Status', 165, yPos + 2)
+    yPos += 10
+    
+    // Module entries
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(9)
+    json.module_results.forEach((module: any) => {
+      if (yPos > 220) return // Move to new page if needed
+      
+      doc.text(module.module_title || 'MODULE', 25, yPos + 2)
+      doc.text(module.module_code || 'CODE', 80, yPos + 2)
+      doc.text(module.credits || '0', 105, yPos + 2)
+      doc.text(`${module.mark_achieved || 0}%`, 125, yPos + 2)
+      
+      // Color-code grades
+      const grade = module.grade || 'F'
+      if (grade.startsWith('A')) doc.setTextColor(0, 150, 0) // Green
+      else if (grade.startsWith('B')) doc.setTextColor(0, 200, 0) // Light green
+      else if (grade.startsWith('C')) doc.setTextColor(200, 200, 0) // Yellow
+      else doc.setTextColor(200, 0, 0) // Red
+      
+      doc.text(grade, 145, yPos + 2)
+      
+      // Color-code status
+      const status = module.status || 'unknown'
+      if (status === 'Passed') doc.setTextColor(0, 150, 0) // Green
+      else if (status === 'Resit') doc.setTextColor(200, 100, 0) // Orange
+      else doc.setTextColor(200, 0, 0) // Red
+      
+      doc.text(status.toUpperCase(), 165, yPos + 2)
+      doc.setTextColor(0, 0, 0) // Reset color
+      
+      yPos += 8
+    })
+    
+    yPos += 15
+  }
+  
+  // Final Results
+  if (json.final_results) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('FINAL ACADEMIC RESULTS', 20, yPos)
+    yPos += 15
+    
+    const final = json.final_results
+    
+    doc.setFillColor(220, 235, 255)
+    doc.rect(20, yPos - 5, 170, 8, 'F')
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Result Type', 25, yPos + 2)
+    doc.text('Details', 140, yPos + 2)
+    yPos += 8
+    
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    
+    const finalDetails = [
+      ['Classification', final.overall_classification || 'N/A'],
+      ['Final Average', `${final.final_average || 0}%`],
+      ['Grade Point Average', final.grade_point_average || 'N/A'],
+      ['Distinctions', final.distinctions_achieved || '0']
+    ]
+    
+    finalDetails.forEach(([category, result]) => {
+      doc.text(category, 25, yPos + 2)
+      doc.text(result, 140, yPos + 2)
+      yPos += 8
+    })
+    
+    yPos += 15
+  }
+  
+  // Special Achievements
+  if (json.special_achievements && Array.isArray(json.special_achievements)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('SPECIAL ACHIEVEMENTS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    json.special_achievements.forEach((achievement: string, index: number) => {
+      doc.text(`${index + 1}. ${achievement}`, 25, yPos)
+      yPos += 8
+    })
+    yPos += 10
+  }
+  
+  // Verification Information
+  if (json.verification_information) {
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'bold')
+    doc.text('VERIFICATION INFORMATION', 20, yPos)
+    yPos += 8
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    const verification = json.verification_information
+    
+    doc.text(`Certificate Number: ${verification.certificate_number || 'N/A'}`, 25, yPos)
+    yPos += 8
+    doc.text(`Verification Code: ${verification.verification_code || 'N/A'}`, 25, yPos)
+    yPos += 8
+    doc.text(`Issuing Authority: ${verification.issuance_authority || 'N/A'}`, 25, yPos)
+    yPos += 15
+  }
+  
+  // Signatories Section
+  if (json.signatories) {
+    yPos += 20
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'bold')
+    doc.text('AUTHORIZED SIGNATORIES', 95, yPos, { align: 'center' })
+    yPos += 20
+    
+    const signatories = json.signatories
+    
+    if (signatories.vice_chancellor) {
+      doc.setFontSize(11)
+      doc.setFont('helvetica', 'bold')
+      doc.text(signatories.vice_chancellor.name || 'Vice-Chancellor', 20, yPos)
+      doc.text(signatories.vice_chancellor.title || 'Vice-Chancellor', 20, yPos + 8)
+      doc.text('................................', 20, yPos + 16)
+    }
+    
+    if (signatories.registrar) {
+      doc.setFontSize(11)
+      doc.setFont('helvetica', 'bold')
+      doc.text(signatories.registrar.name || 'Registrar', 120, yPos)
+      doc.text(signatories.registrar.title || 'University Registrar', 120, yPos + 8)
+      doc.text('................................', 120, yPos + 16)
+    }
+  }
+  
+  // Graduation Date
+  if (json.degree_details?.graduation_date) {
+    yPos += 40
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text(`Conferred this ${json.degree_details.graduation_date}`, 95, yPos, { align: 'center' })
   }
 }
 
