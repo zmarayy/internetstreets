@@ -1,5 +1,5 @@
 /* Professional Document Template Styles */
-@import url('https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&family=Roboto:wght@300;400;700&family=Courier+New:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&family=Roboto:wght@300;400;700&family=Courier+New:wght@400;700&family=Playfair+Display:wght@400;700&display=swap');
 
 .document-container {
   font-family: 'Roboto', 'Arial', sans-serif;
@@ -11,9 +11,37 @@
   padding: 25mm; /* 1 inch margins */
   box-sizing: border-box;
   background-image: 
-    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.02) 1px, transparent 0);
-  background-size: 20px 20px; /* Subtle paper texture */
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.02) 1px, transparent 0),
+    linear-gradient(45deg, transparent 49%, rgba(0,0,0,0.01) 50%, transparent 51%);
+  background-size: 20px 20px, 40px 40px; /* Subtle paper texture + grain */
   page-break-inside: avoid;
+  position: relative;
+}
+
+/* Paper texture overlay */
+.document-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.01) 2px,
+      rgba(0,0,0,0.01) 4px
+    );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Content should be above texture */
+.document-content {
+  position: relative;
+  z-index: 2;
 }
 
 .document-header {
@@ -350,12 +378,230 @@
   break-inside: avoid;
 }
 
+/* Template Variants */
+.variant-clean {
+  /* Clean official memo layout */
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.variant-folder {
+  /* Folder/Case layout with cover-style first page */
+  background: #f8f9fa;
+  border: 2px solid #dee2e6;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.variant-scanned {
+  /* Scanned memo with subtle noise overlay */
+  background: #f5f5f5;
+  filter: contrast(1.1) brightness(0.98);
+  position: relative;
+}
+
+.variant-scanned::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 98px,
+      rgba(0,0,0,0.02) 100px
+    );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Enhanced Visual Elements */
+.classification-stamp {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  transform: rotate(-12deg);
+  background: rgba(184, 15, 42, 0.06);
+  padding: 12px 16px;
+  border: 2px solid #b80f2a;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 11px;
+  color: #b80f2a;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.threat-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 9px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.threat-badge.low { 
+  background: linear-gradient(135deg, #28a745, #20c997); 
+  color: white; 
+}
+.threat-badge.medium { 
+  background: linear-gradient(135deg, #fd7e14, #ffc107); 
+  color: white; 
+}
+.threat-badge.high { 
+  background: linear-gradient(135deg, #dc3545, #e83e8c); 
+  color: white; 
+}
+.threat-badge.critical { 
+  background: linear-gradient(135deg, #6f42c1, #e83e8c); 
+  color: white; 
+}
+
+/* Enhanced Tables */
+.surveillance-table, .metadata-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  font-size: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.surveillance-table th {
+  background: linear-gradient(135deg, #0a2540, #1a2951);
+  color: white;
+  padding: 10px 8px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #b80f2a;
+}
+
+.surveillance-table td {
+  padding: 8px;
+  border: 1px solid #e9ecef;
+  vertical-align: top;
+  background: white;
+}
+
+.surveillance-table tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.surveillance-table tr:hover {
+  background-color: #e3f2fd;
+}
+
+/* QR Code Styling */
+.qr-code {
+  width: 60px;
+  height: 60px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 8px;
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  line-height: 1.2;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Signature Block Enhancement */
+.signature-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin: 30px 0;
+  padding: 20px 0;
+  border-top: 2px solid #dee2e6;
+  background: linear-gradient(90deg, transparent, #f8f9fa, transparent);
+}
+
+.signature-line {
+  width: 150px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #333, transparent);
+  margin: 15px 0 5px 0;
+  position: relative;
+}
+
+.signature-line::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -2px;
+  width: 4px;
+  height: 6px;
+  background: #333;
+  transform: rotate(45deg);
+}
+
+/* Microtext Styling */
+.microtext {
+  font-size: 6px;
+  color: #999;
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.5px;
+}
+
+/* Redaction Bars */
+.redaction-bar {
+  background: #000;
+  height: 12px;
+  margin: 2px 0;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.redaction-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  animation: redactionShimmer 2s infinite;
+}
+
+@keyframes redactionShimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Page Numbers */
+.page-number {
+  position: absolute;
+  bottom: 15mm;
+  right: 20mm;
+  font-size: 9px;
+  color: #666;
+  font-family: 'Georgia', serif;
+}
+
 /* Print optimizations */
 @media print {
   .document-container {
     margin: 0;
     padding: 20mm;
     page-break-after: avoid;
+    background: white;
   }
   
   .document-header {
@@ -366,5 +612,13 @@
   .classification-stamp {
     top: 40mm;
     right: 40mm;
+  }
+  
+  .variant-scanned::after {
+    display: none;
+  }
+  
+  .surveillance-table, .metadata-table {
+    break-inside: avoid;
   }
 }

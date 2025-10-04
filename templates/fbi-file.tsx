@@ -2,72 +2,76 @@ import React from 'react'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import { generateServiceBrand } from '@/lib/brand'
+import { selectRandomVariant, getVariantConfig, generateQRData, generateDocumentId, generateFillerContent, CONTENT_DENSITY_REQUIREMENTS } from '@/lib/templateVariants'
 
 interface FBIFileData {
-  document_title: string
-  document_classification: string
-  case_number: string
-  dossier_id: string
-  subject: {
-    name: string
-    dob: string
-    city: string
-    occupation: string
-    aliases: string[]
-    nationality: string
-    address: string
-    known_associates: string[]
-  }
-  case_status: {
-    investigation_status: string
-    priority_level: string
-    jurisdiction: string
-    case_officer: string
-    supervisor: string
-    opened_date: string
-  }
-  threat_assessment: {
-    overall_threat_level: string
-    terrorism_risk: string
-    criminal_activity_indicators: string[]
-    weapons_monitoring: string
-    financial_monitoring: string
-  }
-  surveillance_logs: Array<{
-    timestamp: string
-    location: string
-    activity: string
-    duration: string
-    observers: string[]
-    equipment_used: string[]
-    behavior_assessment: string
-  }>
-  evidence_summary: {
-    physical_evidence: Array<{
-      type: string
-      description: string
-      discovery_date: string
+  structured: {
+    document_title: string
+    document_classification: string
+    case_number: string
+    dossier_id: string
+    subject: {
+      name: string
+      dob: string
+      city: string
+      occupation: string
+      aliases: string[]
+      nationality: string
+      address: string
+      known_associates: string[]
+    }
+    case_status: {
+      investigation_status: string
+      priority_level: string
+      jurisdiction: string
+      case_officer: string
+      supervisor: string
+      opened_date: string
+    }
+    threat_assessment: {
+      overall_threat_level: string
+      terrorism_risk: string
+      criminal_activity_indicators: string[]
+      weapons_monitoring: string
+      financial_monitoring: string
+    }
+    surveillance_logs: Array<{
+      timestamp: string
+      location: string
+      activity: string
+      duration: string
+      observers: string[]
+      equipment_used: string[]
+      behavior_assessment: string
     }>
-    digital_evidence: Array<{
-      source: string
-      content: string
-      date_recovered: string
-    }>
+    evidence_summary: {
+      physical_evidence: Array<{
+        type: string
+        description: string
+        discovery_date: string
+      }>
+      digital_evidence: Array<{
+        source: string
+        content: string
+        date_recovered: string
+      }>
+    }
+    key_findings: string[]
+    recommendations: string[]
+    next_actions: string[]
+    legal_status: {
+      outstanding_warrants: string[]
+      prosecution_recommendation: string
+      charges_under_consideration: string[]
+    }
+    issued_at: string
   }
-  analyst_assessment: {
-    behavioral_profile: string
-    motivational_factors: string[]
-    communication_patterns: string
+  narrative: {
+    executive_summary: string
+    analyst_notes: string[]
+    behavioral_assessment: string
+    threat_analysis: string
   }
-  recommendations: string[]
-  next_actions: string[]
-  legal_status: {
-    outstanding_warrants: string[]
-    prosecution_recommendation: string
-    charges_under_consideration: string[]
-  }
-  issued_at: string
-  disclaimer: string
 }
 
 interface FBIProps {
@@ -81,13 +85,45 @@ interface FBIProps {
 export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
   const doc = new jsPDF()
   
+  // Select random template variant
+  const variant = selectRandomVariant()
+  const variantConfig = getVariantConfig(variant)
+  
   // Generate professional branding
   const brand = generateServiceBrand('fbi-file')
   
+  // Extract structured and narrative data
+  const structured = data.structured
+  const narrative = data.narrative
+  
+  // Ensure content density requirements are met
+  const requirements = CONTENT_DENSITY_REQUIREMENTS['fbi-file']
+  const surveillanceLogs = structured.surveillance_logs || []
+  const keyFindings = structured.key_findings || []
+  
+  // Add filler content if needed
+  if (surveillanceLogs.length < requirements.minSurveillanceLogs) {
+    const fillerLogs = generateFillerContent('fbi-file', 'surveillance_logs', surveillanceLogs.length, requirements.minSurveillanceLogs)
+    surveillanceLogs.push(...fillerLogs.map(log => ({
+      timestamp: new Date().toISOString(),
+      location: 'Various',
+      activity: log,
+      duration: 'N/A',
+      observers: ['Agent X'],
+      equipment_used: ['Standard'],
+      behavior_assessment: 'Normal'
+    })))
+  }
+  
+  if (keyFindings.length < requirements.minKeyFindings) {
+    const fillerFindings = generateFillerContent('fbi-file', 'key_findings', keyFindings.length, requirements.minKeyFindings)
+    keyFindings.push(...fillerFindings)
+  }
+  
   // Set document properties
   doc.setProperties({
-    title: data.document_title,
-    subject: `Case #${data.case_number}`,
+    title: structured.document_title,
+    subject: `Case #${structured.case_number}`,
     creator: 'Department of Records',
     author: 'Administrative Oversight'
   })
@@ -115,7 +151,7 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
   doc.setTextColor(255, 255, 255)
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(22)
-  doc.text(data.document_title, 105, 15, { align: 'center' })
+  doc.text(structured.document_title, 105, 15, { align: 'center' })
   
   // Subtitle
   doc.setFontSize(8)
@@ -124,10 +160,10 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
   
   // Metadata section (top right)
   doc.setFontSize(7)
-  doc.text(`Case No: ${data.case_number}`, 180, 8, { align: 'right' })
-  doc.text(`Issue Date: ${data.issued_at.split('T')[0]}`, 180, 11, { align: 'right' })
-  doc.text(`Classification: ${data.document_classification}`, 180, 14, { align: 'right' })
-  doc.text(`Dossier ID: ${data.dossier_id}`, 180, 17, { align: 'right' })
+  doc.text(`Case No: ${structured.case_number}`, 180, 8, { align: 'right' })
+  doc.text(`Issue Date: ${structured.issued_at.split('T')[0]}`, 180, 11, { align: 'right' })
+  doc.text(`Classification: ${structured.document_classification}`, 180, 14, { align: 'right' })
+  doc.text(`Dossier ID: ${structured.dossier_id}`, 180, 17, { align: 'right' })
 
   // Classification stamp overlay
   doc.setTextColor(220, 53, 69)
@@ -151,11 +187,11 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
   
   // Left column - Personal Details
   const personalData = [
-    ['Full Name:', data.subject.name],
-    ['Date of Birth:', data.subject.dob],
-    ['Current City:', data.subject.city],
-    ['Occupation:', data.subject.occupation],
-    ['Nationality:', data.subject.nationality]
+    ['Full Name:', structured.subject.name],
+    ['Date of Birth:', structured.subject.dob],
+    ['Current City:', structured.subject.city],
+    ['Occupation:', structured.subject.occupation],
+    ['Nationality:', structured.subject.nationality]
   ]
   
   personalData.forEach((row, i) => {
@@ -169,11 +205,11 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
   doc.text('CASE METADATA', 120, 28)
   
   const caseData = [
-    ['Case No:', data.case_number],
-    ['Opened:', data.case_status.opened_date],
-    ['Analyst:', data.case_status.case_officer],
-    ['Priority:', data.case_status.priority_level.toUpperCase()],
-    ['Status:', data.case_status.investigation_status.toUpperCase()]
+    ['Case No:', structured.case_number],
+    ['Opened:', structured.case_status.opened_date],
+    ['Analyst:', structured.case_status.case_officer],
+    ['Priority:', structured.case_status.priority_level.toUpperCase()],
+    ['Status:', structured.case_status.investigation_status.toUpperCase()]
   ]
   
   caseData.forEach((row, i) => {
@@ -194,39 +230,49 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
   doc.text('THREAT ASSESSMENT', 20, 72)
   
   // Threat level badge
-  const threatColor = data.threat_assessment.overall_threat_level === 'high' ? [220, 53, 69] :
-                     data.threat_assessment.overall_threat_level === 'medium' ? [253, 126, 20] :
-                     data.threat_assessment.overall_threat_level === 'low' ? [40, 167, 69] : [111, 66, 178]
+  const threatColor = structured.threat_assessment.overall_threat_level === 'high' ? [220, 53, 69] :
+                     structured.threat_assessment.overall_threat_level === 'medium' ? [253, 126, 20] :
+                     structured.threat_assessment.overall_threat_level === 'low' ? [40, 167, 69] : [111, 66, 178]
   
   doc.setFillColor(threatColor[0], threatColor[1], threatColor[2])
   doc.rect(140, 68, 25, 8, 'F')
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(7)
-  doc.text(data.threat_assessment.overall_threat_level.toUpperCase(), 152, 72, { align: 'center' })
+  doc.text(structured.threat_assessment.overall_threat_level.toUpperCase(), 152, 72, { align: 'center' })
   
   doc.setTextColor(75, 85, 99)
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(7)
-  doc.text(`Risk Level: ${data.threat_assessment.terrorism_risk.toUpperCase()}`, 20, 78)
-  doc.text(`Financial Monitoring: ${data.threat_assessment.financial_monitoring}`, 20, 82)
+  doc.text(`Risk Level: ${structured.threat_assessment.terrorism_risk.toUpperCase()}`, 20, 78)
+  doc.text(`Financial Monitoring: ${structured.threat_assessment.financial_monitoring}`, 20, 82)
 
   // Synopsis section
   doc.setTextColor(26, 58, 73)
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(12)
-  doc.text('SYNOPSIS / KEY FINDINGS', 20, 95)
+  doc.text('EXECUTIVE SUMMARY', 20, 95)
   
-  doc.setDrawColor(26, 58, 73/255)
+  doc.setDrawColor(26, 58, 73)
   doc.line(20, 97, 190, 97)
   
+  // Executive summary narrative
   doc.setTextColor(75, 85, 99)
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(9)
+  const summaryLines = doc.splitTextToSize(narrative.executive_summary, 175, { fontSize: 9 })
+  doc.text(summaryLines, 20, 105)
   
   // Key findings as bullet points
-  const findings = data.recommendations.slice(0, 5)
-  findings.forEach((finding, i) => {
-    doc.text(`• ${finding}`, 25, 105 + (i * 4))
+  doc.setTextColor(26, 58, 73)
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(10)
+  doc.text('KEY FINDINGS', 20, 125)
+  
+  doc.setTextColor(75, 85, 99)
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(8)
+  keyFindings.slice(0, 5).forEach((finding, i) => {
+    doc.text(`• ${finding}`, 25, 135 + (i * 4))
   })
 
   // Risk Matrix
@@ -260,8 +306,8 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
   doc.setDrawColor(26, 58, 73)
   doc.line(20, 22, 190, 22)
 
-  // Surveillance logs table
-  const logs = data.surveillance_logs.slice(0, 10) // Limit to 10 entries for layout
+  // Surveillance logs table - use enhanced logs with filler content
+  const logs = surveillanceLogs.slice(0, 12) // Show up to 12 entries for rich content
   const tableData = logs.map((log, i) => [
     log.timestamp.split('T')[0] + ' ' + log.timestamp.split('T')[1].split('.')[0],
     log.location,
@@ -319,7 +365,7 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
   doc.text('Physical Evidence:', 20, finalY + 22)
   doc.setFont('helvetica', 'normal')
   
-  data.evidence_summary.physical_evidence.forEach((evidence, i) => {
+  structured.evidence_summary.physical_evidence.forEach((evidence, i) => {
     doc.text(`• ${evidence.type}: ${evidence.description}`, 25, finalY + 28 + (i * 4))
   })
 
@@ -328,7 +374,7 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
   doc.text('Digital Evidence:', 20, finalY + 50)
   doc.setFont('helvetica', 'normal')
   
-  data.evidence_summary.digital_evidence.forEach((evidence, i) => {
+  structured.evidence_summary.digital_evidence.forEach((evidence, i) => {
     doc.text(`• ${evidence.source}: ${evidence.content}`, 25, finalY + 56 + (i * 4))
   })
 
@@ -357,19 +403,22 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(9)
   
-  // Behavioral analysis paragraphs
-  const profile = data.analyst_assessment.behavioral_profile
-  doc.splitTextToSize(profile, 175, { fontSize: 9 })
+  // Behavioral analysis paragraphs from narrative
+  const profile = narrative.behavioral_assessment
   const splitProfile = doc.splitTextToSize(profile, 175, { fontSize: 9 })
   doc.text(splitProfile, 20, 50)
 
+  // Analyst Notes
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(10)
-  doc.text('Communication Patterns', 20, 120)
+  doc.text('Analyst Notes', 20, 120)
   
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(9)
-  doc.text(data.analyst_assessment.communication_patterns, 20, 130)
+  narrative.analyst_notes.forEach((note, i) => {
+    const noteLines = doc.splitTextToSize(note, 175, { fontSize: 9 })
+    doc.text(noteLines, 20, 130 + (i * 20))
+  })
 
   // Recommendations Section
   doc.setTextColor(26, 58, 73)
@@ -383,7 +432,7 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(9)
   
-  data.recommendations.forEach((recommendation, i) => {
+  structured.recommendations.forEach((recommendation, i) => {
     doc.text(`▶ ${recommendation}`, 25, 165 + (i * 5))
   })
 
@@ -397,8 +446,12 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
   
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(8)
-  doc.text(data.case_status.supervisor, 90, 225)
+  doc.text(structured.case_status.supervisor, 90, 225)
   doc.text('Senior Analyst, Intelligence Division', 75, 230)
+
+  // Generate QR code data
+  const qrData = generateQRData('session-' + Date.now(), 'fbi-file')
+  const documentId = generateDocumentId('fbi-file', structured.case_number)
 
   // QR Code placeholder
   doc.setFillColor(0, 0, 0)
@@ -413,10 +466,10 @@ export default function FBITemplate({ data, sanitizedInputs }: FBIProps) {
   doc.setFontSize(7)
   doc.text('Internet Streets Entertainment – Not a Real Document', 105, 285, { align: 'center' })
 
-  // Microtext
+  // Enhanced microtext
   doc.setFontSize(6)
-  doc.text(`Document ID: ${data.case_number} • Generated by Internet Streets`, 20, 290)
-  doc.text(new Date().toISOString().split('T')[0], 200, 290, { align: 'right' })
+  doc.text(`Document ID: ${documentId} • Generated by Internet Streets`, 20, 290)
+  doc.text(`Variant: ${variantConfig.variant.toUpperCase()} • ${new Date().toISOString().split('T')[0]}`, 200, 290, { align: 'right' })
 
   return doc
 }

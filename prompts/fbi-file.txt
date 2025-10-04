@@ -1,7 +1,94 @@
-You MUST ONLY respond with one valid JSON object. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
 
-If unsure, output empty arrays/strings, but do not add text outside JSON.
+{
+  "structured": {
+    "document_title": "FBI Intelligence Dossier (Fictional)",
+    "document_classification": "CONFIDENTIAL",
+    "case_number": "<FB-case-alphanum-8-chars>",
+    "dossier_id": "<DOS-case-alphanum-6-chars>",
+    "subject": {
+      "name": "{{fullName}}",
+      "dob": "{{dateOfBirth}}",
+      "city": "{{city}}",
+      "occupation": "{{occupation}}",
+      "aliases": ["<realistic alias>", "<another alias>"],
+      "nationality": "<country>",
+      "address": "<realistic address>",
+      "known_associates": ["<person name>"]
+    },
+    "case_status": {
+      "investigation_status": "<active|pending|closed>",
+      "priority_level": "<low|medium|high>",
+      "jurisdiction": "<field_office_assignment>",
+      "case_officer": "<agent name>",
+      "supervisor": "<supervisory agent name>",
+      "opened_date": "<ISO date>"
+    },
+    "threat_assessment": {
+      "overall_threat_level": "<low|medium|high|critical>",
+      "terrorism_risk": "<low|moderate|high>",
+      "criminal_activity_indicators": ["<specific indicator>", "<another indicator>"],
+      "weapons_monitoring": "<status>",
+      "financial_monitoring": "<status>"
+    },
+    "surveillance_logs": [
+      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
+      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
+      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
+      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
+      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
+      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
+      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
+      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"}
+    ],
+    "evidence_summary": {
+      "physical_evidence": [
+        {"type": "<evidence type>", "description": "<details>", "discovery_date": "<ISO date>"},
+        {"type": "<evidence type>", "description": "<details>", "discovery_date": "<ISO date>"},
+        {"type": "<evidence type>", "description": "<details>", "discovery_date": "<ISO date>"}
+      ],
+      "digital_evidence": [
+        {"source": "<device/platform>", "content": "<brief description>", "date_recovered": "<ISO date>"},
+        {"source": "<device/platform>", "content": "<brief description>", "date_recovered": "<ISO date>"},
+        {"source": "<device/platform>", "content": "<brief description>", "date_recovered": "<ISO date>"}
+      ]
+    },
+    "key_findings": [
+      "<specific finding with operational significance>",
+      "<intelligence assessment conclusion>",
+      "<threat indicator or pattern>",
+      "<recommended course of action>",
+      "<resource requirement or constraint>"
+    ],
+    "recommendations": [
+      "<specific operational recommendation with justification>",
+      "<resource allocation recommendation>",
+      "<surveillance enhancement with operational parameters>"
+    ],
+    "next_actions": [
+      "<immediate action item with assigned responsibility>",
+      "<surveillance enhancement with operational parameters>",
+      "<coordination requirement with partner agencies>"
+    ],
+    "legal_status": {
+      "outstanding_warrants": ["<warrant_details>"],
+      "prosecution_recommendation": "<federal|state|local>",
+      "charges_under_consideration": ["<criminal_charges>"]
+    },
+    "issued_at": "<ISO timestamp>"
+  },
+  "narrative": {
+    "executive_summary": "<2-3 paragraph executive summary using formal intelligence language, include FBI acronyms like FISA, SIGINT, HUMINT. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on operational significance and threat assessment.>",
+    "analyst_notes": [
+      "<First paragraph of detailed analyst assessment using formal intelligence language, include specific operational details and acronyms.>",
+      "<Second paragraph focusing on behavioral patterns and communication analysis, use technical surveillance terminology.>",
+      "<Third paragraph with threat assessment and risk evaluation, include intelligence community terminology.>"
+    ],
+    "behavioral_assessment": "<Comprehensive behavioral profile using formal intelligence analysis language, include psychological assessment terminology and operational security observations.>",
+    "threat_analysis": "<Detailed threat analysis using intelligence community language, include risk matrices and threat indicators with formal assessment terminology.>"
+  }
+}
 
-{"document_title": "FBI Intelligence Dossier (Fictional)", "document_classification": "CONFIDENTIAL", "case_number": "<FB-case-alphanum-8-chars>", "dossier_id": "<DOS-case-alphanum-6-chars>", "subject": {"name": "{{fullName}}", "dob": "{{dateOfBirth}}", "city": "{{city}}", "occupation": "{{occupation}}", "aliases": ["<realistic alias>", "<another alias>"], "nationality": "<country>", "address": "<realistic address>", "known_associates": ["<person name>"]}, "case_status": {"investigation_status": "<active|pending|closed>", "priority_level": "<low|medium|high>", "jurisdiction": "<field_office_assignment>", "case_officer": "<agent name>", "supervisor": "<supervisory agent name>", "opened_date": "<ISO date>"}, "threat_assessment": {"overall_threat_level": "<green|yellow|orange|red>", "terrorism_risk": "<low|moderate|high>", "criminal_activity_indicators": ["<specific indicator>", "<another indicator>"], "weapons_monitoring": "<status>", "financial_monitoring": "<status>"}, "surveillance_logs": [{"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"}, {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"}], "evidence_summary": {"physical_evidence": [{"type": "<evidence type>", "description": "<details>", "discovery_date": "<ISO date>"}], "digital_evidence": [{"source": "<device/platform>", "content": "<brief description>", "date_recovered": "<ISO date>"}]}, "analyst_assessment": {"behavioral_profile": "<detailed behavioral analysis>", "motivational_factors": ["<factors driving subject behavior>"], "communication_patterns": "<analysis of communication style>"}, "recommendations": ["<specific operational recommendation with justification>", "<resource allocation recommendation>"], "next_actions": ["<immediate action item with assigned responsibility>", "<surveillance enhancement with operational parameters>"], "legal_status": {"outstanding_warrants": ["<warrant_details>"], "prosecution_recommendation": "<federal|state|local>", "charges_under_consideration": ["<criminal_charges>"]}, "issued_at": "<ISO timestamp>", "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"}
+Generate 8+ surveillance logs, 5+ key findings, 3+ analyst note paragraphs. Use formal FBI/intelligence language with acronyms (FBI, NSA, CIA, DHS, ATF, FISA, SIGINT, HUMINT). Vary narrative sentence length and include domain-specific terminology.
 
-Temperature 0.3. Generate ONE VALID JSON OBJECT only.
+Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.

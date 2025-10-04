@@ -95,45 +95,119 @@ function generateOrganizationText(options: BrandOptions): string {
 }
 
 /**
- * Generate circular seal SVG
+ * Generate circular seal SVG with embossed effect and inner glyph
  */
 function generateCircularSeal(options: BrandOptions, colors: any): string {
   const { name, type, sanitized } = options
   const organizationText = generateOrganizationText(options)
   const initials = generateInitials(name)
   
+  // Generate inner glyph based on organization type
+  const innerGlyph = generateInnerGlyph(type)
+  
   return `
     <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <!-- Outer ring -->
-      <circle cx="60" cy="60" r="55" fill="none" stroke="${colors.primary}" stroke-width="3"/>
-      <circle cx="60" cy="60" r="48" fill="${colors.primary}" opacity="0.05"/>
+      <defs>
+        <!-- Embossed gradient effect -->
+        <radialGradient id="emboss" cx="0.3" cy="0.3" r="0.8">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.3)"/>
+          <stop offset="50%" stop-color="rgba(255,255,255,0.1)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.1)"/>
+        </radialGradient>
+        
+        <!-- Drop shadow filter -->
+        <filter id="dropshadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.3)"/>
+        </filter>
+        
+        <!-- Text path for organization name -->
+        <path id="textPath" d="M 20 60 A 40 40 0 1 1 100 60" />
+      </defs>
+      
+      <!-- Outer ring with embossed effect -->
+      <circle cx="60" cy="60" r="55" fill="none" stroke="${colors.primary}" stroke-width="4" filter="url(#dropshadow)"/>
+      <circle cx="60" cy="60" r="48" fill="${colors.primary}" opacity="0.08"/>
       
       <!-- Inner circle -->
       <circle cx="60" cy="60" r="35" fill="none" stroke="${colors.secondary}" stroke-width="2"/>
       
-      <!-- Central initials/emblem -->
-      <circle cx="60" cy="60" r="25" fill="${colors.accent}" opacity="0.1"/>
-      <text x="60" y="68" font-family="Arial, sans-serif" font-size="16" font-weight="bold" 
+      <!-- Central emblem area with embossed background -->
+      <circle cx="60" cy="60" r="25" fill="url(#emboss)" stroke="${colors.accent}" stroke-width="1"/>
+      
+      <!-- Central initials -->
+      <text x="60" y="65" font-family="Georgia, serif" font-size="14" font-weight="bold" 
             text-anchor="middle" fill="${colors.primary}">${initials}</text>
       
+      <!-- Inner glyph (shield, star, scroll, etc.) -->
+      ${innerGlyph}
+      
       <!-- Organization text around circumference -->
-      <defs>
-        <path id="textPath" d="M 20 60 A 40 40 0 1 1 100 60" />
-      </defs>
-      <text font-family="Arial, sans-serif" font-size="10" font-weight="bold" 
-            text-anchor="middle" fill="${colors.secondary}">
+      <text font-family="Georgia, serif" font-size="9" font-weight="bold" 
+            text-anchor="middle" fill="${colors.secondary}" letter-spacing="1px">
         <textPath href="#textPath" startOffset="50%">${organizationText.toUpperCase()}</textPath>
       </text>
       
-      <!-- Small stars or decorative elements -->
-      <g fill="${colors.accent}" opacity="0.8">
-        <circle cx="40" cy="45" r="1"/>
-        <circle cx="80" cy="45" r="1"/>
-        <circle cx="40" cy="75" r="1"/>
-        <circle cx="80" cy="75" r="1"/>
+      <!-- Decorative elements -->
+      <g fill="${colors.accent}" opacity="0.6">
+        <circle cx="35" cy="40" r="1.5"/>
+        <circle cx="85" cy="40" r="1.5"/>
+        <circle cx="35" cy="80" r="1.5"/>
+        <circle cx="85" cy="80" r="1.5"/>
+        <polygon points="60,25 65,35 55,35" fill="${colors.accent}" opacity="0.4"/>
+        <polygon points="60,95 65,85 55,85" fill="${colors.accent}" opacity="0.4"/>
       </g>
     </svg>
   `;
+}
+
+/**
+ * Generate inner glyph based on organization type
+ */
+function generateInnerGlyph(type: BrandOptions['type']): string {
+  switch (type) {
+    case 'government':
+      return `
+        <g fill="none" stroke="#b80f2a" stroke-width="1.5">
+          <path d="M 50 50 L 60 45 L 70 50 L 70 60 L 60 70 L 50 60 Z"/>
+          <circle cx="60" cy="57" r="3"/>
+        </g>
+      `
+    case 'military':
+      return `
+        <g fill="none" stroke="#b80f2a" stroke-width="1.5">
+          <path d="M 50 50 L 60 45 L 70 50 L 70 60 L 60 70 L 50 60 Z"/>
+          <path d="M 55 55 L 65 55 M 60 50 L 60 60"/>
+        </g>
+      `
+    case 'financial':
+      return `
+        <g fill="none" stroke="#123f2c" stroke-width="1.5">
+          <rect x="50" y="50" width="20" height="20" rx="2"/>
+          <path d="M 55 55 L 65 55 M 55 60 L 65 60 M 55 65 L 65 65"/>
+        </g>
+      `
+    case 'educational':
+      return `
+        <g fill="none" stroke="#703030" stroke-width="1.5">
+          <path d="M 50 50 L 60 45 L 70 50 L 70 60 L 60 70 L 50 60 Z"/>
+          <path d="M 55 55 L 65 55 M 55 60 L 65 60"/>
+        </g>
+      `
+    case 'medical':
+      return `
+        <g fill="none" stroke="#b80f2a" stroke-width="1.5">
+          <circle cx="60" cy="55" r="8"/>
+          <path d="M 60 50 L 60 60 M 55 55 L 65 55"/>
+        </g>
+      `
+    default:
+      return `
+        <g fill="none" stroke="#666" stroke-width="1.5">
+          <rect x="50" y="50" width="20" height="20" rx="2"/>
+          <path d="M 55 55 L 65 55 M 55 60 L 65 60"/>
+        </g>
+      `
+  }
 }
 
 /**
