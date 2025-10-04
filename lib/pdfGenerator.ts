@@ -1,229 +1,226 @@
-import puppeteer from 'puppeteer'
+/**
+ * Simple PDF generator using jsPDF (no Chrome/Puppeteer required)
+ * Works perfectly in serverless environments like Netlify Functions
+ */
 
-export interface PDFOptions {
-  format?: 'A4' | 'Letter'
-  margin?: {
-    top?: string
-    right?: string
-    bottom?: string
-    left?: string
+import jsPDF from 'jspdf'
+
+export function generatePDFfromJSON(slug: string, json: any): Buffer {
+  const doc = new jsPDF()
+  
+  // Set font
+  doc.setFont('helvetica')
+  
+  // Add watermark
+  doc.setFontSize(48)
+  doc.setTextColor(200, 200, 200)
+  // Watermark text (no rotation as jsPDF doesn't support it easily)
+  doc.text('INTERNET STREETS', 15, 50)
+  doc.text('ENTERTAINMENT', 25, 70)
+  
+  // Reset text settings for content
+  doc.setFontSize(12)
+  doc.setTextColor(0, 0, 0)
+  
+  let yPos = 30
+  
+  // Add document title
+  if (json.document_title) {
+    doc.setFontSize(16)
+    doc.setFont('helvetica', 'bold')
+    doc.text(json.document_title, 20, yPos)
+    yPos += 15
   }
-  printBackground?: boolean
+  
+  // Add subject details
+  if (json.subject) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Subject Information:', 20, yPos)
+    yPos += 10
+    
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(12)
+    if (json.subject.name) {
+      doc.text(`Name: ${json.subject.name}`, 30, yPos)
+      yPos += 8
+    }
+    if (json.subject.dob) {
+      doc.text(`Date of Birth: ${json.subject.dob}`, 30, yPos)
+      yPos += 8
+    }
+    if (json.subject.city) {
+      doc.text(`City: ${json.subject.city}`, 30, yPos)
+      yPos += 8
+    }
+    yPos += 10
+  }
+  
+  // Add case-specific content based on service type
+  switch (slug) {
+    case 'fbi-file':
+      addFBIDetails(doc, json, yPos)
+      break
+    case 'payslip':
+      addPayslipDetails(doc, json, yPos)
+      break
+    case 'rejection-letter':
+      addRejectionLetter(doc, json, yPos)
+      break
+    default:
+      addGenericDetails(doc, json, yPos)
+  }
+  
+  // Add disclaimer at bottom
+  doc.setFontSize(8)
+  doc.setTextColor(100, 100, 100)
+  doc.text('FOR ENTERTAINMENT ONLY. NOT A REAL DOCUMENT.', 20, doc.internal.pageSize.height - 20, { align: 'center' })
+  
+  // Convert to Buffer
+  return Buffer.from(doc.output('arraybuffer'))
 }
 
-export async function generatePDF(htmlContent: string, options: PDFOptions = {}): Promise<Buffer> {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+function addFBIDetails(doc: jsPDF, json: any, startY: number) {
+  let yPos = startY
+  
+  if (json.case_number) {
+    doc.setFontSize(12)
+    doc.text(`Case Number: ${json.case_number}`, 20, yPos)
+    yPos += 15
+  }
+  
+  if (json.threat_level) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text(`Threat Level: ${json.threat_level}`, 20, yPos)
+    yPos += 15
+  }
+  
+  if (json.summary) {
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'normal')
+    doc.text('Summary:', 20, yPos)
+    yPos += 8
+    const summaryLines = doc.splitTextToSize(json.summary, 170)
+    doc.text(summaryLines as string[], 30, yPos)
+    yPos += summaryLines.length * 6
+  }
+  
+  if (json.allegations && Array.isArray(json.allegations)) {
+    doc.text('Allegations:', 20, yPos)
+    yPos += 8
+    json.allegations.forEach((allegation: string, index: number) => {
+      doc.text(`• ${allegation}`, 30, yPos)
+      yPos += 6
+    })
+  }
+}
+
+function addPayslipDetails(doc: jsPDF, json: any, startY: number) {
+  let yPos = startY
+  
+  if (json.employee && json.employee.name) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text(`Employee: ${json.employee.name}`, 20, yPos)
+    yPos += 15
+  }
+  
+  if (json.employer && json.employer.company) {
+    doc.text(`Company: ${json.employer.company}`, 20, yPos)
+    yPos += 15
+  }
+  
+  if (json.pay_period && json.pay_period.pay_date) {
+    doc.text(`Pay Date: ${json.pay_period.pay_date}`, 20, yPos)
+    yPos += 20
+  }
+  
+  if (json.amounts) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Payment Details:', 20, yPos)
+    yPos += 15
+    
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(12)
+    
+    if (json.amounts.gross_pay_gbp) {
+      doc.text(`Gross Pay: £${json.amounts.gross_pay_gbp}`, 30, yPos)
+      yPos += 10
+    }
+    if (json.amounts.tax_amount_gbp) {
+      doc.text(`Tax: £${json.amounts.tax_amount_gbp}`, 30, yPos)
+      yPos += 10
+    }
+    if (json.amounts.ni_amount_gbp) {
+      doc.text(`National Insurance: £${json.amounts.ni_amount_gbp}`, 30, yPos)
+      yPos += 10
+    }
+    if (json.amounts.net_pay_gbp) {
+      doc.setFont('helvetica', 'bold')
+      doc.text(`Net Pay: £${json.amounts.net_pay_gbp}`, 30, yPos)
+    }
+  }
+}
+
+function addRejectionLetter(doc: jsPDF, json: any, startY: number) {
+  let yPos = startY
+  
+  if (json.date) {
+    doc.setFontSize(12)
+    doc.text(`Date: ${new Date(json.date).toLocaleDateString()}`, 20, yPos)
+    yPos += 20
+  }
+  
+  if (json.salutation) {
+    doc.text(json.salutation, 20, yPos)
+    yPos += 15
+  }
+  
+  if (json.opening) {
+    const openingLines = doc.splitTextToSize(json.opening, 170)
+    doc.text(openingLines as string[], 20, yPos)
+    yPos += openingLines.length * 6 + 10
+  }
+  
+  if (json.reasoning && Array.isArray(json.reasoning)) {
+    doc.text('Key considerations included:', 20, yPos)
+    yPos += 10
+    json.reasoning.forEach((reason: string) => {
+      doc.text(`• ${reason}`, 30, yPos)
+      yPos += 6
+    })
+    yPos += 10
+  }
+  
+  if (json.closing) {
+    const closingLines = doc.splitTextToSize(json.closing, 170)
+    doc.text(closingLines as string[], 20, yPos)
+    yPos += closingLines.length * 6 + 15
+  }
+  
+  if (json.signature_block) {
+    doc.setFont('helvetica', 'bold')
+    doc.text(json.signature_block.name, 20, yPos)
+    yPos += 8
+    doc.setFont('helvetica', 'normal')
+    doc.text(json.signature_block.title, 20, yPos)
+    yPos += 8
+    doc.text(json.signature_block.company, 20, yPos)
+  }
+}
+
+function addGenericDetails(doc: jsPDF, json: any, startY: number) {
+  let yPos = startY
+  
+  // Add any other fields that are strings
+  Object.entries(json).forEach(([key, value]) => {
+    if (typeof value === 'string' && key !== 'document_title' && key !== 'disclaimer') {
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'normal')
+      doc.text(`${key}: ${value}`, 20, yPos)
+      yPos += 10
+    }
   })
-
-  try {
-    const page = await browser.newPage()
-    
-    await page.setContent(htmlContent, {
-      waitUntil: 'networkidle0'
-    })
-
-    const pdfBuffer = await page.pdf({
-      format: options.format || 'A4',
-      margin: options.margin || {
-        top: '20mm',
-        right: '20mm',
-        bottom: '20mm',
-        left: '20mm'
-      },
-      printBackground: options.printBackground || true
-    })
-
-    return pdfBuffer
-  } finally {
-    await browser.close()
-  }
-}
-
-export function createDocumentHTML(jsonData: any, serviceName: string): string {
-  const disclaimer = jsonData.disclaimer || "FOR ENTERTAINMENT PURPOSES ONLY - NOT A REAL DOCUMENT"
-  
-  return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${serviceName}</title>
-    <style>
-        body {
-            font-family: 'Courier New', monospace;
-            line-height: 1.4;
-            margin: 0;
-            padding: 20px;
-            background-color: #ffffff;
-            color: #000000;
-            font-size: 11px;
-        }
-        
-        .document-header {
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .document-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .document-content {
-            margin-bottom: 20px;
-        }
-        
-        .section {
-            margin-bottom: 15px;
-        }
-        
-        .section-title {
-            font-weight: bold;
-            text-decoration: underline;
-            margin-bottom: 5px;
-        }
-        
-        .field {
-            margin-bottom: 3px;
-        }
-        
-        .field-label {
-            font-weight: bold;
-        }
-        
-        .list-item {
-            margin-bottom: 2px;
-            margin-left: 10px;
-        }
-        
-        .document-footer {
-            border-top: 1px solid #ccc;
-            margin-top: 30px;
-            padding-top: 10px;
-            font-size: 9px;
-            text-align: center;
-            color: #666;
-        }
-        
-        .classification {
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            padding: 5px;
-            margin: 10px 0;
-            font-size: 9px;
-            text-align: center;
-        }
-        
-        .signature-line {
-            margin-top: 20px;
-            border-bottom: 1px solid #000;
-            width: 200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .two-column {
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .column {
-            width: 48%;
-        }
-        
-        @media print {
-            body {
-                margin: 0;
-                padding: 15px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="document-header">
-        <div class="document-title">${jsonData.document_title || serviceName}</div>
-    </div>
-    
-    <div class="document-content">
-        ${renderJSONToHTML(jsonData)}
-    </div>
-    
-    <div class="document-footer">
-        <div class="classification">
-            ⚠️ ${disclaimer}
-        </div>
-        <p>Generated by Internet Streets - The AI Black Market</p>
-        <p>This document is fictional and for novelty use only.</p>
-    </div>
-</body>
-</html>
-  `
-}
-
-function renderJSONToHTML(data: any): string {
-  let html = ''
-  
-  // Skip document_title and disclaimer as they're handled separately
-  const skipFields = ['document_title', 'disclaimer']
-  
-  for (const [key, value] of Object.entries(data)) {
-    if (skipFields.includes(key)) continue
-    
-    html += `<div class="section">`
-    html += `<div class="section-title">${formatFieldName(key)}</div>`
-    
-    if (typeof value === 'object' && value !== null) {
-      if (Array.isArray(value)) {
-        html += renderArray(value)
-      } else {
-        html += renderObject(value)
-      }
-    } else {
-      html += `<div class="field">${value}</div>`
-    }
-    
-    html += `</div>`
-  }
-  
-  return html
-}
-
-function renderObject(obj: any): string {
-  let html = ''
-  for (const [key, value] of Object.entries(obj)) {
-    html += `<div class="field">`
-    html += `<span class="field-label">${formatFieldName(key)}:</span> ${value}`
-    html += `</div>`
-  }
-  return html
-}
-
-function renderArray(arr: any[]): string {
-  let html = ''
-  for (const item of arr) {
-    if (typeof item === 'object' && item !== null) {
-      html += `<div class="list-item">`
-      for (const [key, value] of Object.entries(item)) {
-        html += `<span class="field-label">${formatFieldName(key)}:</span> ${value}<br>`
-      }
-      html += `</div>`
-    } else {
-      html += `<div class="list-item">• ${item}</div>`
-    }
-  }
-  return html
-}
-
-function formatFieldName(fieldName: string): string {
-  return fieldName
-    .replace(/_/g, ' ')
-    .replace(/([A-Z])/g, ' $1')
-    .replace(/^./, str => str.toUpperCase())
-    .trim()
 }
