@@ -1,58 +1,62 @@
-NATIONAL SECURITY AGENCY
-SURVEILLANCE LOG
+You are producing a fictional NSA surveillance activity log for entertainment only.
+Return STRICT JSON, no commentary.
 
-Target: {{fullName}}
-Email: {{email}}
-Phone: {{phoneNumber}}
-Location: {{city}}
+Constraints:
+- Generate detailed surveillance content that looks like intelligence monitoring
+- Each string ≤ 140 chars for readability
+- Activity log: 5-8 entries with realistic surveillance activities
+- Create credible technical details and communication intercepts
 
-CLASSIFICATION: TOP SECRET
-LOG ID: NSA-{{randomLogId}}
-DATE: {{currentDate}}
+Placeholders: {{name}}, {{city}}
 
-TARGET INFORMATION
-==================
-Full Name: {{fullName}}
-Email Address: {{email}}
-Phone Number: {{phoneNumber}}
-Current Location: {{city}}
-IP Address: {{ipAddress}}
+JSON schema:
+{
+  "document_title": "NSA Surveillance Activity Log (Fictional)",
+  "subject": { 
+    "name": "{{name}}", 
+    "location": "{{city}}",
+    "aliases": ["<realistic alias>", "<another alias>"],
+    "nationality": "<country>",
+    "device_count": <2-5>,
+    "ip_addresses": ["<realistic IP>", "<another IP>"]
+  },
+  "logDate": "<ISO date>",
+  "logId": "<NSA-LOG-8-char-alnum>",
+  "classification": "<CONFIDENTIAL|SECRET|TOP-SECEST>",
+  "entries": [
+    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" },
+    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" },
+    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" },
+    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" },
+    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" },
+    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" },
+    { "time": "<HH:MM>", "channel": "<email|call|sms|social|browsing|location>", "detail": "<specific surveillance activity>", "severity": "<low|moderate|high>" }
+  ],
+  "communicationAnalysis": {
+    "email_sentiment": "<neutral|concerning|flagged>",
+    "call_patterns": "<normal|irregular|suspicious>",
+    "social_media_activity": "<high|medium|low>",
+    "encrypted_communications": "<percentage>%",
+    "foreign_contacts": <number>
+  },
+  "flags": [
+    "<specific flag like: Frequent VPN usage detected>",
+    "<specific flag like: Communication with foreign nationals>",
+    "<specific flag like: Access to encryption software>",
+    "<specific flag like: Unusual browsing patterns>"
+  ],
+  "technicalDetails": {
+    "devices_tracked": ["<device type>: <identifier>", "<device type>: <identifier>"],
+    "data_collected_gb": "<realistic amount>",
+    "encryption_detected": ["<method>", "<method>"],
+    "location_points": ["<city>, <country>", "<city>, <country>"]
+  },
+  "overall_conern": "<low|moderate|high|critical>",
+  "surveillance_status": "<active|escalated|terminated>",
+  "analyst_summary": "<detailed summary of surveillance findings and behavior patterns>",
+  "nextAction": "<surveillance recommendation>",
+  "issued_at": "<ISO date>",
+  "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"
+}
 
-COMMUNICATION INTERCEPTS
-========================
-Email Monitoring: {{emailMonitoring}}
-Phone Call Logs: {{phoneCallLogs}}
-Text Message Surveillance: {{textMessageSurveillance}}
-Social Media Activity: {{socialMediaActivity}}
-
-DIGITAL FOOTPRINT ANALYSIS
-==========================
-Website Visits: {{websiteVisits}}
-Search History: {{searchHistory}}
-Online Purchases: {{onlinePurchases}}
-App Usage Patterns: {{appUsagePatterns}}
-
-SURVEILLANCE REPORTS
-====================
-Agent Observations: {{agentObservations}}
-Behavioral Analysis: {{behavioralAnalysis}}
-Threat Assessment: {{threatAssessment}}
-Recommended Actions: {{recommendedActions}}
-
-TECHNICAL DETAILS
-=================
-Device Fingerprints: {{deviceFingerprints}}
-Network Analysis: {{networkAnalysis}}
-Encryption Status: {{encryptionStatus}}
-Data Collection Methods: {{dataCollectionMethods}}
-
-FINAL ASSESSMENT
-================
-Threat Level: {{threatLevel}}
-Surveillance Status: {{surveillanceStatus}}
-Next Review: {{nextReview}}
-
-Agent Signature: {{agentSignature}}
-Date: {{currentDate}}
-
-CLASSIFICATION: TOP SECRET
+Temperature: 0.6. Output JSON only.

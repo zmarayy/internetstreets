@@ -56,6 +56,12 @@ export function generatePDFfromJSON(slug: string, json: any): Buffer {
     case 'fbi-file':
       addFBIDetails(doc, json, yPos)
       break
+    case 'nsa-surveillance':
+      addNSADetails(doc, json, yPos)
+      break
+    case 'criminal-record':
+      addCriminalRecordDetails(doc, json, yPos)
+      break
     case 'payslip':
       addPayslipDetails(doc, json, yPos)
       break
@@ -244,6 +250,353 @@ function addWatermark(doc: jsPDF) {
   // This would require more complex jsPDF functionality
   // For now, we'll stick with the footer disclaimer
   // Could be enhanced later with rotated text or images
+}
+
+function addNSADetails(doc: jsPDF, json: any, startY: number) {
+  let yPos = startY
+  
+  // Header Section
+  doc.setFontSize(16)
+  doc.setFont('helvetica', 'bold')
+  doc.text(json.logId || 'NSA-LOG-UNKNOWN', 20, yPos)
+  yPos += 10
+  
+  // Classification Badge
+  if (json.classification) {
+    doc.setFontSize(14)
+    const classify = json.classification
+    const classifyColor = getClassificationColor(classify)
+    doc.setTextColor(classifyColor.r, classifyColor.g, classifyColor.b)
+    doc.text(`CLASSIFICATION: ${classify}`, 20, yPos)
+    doc.setTextColor(0, 0, 0)
+    yPos += 15
+  }
+  
+  // Subject Information
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.text('TARGET INFORMATION', 20, yPos)
+  yPos += 15
+  
+  drawTableHeader(doc, 'FIELD', 'DETAILS', yPos)
+  yPos += 8
+  
+  const subjectData = [
+    ['Name', json.subject?.name || 'REDACTED'],
+    ['Location', json.subject?.location || 'REDACTED'],
+    ['Nationality', json.subject?.nationality || 'REDACTED'],
+    ['Device Count', json.subject?.device_count?.toString() || 'REDACTED'],
+    ['Log Date', json.logDate || 'REDACTED']
+  ]
+  
+  subjectData.forEach(([field, value]) => {
+    drawTableRow(doc, field, value, yPos)
+    yPos += 10
+  })
+  
+  yPos += 10
+  
+  // Activity Log Section
+  if (json.entries && Array.isArray(json.entries)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('SURVEILLANCE ACTIVITY LOG', 20, yPos)
+    yPos += 15
+    
+    // Table headers
+    doc.setFillColor(240, 240, 240)
+    doc.rect(20, yPos - 5, 170, 12, 'F')
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Time', 25, yPos + 2)
+    doc.text('Channel', 55, yPos + 2)
+    doc.text('Activity', 95, yPos + 2)
+    doc.text('Severity', 155, yPos + 2)
+    yPos += 10
+    
+    // Activity entries
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(9)
+    json.entries.forEach((entry: any) => {
+      if (yPos > 250) return
+      doc.text(entry.time || 'REDACTED', 25, yPos + 2)
+      doc.text(entry.channel || 'REDACTED', 55, yPos + 2)
+      doc.text(entry.detail || 'REDACTED', 95, yPos + 2)
+      
+      // Color-code severity
+      const severity = entry.severity || 'low'
+      if (severity === 'high') doc.setTextColor(200, 0, 0)
+      else if (severity === 'moderate') doc.setTextColor(200, 100, 0)
+      else doc.setTextColor(0, 150, 0)
+      doc.text(severity.toUpperCase(), 155, yPos + 2)
+      doc.setTextColor(0, 0, 0) // Reset color
+      
+      yPos += 8
+    })
+    yPos += 15
+  }
+  
+  // Communication Analysis Section
+  if (json.communicationAnalysis) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('COMMUNICATION ANALYSIS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    const analysis = json.communicationAnalysis
+    
+    if (analysis.email_sentiment) {
+      doc.text(`Email Sentiment: ${analysis.email_sentiment.toUpperCase()}`, 25, yPos)
+      yPos += 8
+    }
+    if (analysis.call_patterns) {
+      doc.text(`Call Patterns: ${analysis.call_patterns.toUpperCase()}`, 25, yPos)
+      yPos += 8
+    }
+    if (analysis.social_media_activity) {
+      doc.text(`Social Activity: ${analysis.social_media_activity.toUpperCase()}`, 25, yPos)
+      yPos += 8
+    }
+    if (analysis.encrypted_communications) {
+      doc.text(`Encrypted Communications: ${analysis.encrypted_communications}`, 25, yPos)
+      yPos += 8
+    }
+    yPos += 10
+  }
+  
+  // Technical Details Section
+  if (json.technicalDetails) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('TECHNICAL DETAILS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    
+    if (json.technicalDetails.devices_tracked) {
+      doc.text('Devices Tracked:', 25, yPos)
+      yPos += 8
+      json.technicalDetails.devices_tracked.forEach((device: string) => {
+        doc.text(`• ${device}`, 35, yPos)
+        yPos += 6
+      })
+      yPos += 5
+    }
+    
+    if (json.technicalDetails.data_collected_gb) {
+      doc.text(`Data Collected: ${json.technicalDetails.data_collected_gb} GB`, 25, yPos)
+      yPos += 10
+    }
+  }
+  
+  // Flags Section
+  if (json.flags && Array.isArray(json.flags)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('SURVEILLANCE FLAGS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    json.flags.forEach((flag: string, index: number) => {
+      doc.text(`${index + 1}. ${flag}`, 25, yPos)
+      yPos += 8
+    })
+    yPos += 10
+  }
+  
+  // Summary Section
+  if (json.analystSummary) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('ANALYST SUMMARY', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'normal')
+    const summaryLines = doc.splitTextToSize(json.analystSummary, 170)
+    doc.text(summaryLines as string[], 20, yPos)
+    yPos += summaryLines.length * 6 + 10
+  }
+  
+  // Overall Assessment
+  if (json.overallConcern) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('OVERALL ASSESSMENT', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(14)
+    const concern = json.overallConcern
+    const concernColor = getThreatLevelColor(concern)
+    doc.setTextColor(concernColor.r, concernColor.g, concernColor.b)
+    doc.text(`THREAT LEVEL: ${concern.toUpperCase()}`, 20, yPos)
+    doc.setTextColor(0, 0, 0)
+  }
+}
+
+function getClassificationColor(classification: string) {
+  switch (classification?.toUpperCase()) {
+    case 'TOP-SECRET':
+    case 'TOP-SECEST':
+      return { r: 180, g: 0, b: 0 }
+    case 'SECRET':
+      return { r: 200, g: 100, b: 0 }
+    case 'CONFIDENTIAL':
+      return { r: 200, g: 200, b: 0 }
+    default:
+      return { r: 100, g: 100, b: 100 }
+  }
+}
+
+function addCriminalRecordDetails(doc: jsPDF, json: any, startY: number) {
+  let yPos = startY
+  
+  // Header Section
+  doc.setFontSize(16)
+  doc.setFont('helvetica', 'bold')
+  doc.text(json.record_id || 'CRIM-UNKNOWN', 20, yPos)
+  yPos += 10
+  
+  // Classification Badge
+  if (json.classification) {
+    doc.setFontSize(14)
+    const classify = json.classification
+    const classifyColor = getClassificationColor(classify)
+    doc.setTextColor(classifyColor.r, classifyColor.g, classifyColor.b)
+    doc.text(`CLASSIFICATION: ${classify}`, 20, yPos)
+    doc.setTextColor(0, 0, 0)
+    yPos += 15
+  }
+  
+  // Subject Information
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.text('SUBJECT INFORMATION', 20, yPos)
+  yPos += 15
+  
+  drawTableHeader(doc, 'FIELD', 'DETAILS', yPos)
+  yPos += 8
+  
+  const subjectData = [
+    ['Name', json.subject?.name || 'REDACTED'],
+    ['DOB', json.subject?.dob || 'REDACTED'],
+    ['Nationality', json.subject?.nationality || 'REDACTED'],
+    ['Last Known Address', json.subject?.last_known_address || 'REDACTED']
+  ]
+  
+  subjectData.forEach(([field, value]) => {
+    drawTableRow(doc, field, value, yPos)
+    yPos += 10
+  })
+  
+  yPos += 10
+  
+  // Criminal Offences Section
+  if (json.offences && Array.isArray(json.offences)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('CRIMINAL OFFENCES', 20, yPos)
+    yPos += 15
+    
+    json.offences.forEach((offence: any, index: number) => {
+      if (yPos > 200) return // Start new page if needed
+      
+      // Offence header
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text(`${index + 1}. ${offence.category || 'UNKNOWN OFFENCE'}`, 20, yPos)
+      yPos += 10
+      
+      // Offence details
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(10)
+      
+      const offenceData = [
+        ['Date', offence.date || 'REDACTED'],
+        ['Court', offence.venue || 'REDACTED'],
+        ['Case Number', offence.case_number || 'REDACTED'],
+        ['Charges', offence.charges || 'REDACTED'],
+        ['Status', offence.status || 'REDACTED'],
+        ['Sentencing', offence.sentencing || 'REDACTED']
+      ]
+      
+      offenceData.forEach(([field, value]) => {
+        doc.text(`${field}: ${value}`, 30, yPos)
+        yPos += 6
+      })
+      
+      if (offence.notes) {
+        doc.text(`Notes: ${offence.notes}`, 30, yPos)
+        yPos += 8
+      }
+      
+      yPos += 5
+    })
+    yPos += 10
+  }
+  
+  // Warnings Section
+  if (json.warnings && Array.isArray(json.warnings)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('WARNINGS & CAUTIONS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    json.warnings.forEach((warning: string, index: number) => {
+      doc.text(`${index + 1}. ${warning}`, 25, yPos)
+      yPos += 8
+    })
+    yPos += 10
+  }
+  
+  // Risk Assessment Section
+  if (json.risk_assessment) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('RISK ASSESSMENT', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    const risk = json.risk_assessment
+    
+    if (risk.violence_risk) {
+      doc.text(`Violence Risk: ${risk.violence_risk.toUpperCase()}`, 25, yPos)
+      yPos += 8
+    }
+    if (risk.reoffending_probability) {
+      doc.text(`Reoffending Probability: ${risk.reoffending_probability.toUpperCase()}`, 25, yPos)
+      yPos += 8
+    }
+    if (risk.public_safety_concern) {
+      doc.text(`Public Safety Concern: ${risk.public_safety_concern.toUpperCase()}`, 25, yPos)
+      yPos += 8
+    }
+    if (risk.monitoring_level) {
+      doc.text(`Monitoring Level: ${risk.monitoring_level.toUpperCase()}`, 25, yPos)
+      yPos += 8
+    }
+    yPos += 10
+  }
+  
+  // Summary Section
+  if (json.summary) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('OVERALL SUMMARY', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'normal')
+    const summaryLines = doc.splitTextToSize(json.summary, 170)
+    doc.text(summaryLines as string[], 20, yPos)
+  }
 }
 
 function addPayslipDetails(doc: jsPDF, json: any, startY: number) {
