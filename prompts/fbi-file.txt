@@ -2,27 +2,51 @@ You are producing a fictional, FBI-style dossier for entertainment only.
 Return STRICT JSON, no commentary.
 
 Constraints:
-- Keep it concise, authoritative, and readable in a 1–2 page PDF.
-- Each string ≤ 140 chars. Arrays ≤ 5 items.
+- Generate detailed, realistic intelligence content that fills 1-2 pages
+- Each string ≤ 140 chars to maintain readability
+- Surveillance logs: 3-5 entries with realistic activities
+- Create credible allegations and risk factors
 
-Placeholders: {{fullName}}, {{dateOfBirth}}, {{city}}
+Placeholders: {{name}}, {{dob}}, {{city}}
 
 JSON schema:
 {
   "document_title": "FBI Intelligence Dossier (Fictional)",
-  "subject": { "name": "{{fullName}}", "dob": "{{dateOfBirth}}", "city": "{{city}}" },
-  "case_number": "<random 10-char alnum>",
-  "threat_level": "<LOW|MEDIUM|HIGH|CRITICAL>",
-  "summary": "<1–2 lines>",
-  "allegations": ["<short item>", "..."],
-  "surveillance_notes": [
-    { "timestamp": "<ISO>", "note": "<short note>" },
-    { "timestamp": "<ISO>", "note": "<short note>" }
+  "subject": { 
+    "name": "{{name}}", 
+    "dob": "{{dob}}", 
+    "city": "{{city}}",
+    "aliases": ["<realistic alias>", "<another alias>"],
+    "nationality": "<country>",
+    "employment": "<occupation>"
+  },
+  "caseNumber": "<random 8-char alnum like A1B2C3D4>",
+  "threatLevel": "<LOW|MEDIUM|HIGH|CRITICAL>",
+  "summary": "<detailed intelligence assessment, 2-3 sentences describing subject's activities and patterns>",
+  "allegations": [
+    "<specific allegation like: Frequent communication with foreign contacts>",
+    "<specific allegation like: Financial transactions with flagged entities>",
+    "<specific allegation like: Suspicious travel patterns to sensitive regions>",
+    "<specific allegation like: Encrypted communication devices>",
+    "<specific allegation like: Access to restricted technology>"
   ],
-  "risk_factors": ["<short item>", "..."],
-  "recommendation": "<short line>",
+  "surveillanceLogs": [
+    { "timestamp": "<recent date/time>", "activity": "<detailed surveillance activity>", "severity": "<Low|Medium|High>" },
+    { "timestamp": "<recent date/time>", "activity": "<detailed surveillance activity>", "severity": "<Low|Medium|High>" },
+    { "timestamp": "<recent date/time>", "activity": "<detailed surveillance activity>", "severity": "<Low|Medium|High>" },
+    { "timestamp": "<recent date/time>", "activity": "<detailed surveillance activity>", "severity": "<Low|Medium|High>" },
+    { "timestamp": "<recent date/time>", "activity": "<detailed surveillance activity>", "severity": "<Low|Medium|High>" }
+  ],
+  "riskFactors": [
+    "<specific risk like: High financial activity in cryptocurrency>",
+    "<specific risk like: International travel patterns>",
+    "<specific risk like: Technical sophistication>",
+    "<specific risk like: Anti-surveillance measures>"
+  ],
+  "analystNotes": "<detailed analyst commentary about subject's behavior patterns, communication methods, and overall assessment based on surveillance data.",
+  "recommendation": "<specific operational recommendation>",
   "issued_at": "<ISO date>",
-  "disclaimer": "FOR ENTERTAINMENT ONLY. NOT A REAL DOCUMENT."
+  "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"
 }
 
-Temperature: 0.6. Output JSON only.
+Temperature: 0.7. Output JSON only.

@@ -1,32 +1,58 @@
-Create a fictional UK-style payslip. Keep maths simple and explicit.
-STRICT JSON. Concise. Do not claim to be HMRC.
+Create a detailed fictional UK-style payslip for entertainment purposes.
+STRICT JSON. Realistic but not claiming to be HMRC.
 
-Placeholders: {{fullName}}, {{companyName}}, {{jobTitle}}, {{salary}}, {{payPeriod}}
+Placeholders: {{employeeName}}, {{company}}, {{jobTitle}}, {{payDate}}, {{gross}}
 
 Rules:
-- Use flat tax_rate=0.20 and ni_rate=0.12.
-- Calculate monthly salary from annual: monthly = {{salary}} / 12
-- tax_amount = round(monthly * 0.20, 2)
-- ni_amount  = round(monthly * 0.12, 2)
-- net_pay    = round(monthly - tax_amount - ni_amount, 2)
+- Use standard UK rates: tax_rate=0.20 and ni_rate=0.12
+- Calculate exact amounts: tax_amount = round({{gross}} * 0.20, 2)
+- Calculate exactly: ni_amount = round({{gross}} * 0.12, 2)  
+- Calculate exactly: net_pay = round({{gross}} - tax_amount - ni_amount, 2)
+- Include realistic employee references and pay period details
 
 JSON schema:
 {
-  "document_title": "Payslip (Fictional)",
-  "employee": { "name": "{{fullName}}", "job_title": "{{jobTitle}}" },
-  "employer": { "company": "{{companyName}}" },
-  "pay_period": { "period": "{{payPeriod}}" },
+  "document_title": "Statement of Earnings (Fictional)",
+  "employee": { 
+    "name": "{{employeeName}}", 
+    "job_title": "{{jobTitle}}",
+    "department": "<realistic department>",
+    "employee_id": "<5-char alnum like EMP01>"
+  },
+  "employer": { 
+    "company": "{{company}}",
+    "address": "<realistic UK business address>",
+    "registration": "<company reg number>"
+  },
+  "pay_period": { 
+    "pay_date": "{{payDate}}",
+    "period_start": "<date 1 month before pay_date>",
+    "period_end": "<date day before pay_date>"
+  },
   "amounts": {
-    "annual_salary_gbp": {{salary}},
-    "monthly_gross_gbp": "<calc>",
+    "gross_pay_gbp": "{{gross}}",
+    "basic_pay_gbp": "<same as gross or slightly less>",
+    "overtime_gbp": "<optional small amount 0-200>",
+    "bonus_gbp": "<optional small amount 0-500>",
+    "pension_deduction_gbp": "<small amount usually 50-200>",
     "tax_rate": 0.20,
-    "tax_amount_gbp": "<calc>",
+    "tax_amount_gbp": "<calc from gross>",
     "ni_rate": 0.12,
-    "ni_amount_gbp": "<calc>",
+    "ni_amount_gbp": "<calc from gross>",
+    "total_deductions_gbp": "<calc sum of all deductions>",
     "net_pay_gbp": "<calc>"
   },
-  "references": { "employee_no": "<alnum>", "slip_no": "<alnum>" },
-  "disclaimer": "FOR ENTERTAINMENT ONLY. NOT FOR OFFICIAL USE."
+  "references": { 
+    "employee_no": "<6-digit number>", 
+    "slip_no": "<8-digit alnum>",
+    "payroll_ref": "<alnum>"
+  },
+  "year_to_date": {
+    "gross_total_gbp": "<multiply monthly by realistic months>",
+    "tax_total_gbp": "<multiply monthly tax by months>",
+    "ni_total_gbp": "<multiply monthly ni by months>"
+  },
+  "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT FOR OFFICIAL USE"
 }
 
-Temperature 0.2. JSON only.
+Temperature 0.3. JSON only.
