@@ -63,16 +63,29 @@ export async function GET(
     }
 
     // Get service configuration
+    console.log(`Getting service for slug: ${slug}`)
     const service = getService(slug)
     if (!service) {
       throw new Error(`Service not found: ${slug}`)
     }
+    console.log(`Found service: ${service.name}, prompt_file: ${service.prompt_file}`)
 
     // Generate the document
+    console.log(`Loading prompt file: ${service.prompt_file}`)
     const basePrompt = await loadPrompt(service.prompt_file)
+    console.log(`Loaded prompt (${basePrompt.length} chars): ${basePrompt.substring(0, 100)}...`)
+    
     const builtPrompt = buildPromptWithUserData(basePrompt, inputs)
+    console.log(`Built prompt with inputs: ${JSON.stringify(inputs)}`)
+
+    // Check OpenAI API key
+    console.log(`OpenAI API Key present: ${!!process.env.OPENAI_API_KEY}`)
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OpenAI API key is missing')
+    }
 
     // Generate JSON content with OpenAI
+    console.log(`Calling OpenAI API...`)
     const openai = getOpenAI()
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -86,13 +99,19 @@ export async function GET(
       temperature: getTemperatureForService(service.prompt_file),
     })
 
+    console.log(`OpenAI response received! Tokens used: ${completion.usage?.total_tokens || 'unknown'}`)
     const response = completion.choices[0].message.content || ''
+    console.log(`Response length: ${response.length} chars`)
     
     // Extract JSON from response
+    console.log(`Extracting JSON from response...`)
     const jsonData = extractJSONFromResponse(response)
+    console.log(`JSON extracted successfully: ${Object.keys(jsonData).join(', ')}`)
 
     // Generate PDF from JSON data using the render system
+    console.log(`Generating PDF with renderServiceToPdf...`)
     const pdfBuffer = await renderServiceToPdf(slug, jsonData)
+    console.log(`PDF generated successfully! Size: ${pdfBuffer.length} bytes`)
 
     // Cache the result
     generatedResults.set(sessionId, {
