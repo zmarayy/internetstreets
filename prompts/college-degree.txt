@@ -1,0 +1,21 @@
+Create a fictional degree certificate text payload.
+STRICT JSON. Prestigious tone. No real seals/logos.
+
+Placeholders: {{fullName}}, {{dateOfBirth}}, {{universityName}}, {{degreeType}}, {{subject}}, {{graduationYear}}
+
+JSON schema:
+{
+  "document_title": "Degree Certificate (Fictional)",
+  "recipient": { "name": "{{fullName}}", "dob": "{{dateOfBirth}}" },
+  "degree": { "title": "{{degreeType}} in {{subject}}", "classification": "<First|Upper Second|Lower Second|Third>" },
+  "awarding_body": "{{universityName}}",
+  "graduation_date": "{{graduationYear}}",
+  "certificate_no": "<alnum>",
+  "signatories": [
+    { "name": "<fake registrar>", "title": "Registrar" },
+    { "name": "<fake dean>", "title": "Dean" }
+  ],
+  "disclaimer": "FOR ENTERTAINMENT ONLY. NOT AN OFFICIAL CREDENTIAL."
+}
+
+Temperature 0.3. JSON only.

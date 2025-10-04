@@ -1,0 +1,19 @@
+Create a fictional school behaviour record.
+STRICT JSON. Formal school tone with light humour.
+
+Placeholders: {{fullName}}, {{dateOfBirth}}, {{schoolName}}, {{yearGroup}}, {{studentId}}
+
+JSON schema:
+{
+  "document_title": "Behaviour Record (Fictional)",
+  "student": { "name": "{{fullName}}", "dob": "{{dateOfBirth}}", "school": "{{schoolName}}", "year_group": "{{yearGroup}}", "student_id": "{{studentId}}" },
+  "behaviour_grade": "<A|B|C|D|E|F>",
+  "attendance_percent": <60-100 integer>,
+  "incidents": ["<short>", "..."],
+  "teacher_comments": "<1–2 short lines>",
+  "awards": ["<short>", "..."],
+  "issued_at": "<ISO date>",
+  "disclaimer": "FOR ENTERTAINMENT ONLY."
+}
+
+Temperature 0.4. JSON only.

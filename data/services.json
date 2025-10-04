@@ -1,0 +1,410 @@
+{
+  "fbi-file": {
+    "name": "FBI File Generator",
+    "description": "See what the gov has on you 👀",
+    "slug": "fbi-file",
+    "prompt_file": "fbi-file.txt",
+    "type": "pdf",
+    "price": 250,
+    "fields": [
+      {
+        "name": "fullName",
+        "label": "Full Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "John Doe"
+      },
+      {
+        "name": "dateOfBirth",
+        "label": "Date of Birth",
+        "type": "date",
+        "required": true
+      },
+      {
+        "name": "city",
+        "label": "City",
+        "type": "text",
+        "required": true,
+        "placeholder": "London"
+      },
+      {
+        "name": "occupation",
+        "label": "Occupation",
+        "type": "text",
+        "required": false,
+        "placeholder": "Software Developer"
+      }
+    ]
+  },
+  "nsa-surveillance": {
+    "name": "NSA Surveillance Log",
+    "description": "Track your digital footprint",
+    "slug": "nsa-surveillance",
+    "prompt_file": "nsa-log.txt",
+    "type": "pdf",
+    "price": 250,
+    "fields": [
+      {
+        "name": "fullName",
+        "label": "Full Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "John Doe"
+      },
+      {
+        "name": "email",
+        "label": "Email Address",
+        "type": "email",
+        "required": true,
+        "placeholder": "john@example.com"
+      },
+      {
+        "name": "phoneNumber",
+        "label": "Phone Number",
+        "type": "text",
+        "required": true,
+        "placeholder": "+44 7700 900000"
+      },
+      {
+        "name": "city",
+        "label": "City",
+        "type": "text",
+        "required": true,
+        "placeholder": "London"
+      }
+    ]
+  },
+  "criminal-record": {
+    "name": "Government Criminal Record Leak",
+    "description": "Generate fake criminal history",
+    "slug": "criminal-record",
+    "prompt_file": "gov-criminal.txt",
+    "type": "pdf",
+    "price": 250,
+    "fields": [
+      {
+        "name": "fullName",
+        "label": "Full Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "John Doe"
+      },
+      {
+        "name": "dateOfBirth",
+        "label": "Date of Birth",
+        "type": "date",
+        "required": true
+      },
+      {
+        "name": "nationality",
+        "label": "Nationality",
+        "type": "text",
+        "required": true,
+        "placeholder": "British"
+      },
+      {
+        "name": "city",
+        "label": "City",
+        "type": "text",
+        "required": true,
+        "placeholder": "London"
+      }
+    ]
+  },
+  "universal-credit": {
+    "name": "Universal Credit Assessment Report",
+    "description": "Fake benefits assessment",
+    "slug": "universal-credit",
+    "prompt_file": "universal-credit.txt",
+    "type": "pdf",
+    "price": 250,
+    "fields": [
+      {
+        "name": "fullName",
+        "label": "Full Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "John Doe"
+      },
+      {
+        "name": "dateOfBirth",
+        "label": "Date of Birth",
+        "type": "date",
+        "required": true
+      },
+      {
+        "name": "nationalInsurance",
+        "label": "National Insurance Number",
+        "type": "text",
+        "required": true,
+        "placeholder": "AB123456C"
+      },
+      {
+        "name": "address",
+        "label": "Address",
+        "type": "text",
+        "required": true,
+        "placeholder": "123 Main Street, London"
+      }
+    ]
+  },
+  "credit-score": {
+    "name": "Trap Credit Score Report",
+    "description": "Generate fake credit reports",
+    "slug": "credit-score",
+    "prompt_file": "trap-credit.txt",
+    "type": "pdf",
+    "price": 250,
+    "fields": [
+      {
+        "name": "fullName",
+        "label": "Full Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "John Doe"
+      },
+      {
+        "name": "dateOfBirth",
+        "label": "Date of Birth",
+        "type": "date",
+        "required": true
+      },
+      {
+        "name": "address",
+        "label": "Address",
+        "type": "text",
+        "required": true,
+        "placeholder": "123 Main Street, London"
+      },
+      {
+        "name": "employmentStatus",
+        "label": "Employment Status",
+        "type": "text",
+        "required": true,
+        "placeholder": "Employed"
+      }
+    ]
+  },
+  "payslip": {
+    "name": "Fake Payslip Generator",
+    "description": "Create realistic payslips",
+    "slug": "payslip",
+    "prompt_file": "payslip.txt",
+    "type": "pdf",
+    "price": 250,
+    "fields": [
+      {
+        "name": "fullName",
+        "label": "Full Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "John Doe"
+      },
+      {
+        "name": "companyName",
+        "label": "Company Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "Tech Corp Ltd"
+      },
+      {
+        "name": "jobTitle",
+        "label": "Job Title",
+        "type": "text",
+        "required": true,
+        "placeholder": "Software Developer"
+      },
+      {
+        "name": "salary",
+        "label": "Annual Salary (£)",
+        "type": "number",
+        "required": true,
+        "placeholder": "50000"
+      },
+      {
+        "name": "payPeriod",
+        "label": "Pay Period",
+        "type": "text",
+        "required": true,
+        "placeholder": "Monthly"
+      }
+    ]
+  },
+  "job-rejection": {
+    "name": "Job Application Rejection Letter",
+    "description": "Generate rejection letters",
+    "slug": "job-rejection",
+    "prompt_file": "rejection-letter.txt",
+    "type": "pdf",
+    "price": 250,
+    "fields": [
+      {
+        "name": "fullName",
+        "label": "Full Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "John Doe"
+      },
+      {
+        "name": "companyName",
+        "label": "Company Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "Tech Corp Ltd"
+      },
+      {
+        "name": "jobTitle",
+        "label": "Job Title Applied For",
+        "type": "text",
+        "required": true,
+        "placeholder": "Software Developer"
+      },
+      {
+        "name": "applicationDate",
+        "label": "Application Date",
+        "type": "date",
+        "required": true
+      }
+    ]
+  },
+  "rent-reference": {
+    "name": "Rent Reference Letter Generator",
+    "description": "Create landlord references",
+    "slug": "rent-reference",
+    "prompt_file": "rent-reference.txt",
+    "type": "pdf",
+    "price": 250,
+    "fields": [
+      {
+        "name": "fullName",
+        "label": "Full Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "John Doe"
+      },
+      {
+        "name": "landlordName",
+        "label": "Landlord Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "Jane Smith"
+      },
+      {
+        "name": "propertyAddress",
+        "label": "Property Address",
+        "type": "text",
+        "required": true,
+        "placeholder": "123 Main Street, London"
+      },
+      {
+        "name": "rentAmount",
+        "label": "Monthly Rent (£)",
+        "type": "number",
+        "required": true,
+        "placeholder": "1200"
+      },
+      {
+        "name": "tenancyPeriod",
+        "label": "Tenancy Period",
+        "type": "text",
+        "required": true,
+        "placeholder": "12 months"
+      }
+    ]
+  },
+  "school-behaviour": {
+    "name": "School Behaviour Record Reprint",
+    "description": "Generate school records",
+    "slug": "school-behaviour",
+    "prompt_file": "school-report.txt",
+    "type": "pdf",
+    "price": 250,
+    "fields": [
+      {
+        "name": "fullName",
+        "label": "Full Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "John Doe"
+      },
+      {
+        "name": "dateOfBirth",
+        "label": "Date of Birth",
+        "type": "date",
+        "required": true
+      },
+      {
+        "name": "schoolName",
+        "label": "School Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "St. Mary's High School"
+      },
+      {
+        "name": "yearGroup",
+        "label": "Year Group",
+        "type": "text",
+        "required": true,
+        "placeholder": "Year 11"
+      },
+      {
+        "name": "studentId",
+        "label": "Student ID",
+        "type": "text",
+        "required": true,
+        "placeholder": "SM2024001"
+      }
+    ]
+  },
+  "college-degree": {
+    "name": "Fake College Degree Generator",
+    "description": "Create fake diplomas",
+    "slug": "college-degree",
+    "prompt_file": "college-degree.txt",
+    "type": "pdf",
+    "price": 250,
+    "fields": [
+      {
+        "name": "fullName",
+        "label": "Full Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "John Doe"
+      },
+      {
+        "name": "dateOfBirth",
+        "label": "Date of Birth",
+        "type": "date",
+        "required": true
+      },
+      {
+        "name": "universityName",
+        "label": "University Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "University of London"
+      },
+      {
+        "name": "degreeType",
+        "label": "Degree Type",
+        "type": "text",
+        "required": true,
+        "placeholder": "Bachelor of Science"
+      },
+      {
+        "name": "subject",
+        "label": "Subject",
+        "type": "text",
+        "required": true,
+        "placeholder": "Computer Science"
+      },
+      {
+        "name": "graduationYear",
+        "label": "Graduation Year",
+        "type": "number",
+        "required": true,
+        "placeholder": "2023"
+      }
+    ]
+  }
+}

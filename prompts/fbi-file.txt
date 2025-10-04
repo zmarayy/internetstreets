@@ -1,0 +1,28 @@
+You are producing a fictional, FBI-style dossier for entertainment only.
+Return STRICT JSON, no commentary.
+
+Constraints:
+- Keep it concise, authoritative, and readable in a 1–2 page PDF.
+- Each string ≤ 140 chars. Arrays ≤ 5 items.
+
+Placeholders: {{fullName}}, {{dateOfBirth}}, {{city}}
+
+JSON schema:
+{
+  "document_title": "FBI Intelligence Dossier (Fictional)",
+  "subject": { "name": "{{fullName}}", "dob": "{{dateOfBirth}}", "city": "{{city}}" },
+  "case_number": "<random 10-char alnum>",
+  "threat_level": "<LOW|MEDIUM|HIGH|CRITICAL>",
+  "summary": "<1–2 lines>",
+  "allegations": ["<short item>", "..."],
+  "surveillance_notes": [
+    { "timestamp": "<ISO>", "note": "<short note>" },
+    { "timestamp": "<ISO>", "note": "<short note>" }
+  ],
+  "risk_factors": ["<short item>", "..."],
+  "recommendation": "<short line>",
+  "issued_at": "<ISO date>",
+  "disclaimer": "FOR ENTERTAINMENT ONLY. NOT A REAL DOCUMENT."
+}
+
+Temperature: 0.6. Output JSON only.

@@ -1,0 +1,65 @@
+SCHOOL BEHAVIOUR RECORD
+
+Student: {{fullName}}
+DOB: {{dateOfBirth}}
+School: {{schoolName}}
+Year Group: {{yearGroup}}
+Student ID: {{studentId}}
+
+{{schoolName}}
+RECORD ID: SBR-{{randomRecordId}}
+ACADEMIC YEAR: {{academicYear}}
+TERM: {{term}}
+
+STUDENT INFORMATION
+===================
+Full Name: {{fullName}}
+Date of Birth: {{dateOfBirth}}
+Student ID: {{studentId}}
+School: {{schoolName}}
+Year Group: {{yearGroup}}
+
+ATTENDANCE RECORD
+=================
+Overall Attendance: {{attendancePercentage}}%
+Absences: {{absences}}
+Reasons for Absence: {{absenceReasons}}
+Lateness Incidents: {{latenessIncidents}}
+Attendance Trends: {{attendanceTrends}}
+
+BEHAVIOUR ASSESSMENT
+====================
+Positive Behaviours: {{positiveBehaviours}}
+Areas of Concern: {{areasOfConcern}}
+Disciplinary Incidents: {{disciplinaryIncidents}}
+Improvement Over Time: {{improvementOverTime}}
+
+ACADEMIC PERFORMANCE
+====================
+Subject Grades: {{subjectGrades}}
+Effort Levels: {{effortLevels}}
+Homework Completion: {{homeworkCompletion}}
+Teacher Comments: {{teacherComments}}
+
+SUPPORT AND INTERVENTIONS
+==========================
+Pastoral Support: {{pastoralSupport}}
+Parent/Carer Involvement: {{parentInvolvement}}
+External Agency Involvement: {{externalAgency}}
+Action Plans: {{actionPlans}}
+
+FUTURE RECOMMENDATIONS
+=======================
+Areas for Improvement: {{areasForImprovement}}
+Support Strategies: {{supportStrategies}}
+Expected Outcomes: {{expectedOutcomes}}
+Next Review Date: {{nextReviewDate}}
+
+TEACHER SIGNATURES
+==================
+Form Tutor: {{formTutorSignature}}
+Head of Year: {{headOfYearSignature}}
+Date: {{currentDate}}
+
+{{schoolName}}
+Pastoral Care Department

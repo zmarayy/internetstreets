@@ -1,0 +1,59 @@
+GOVERNMENT CRIMINAL RECORD
+CLASSIFIED LEAK
+
+Subject: {{fullName}}
+DOB: {{dateOfBirth}}
+Nationality: {{nationality}}
+Location: {{city}}
+
+CLASSIFICATION: RESTRICTED
+RECORD ID: GOV-{{randomRecordId}}
+DATE: {{currentDate}}
+
+PERSONAL INFORMATION
+====================
+Full Name: {{fullName}}
+Date of Birth: {{dateOfBirth}}
+Nationality: {{nationality}}
+Current Address: {{city}}
+Physical Description: {{physicalDescription}}
+
+CRIMINAL HISTORY
+================
+Case Numbers: {{caseNumbers}}
+Charges: {{charges}}
+Convictions: {{convictions}}
+Court Proceedings: {{courtProceedings}}
+Sentencing Details: {{sentencingDetails}}
+
+CURRENT STATUS
+===============
+Active Warrants: {{activeWarrants}}
+Probation/Parole Status: {{probationStatus}}
+Restrictions: {{restrictions}}
+Conditions: {{conditions}}
+
+INVESTIGATION NOTES
+===================
+Officer Observations: {{officerObservations}}
+Behavioral Patterns: {{behavioralPatterns}}
+Known Associates: {{knownAssociates}}
+Risk Assessment: {{riskAssessment}}
+
+LEGAL PROCEEDINGS
+=================
+Court Dates: {{courtDates}}
+Legal Representation: {{legalRepresentation}}
+Appeals Status: {{appealsStatus}}
+Compliance History: {{complianceHistory}}
+
+FINAL ASSESSMENT
+================
+Risk Level: {{riskLevel}}
+Status: {{status}}
+Next Review: {{nextReview}}
+
+Officer Signature: {{officerSignature}}
+Date: {{currentDate}}
+
+CLASSIFICATION: RESTRICTED

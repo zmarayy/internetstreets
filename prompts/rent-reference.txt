@@ -1,0 +1,19 @@
+Create a fictional landlord-style reference.
+STRICT JSON. Positive/neutral tone.
+
+Placeholders: {{fullName}}, {{landlordName}}, {{propertyAddress}}, {{rentAmount}}, {{tenancyPeriod}}
+
+JSON schema:
+{
+  "document_title": "Tenancy Reference (Fictional)",
+  "tenant": { "name": "{{fullName}}", "address": "{{propertyAddress}}" },
+  "landlord": { "name": "{{landlordName}}" },
+  "tenancy": { "duration": "{{tenancyPeriod}}", "monthly_rent_gbp": "{{rentAmount}}" },
+  "rating": "<Excellent|Good|Fair>",
+  "remarks": ["<short>", "..."],
+  "landlord_contact": "<fake contact line>",
+  "issued_at": "<ISO date>",
+  "disclaimer": "FOR ENTERTAINMENT ONLY."
+}
+
+Temperature 0.3. JSON only.

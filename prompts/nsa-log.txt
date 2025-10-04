@@ -1,0 +1,19 @@
+Create a fictional surveillance activity log (entertainment only).
+Return STRICT JSON only. Concise.
+
+Placeholders: {{fullName}}, {{email}}, {{phoneNumber}}, {{city}}
+
+JSON schema:
+{
+  "document_title": "NSA Activity Log (Fictional)",
+  "subject": { "name": "{{fullName}}", "email": "{{email}}", "phone": "{{phoneNumber}}", "city": "{{city}}" },
+  "log_date": "<ISO date>",
+  "entries": [
+    { "time": "<HH:MM>", "channel": "<search|call|app|sms|social>", "detail": "<short>", "severity": "<low|moderate|high>" }
+  ],
+  "flags": ["<short flag>", "..."],
+  "overall_concern": "<low|moderate|high>",
+  "disclaimer": "FOR ENTERTAINMENT ONLY."
+}
+
+Entries: 8–10. Temperature 0.5. JSON only.

@@ -1,0 +1,46 @@
+JOB APPLICATION REJECTION LETTER
+
+Applicant: {{fullName}}
+Company: {{companyName}}
+Position: {{jobTitle}}
+Application Date: {{applicationDate}}
+
+{{companyName}}
+REFERENCE: REJ-{{randomReferenceId}}
+DATE: {{currentDate}}
+
+Dear {{fullName}},
+
+Thank you for your interest in the {{jobTitle}} position at {{companyName}} and for taking the time to submit your application on {{applicationDate}}.
+
+After careful consideration of all applications received, we have decided to move forward with other candidates whose qualifications more closely match our current needs.
+
+APPLICATION FEEDBACK
+====================
+Strengths Identified: {{strengthsIdentified}}
+Areas for Improvement: {{areasForImprovement}}
+Specific Reasons: {{specificReasons}}
+Constructive Suggestions: {{constructiveSuggestions}}
+
+COMPANY INFORMATION
+===================
+Company Address: {{companyAddress}}
+Contact Information: {{contactInformation}}
+Website: {{website}}
+Future Opportunities: {{futureOpportunities}}
+
+We encourage you to apply for future positions that may be a better fit for your skills and experience. We will keep your application on file for six months and may contact you if a suitable position becomes available.
+
+Thank you again for your interest in {{companyName}}.
+
+Sincerely,
+
+{{hrRepresentative}}
+Human Resources Manager
+{{companyName}}
+
+Contact: {{hrEmail}}
+Phone: {{hrPhone}}
+
+{{companyName}}
+Human Resources Department

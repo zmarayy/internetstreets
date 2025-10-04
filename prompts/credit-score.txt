@@ -1,0 +1,63 @@
+CREDIT SCORE REPORT
+
+Subject: {{fullName}}
+DOB: {{dateOfBirth}}
+Address: {{address}}
+Employment: {{employmentStatus}}
+
+CREDIT REFERENCE AGENCY
+REPORT ID: CRA-{{randomReportId}}
+DATE: {{currentDate}}
+
+PERSONAL INFORMATION
+====================
+Full Name: {{fullName}}
+Date of Birth: {{dateOfBirth}}
+Address: {{address}}
+Employment Status: {{employmentStatus}}
+Credit Reference Number: {{creditReferenceNumber}}
+
+CREDIT SCORE
+=============
+Overall Score: {{creditScore}}/999
+Risk Category: {{riskCategory}}
+Score Factors: {{scoreFactors}}
+Previous Score: {{previousScore}}
+
+CREDIT HISTORY
+===============
+Account Details: {{accountDetails}}
+Payment History: {{paymentHistory}}
+Credit Utilization: {{creditUtilization}}
+Recent Applications: {{recentApplications}}
+
+FINANCIAL SUMMARY
+=================
+Total Debt: {{totalDebt}}
+Available Credit: {{availableCredit}}
+Monthly Payments: {{monthlyPayments}}
+Credit Recommendations: {{creditRecommendations}}
+
+PUBLIC RECORDS
+===============
+County Court Judgments: {{countyCourtJudgments}}
+Bankruptcies: {{bankruptcies}}
+Individual Voluntary Arrangements: {{iva}}
+
+ACCOUNT INFORMATION
+===================
+Credit Cards: {{creditCards}}
+Loans: {{loans}}
+Mortgages: {{mortgages}}
+Overdrafts: {{overdrafts}}
+
+FINAL ASSESSMENT
+================
+Credit Rating: {{creditRating}}
+Recommendations: {{recommendations}}
+Next Review: {{nextReview}}
+
+Analyst Signature: {{analystSignature}}
+Date: {{currentDate}}
+
+CREDIT REFERENCE AGENCY

@@ -1,0 +1,22 @@
+Create a fictional Universal Credit assessment letter (entertainment only).
+STRICT JSON. Formal tone with light humour. No real DWP branding.
+
+Placeholders: {{fullName}}, {{dateOfBirth}}, {{nationalInsurance}}, {{address}}
+
+JSON schema:
+{
+  "document_title": "Universal Credit Assessment (Fictional)",
+  "applicant": { "name": "{{fullName}}", "dob": "{{dateOfBirth}}", "ni_number": "{{nationalInsurance}}", "address": "{{address}}" },
+  "case_ref": "<alnum>",
+  "financial_overview": {
+    "assessed_income_gbp": "<number as string>",
+    "spending_commentary": "<short line>"
+  },
+  "eligibility_result": "<Approved|Declined|Needs Review>",
+  "recommended_allowance_gbp": "<number as string>",
+  "notes": ["<short>", "..."],
+  "issued_at": "<ISO date>",
+  "disclaimer": "FOR ENTERTAINMENT ONLY. NOT OFFICIAL."
+}
+
+Temperature 0.4. JSON only.

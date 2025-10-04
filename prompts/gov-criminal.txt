@@ -1,0 +1,20 @@
+Generate a fictional government record leak (entertainment only).
+STRICT JSON. Concise. No real agencies named.
+
+Placeholders: {{fullName}}, {{dateOfBirth}}, {{nationality}}, {{city}}
+
+JSON schema:
+{
+  "document_title": "Criminal Record Extract (Fictional)",
+  "subject": { "name": "{{fullName}}", "dob": "{{dateOfBirth}}", "nationality": "{{nationality}}", "city": "{{city}}" },
+  "record_id": "<random alnum>",
+  "offences": [
+    { "category": "<short>", "date": "<ISO date>", "status": "<open|closed|dismissed>", "notes": "<short>" }
+  ],
+  "warnings": ["<short>", "..."],
+  "summary": "<1 short line>",
+  "issued_at": "<ISO date>",
+  "disclaimer": "FOR ENTERTAINMENT ONLY."
+}
+
+Offences: 3–5. Temperature 0.5. JSON only.
