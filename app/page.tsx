@@ -1,5 +1,6 @@
 
 import Link from 'next/link'
+import { Metadata } from 'next'
 import { 
   FileText, 
   Eye, 
@@ -13,6 +14,28 @@ import {
   School 
 } from 'lucide-react'
 import { loadServicesConfig } from '@/lib/services'
+
+export const metadata: Metadata = {
+  title: 'Internet Streets - The AI Black Market | Novelty Document Generator',
+  description: 'Generate realistic FBI files, payslips, degrees, and official documents for novelty purposes. AI-powered document creation with professional templates. Entertainment only.',
+  keywords: 'AI document generator, novelty documents, FBI file generator, fake payslip, fake degree, entertainment documents, AI black market',
+  openGraph: {
+    title: 'Internet Streets - The AI Black Market',
+    description: 'Generate realistic documents for novelty purposes. FBI files, payslips, degrees, and more. Entertainment only.',
+    url: 'https://internetstreets.uk',
+    siteName: 'Internet Streets',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Internet Streets - The AI Black Market',
+    description: 'Generate realistic documents for novelty purposes. Entertainment only.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+}
 
 const iconMap = {
   'fbi-file': FileText,
@@ -53,8 +76,36 @@ export default function HomePage() {
     href: `/services/${id}`,
     price: service.price
   }))
+
+  // Structured data for SEO
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Internet Streets",
+    "alternateName": "The AI Black Market",
+    "url": "https://internetstreets.uk",
+    "description": "Generate realistic documents for novelty purposes. FBI files, payslips, degrees, and more. Entertainment only.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://internetstreets.uk/services?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    },
+    "offers": {
+      "@type": "AggregateOffer",
+      "priceCurrency": "GBP",
+      "lowPrice": "2.50",
+      "highPrice": "2.50",
+      "offerCount": services.length
+    }
+  }
+
   return (
-    <div className="min-h-screen">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -122,6 +173,7 @@ export default function HomePage() {
           </p>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   )
 }
