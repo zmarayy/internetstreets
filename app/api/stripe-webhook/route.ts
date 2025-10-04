@@ -13,7 +13,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 // Store generation status for polling
 const generationStatus = new Map<string, {
-  status: 'processing' | 'ready' | 'error'
+  status: 'processing' | 'repairing' | 'ready' | 'error'
   sessionId: string
   traceId: string
   error?: string
@@ -21,6 +21,7 @@ const generationStatus = new Map<string, {
   previewUrl?: string
   downloadUrl?: string
   serviceName?: string
+  repairAttempted?: boolean
 }>()
 
 /**
@@ -71,16 +72,33 @@ async function processDocumentGeneration(
       promptResult.metadata!.temperature,
       slug,
       traceId,
-      2 // Max retries
+      3 // Max retries
     )
+    
+    // Update status to repairing if JSON repair was attempted
+    if (generationResult.repairAttempted && !generationResult.success) {
+      generationStatus.set(sessionId, {
+        status: 'repairing',
+        sessionId,
+        traceId,
+        serviceName: slug,
+        repairAttempted: true
+      })
+      logger.generationStep('Attempting JSON repair', traceId, GenerationStep.RETRY_ATTEMPT, sessionId, slug)
+    }
 
     if (!generationResult.success) {
+      // Log the raw response for debugging
+      if (generationResult.rawResponse) {
+        logger.jsonParseError(traceId, generationResult.rawResponse, sessionId, slug)
+      }
+      
       logger.generationFailed(
         `OpenAI generation failed after ${generationResult.retries} retries: ${generationResult.error}`,
         traceId,
         sessionId,
         slug,
-        { retries: generationResult.retries, rawResponse: generationResult.rawResponse }
+        { retries: generationResult.retries, repairAttempted: generationResult.repairAttempted }
       )
       throw new Error(`Generation failed: ${generationResult.error}`)
     }

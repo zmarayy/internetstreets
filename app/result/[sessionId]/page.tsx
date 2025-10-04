@@ -6,12 +6,13 @@ import { useParams } from 'next/navigation'
 import { Loader2, Download, Share2, FileText } from 'lucide-react'
 
 interface ResultStatus {
-  status: 'processing' | 'ready' | 'error'
+  status: 'processing' | 'repairing' | 'ready' | 'error'
   previewUrl?: string
   downloadUrl?: string
   error?: string
   serviceName?: string
   sessionId?: string
+  repairAttempted?: boolean
 }
 
 export default function ResultPage() {
@@ -117,21 +118,27 @@ export default function ResultPage() {
   }
 
   if (isLoading) {
+    const isRepairing = resultStatus.status === 'repairing'
+    
     return (
       <div className="min-h-screen flex items-center justify-center bg-dark-bg text-white">
         <div className="text-center">
-          <Loader2 className="animate-spin text-neon-green mx-auto mb-6" size={64} />
-          <h1 className="text-3xl font-bold text-neon-green mb-4">
-            Your Document is Being Generated...
+          <Loader2 className={`animate-spin mx-auto mb-6 ${isRepairing ? 'text-neon-blue' : 'text-neon-green'}`} size={64} />
+          <h1 className={`text-3xl font-bold mb-4 ${isRepairing ? 'text-neon-blue' : 'text-neon-green'}`}>
+            {isRepairing ? 'We\'re Repairing Your File...' : 'Your Document is Being Generated...'}
           </h1>
           <p className="text-xl text-gray-300 mb-2">
             {resultStatus.serviceName || 'Processing your request'}
           </p>
           <p className="text-gray-400">
-            This usually takes 10-30 seconds. Please don't close this page.
+            {isRepairing 
+              ? 'Auto-repairing malformed content. This may take up to 15 seconds...'
+              : 'This usually takes 10-30 seconds. Please don\'t close this page.'
+            }
           </p>
           <div className="mt-8 text-sm text-gray-500">
             <p>⏱️ Document will auto-delete after 1 hour</p>
+            {isRepairing && <p className="mt-2 text-blue-400">🔧 Repairing content structure...</p>}
           </div>
         </div>
       </div>

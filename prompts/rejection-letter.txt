@@ -1,3 +1,9 @@
+You MUST ONLY respond with one valid JSON object. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+
+If unsure, output empty arrays/strings, but do not add text outside JSON.
+
+Actual content:
+  
 Create a polite fictional rejection letter.
 STRICT JSON. Corporate tone, tiny hint of humour allowed.
 

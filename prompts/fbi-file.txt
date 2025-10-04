@@ -1,4 +1,9 @@
-You must ONLY respond with valid JSON. NO other text, commentary, or formatting.
+You MUST ONLY respond with one valid JSON object. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+
+If unsure, output empty arrays/strings, but do not add text outside JSON.
+
+Actual content:
+  
 
 Generate a fictional FBI intelligence dossier. Complete the exact JSON structure below.
 

@@ -140,6 +140,15 @@ export const logger = {
   retryAttempt: (attemptNumber: number, reason: string, traceId: string, sessionId?: string, serviceSlug?: string) =>
     log(LogLevel.WARN, `Retry attempt ${attemptNumber}: ${reason}`, traceId, { attemptNumber, reason }, sessionId, serviceSlug, GenerationStep.RETRY_ATTEMPT),
 
+  jsonParseError: (traceId: string, rawResponse: string, sessionId?: string, serviceSlug?: string) =>
+    log(LogLevel.ERROR, `JSON parse failed - logged raw response`, traceId, { 
+      rawResponse: rawResponse.substring(0, 500) + (rawResponse.length > 500 ? '...' : ''),
+      fullLength: rawResponse.length 
+    }, sessionId, serviceSlug),
+
+  jsonRepairAttempt: (traceId: string, success: boolean, sessionId?: string, serviceSlug?: string) =>
+    log(LogLevel.INFO, `JSON repair ${success ? 'succeeded' : 'failed'}`, traceId, { repairAttempted: success }, sessionId, serviceSlug),
+
   sanitizationAction: (reason: string, originalValue: string, sanitizedValue: string, traceId: string, sessionId?: string, serviceSlug?: string) =>
     log(LogLevel.WARN, `Input sanitized: ${reason}`, traceId, { originalValue, sanitizedValue }, sessionId, serviceSlug, GenerationStep.SANITIZATION),
 

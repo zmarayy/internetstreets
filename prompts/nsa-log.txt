@@ -1,3 +1,9 @@
+You MUST ONLY respond with one valid JSON object. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+
+If unsure, output empty arrays/strings, but do not add text outside JSON.
+
+Actual content:
+  
 Create a fictional surveillance activity log (entertainment only).
 Return STRICT JSON only. Concise.
 
