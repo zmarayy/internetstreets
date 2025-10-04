@@ -114,22 +114,28 @@ function repairJson(jsonString: string): { repaired: boolean; json: string } {
 function extractAndRepairJson(response: string): { success: boolean; data?: any; repaired?: boolean; error?: string } {
   try {
     // First, try direct parsing
+    console.log('Attempting direct JSON parse...')
     const directParse = JSON.parse(response)
+    console.log('Direct JSON parse successful!')
     return { success: true, data: directParse }
   } catch (e) {
     console.log('Direct JSON parse failed, attempting repair...')
+    console.log('Parse error:', e instanceof Error ? e.message : 'Unknown error')
     
     // Attempt repair
     const repair = repairJson(response)
     if (!repair.repaired) {
+      console.log('JSON repair failed - unable to repair')
       return { success: false, error: 'Unable to repair malformed JSON' }
     }
     
     try {
+      console.log('Attempting to parse repaired JSON...')
       const repairedData = JSON.parse(repair.json)
-      console.log('JSON repair successful')
+      console.log('JSON repair successful!')
       return { success: true, data: repairedData, repaired: true }
     } catch (parseError) {
+      console.log('Repaired JSON parse failed:', parseError instanceof Error ? parseError.message : 'Unknown error')
       return { success: false, error: `JSON repair failed: ${parseError instanceof Error ? parseError.message : 'Unknown error'}` }
     }
   }
@@ -206,6 +212,7 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
     const rawResponse = response.choices[0]?.message?.content?.trim() || ''
     console.log(`[${traceId}] OpenAI response length: ${rawResponse.length} chars`)
     console.log(`[${traceId}] OpenAI response preview: ${rawResponse.substring(0, 200)}...`)
+    console.log(`[${traceId}] Full OpenAI response:`, rawResponse)
     
     if (!rawResponse) {
       return {
