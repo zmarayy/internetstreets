@@ -147,18 +147,18 @@ function validateJsonStructure(jsonData: any, serviceSlug: string): { valid: boo
     return { valid: false, issues }
   }
 
-  // Required fields based on service type
+  // Required fields based on service type (updated for hybrid structured+narrative)
   const requiredFields = {
-    'fbi-file': ['document_title', 'subject'],
-    'nsa-surveillance': ['document_title', 'subject', 'report_id'],
-    'criminal-record': ['document_title', 'subject', 'record_number'],
-    'universal-credit': ['document_title', 'applicant', 'case_reference'],
-    'payslip': ['document_title', 'employee', 'employer'],
-    'credit-score': ['document_title', 'subject', 'report_reference'],
-    'job-rejection': ['document_title', 'company', 'applicant'],
-    'rent-reference': ['document_title', 'tenant_name', 'landlord_name'],
-    'school-report': ['document_title', 'student_info', 'school_details'],
-    'college-degree': ['document_title', 'student_information', 'university_details']
+    'fbi-file': ['structured', 'narrative'],
+    'nsa-surveillance': ['structured', 'narrative'],
+    'criminal-record': ['structured', 'narrative'],
+    'universal-credit': ['structured', 'narrative'],
+    'payslip': ['structured', 'narrative'],
+    'credit-score': ['structured', 'narrative'],
+    'job-rejection': ['structured', 'narrative'],
+    'rent-reference': ['structured', 'narrative'],
+    'school-behaviour': ['structured', 'narrative'],
+    'college-degree': ['structured', 'narrative']
   }
 
   const serviceRequiredFields = requiredFields[serviceSlug as keyof typeof requiredFields] || []
@@ -204,6 +204,8 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
     clearTimeout(timeoutId)
     
     const rawResponse = response.choices[0]?.message?.content?.trim() || ''
+    console.log(`[${traceId}] OpenAI response length: ${rawResponse.length} chars`)
+    console.log(`[${traceId}] OpenAI response preview: ${rawResponse.substring(0, 200)}...`)
     
     if (!rawResponse) {
       return {
