@@ -65,11 +65,17 @@ export function generatePDFfromJSON(slug: string, json: any): Buffer {
     case 'universal-credit':
       addUniversalCreditDetails(doc, json, yPos)
       break
+    case 'credit-score':
+      addCreditScoreDetails(doc, json, yPos)
+      break
     case 'payslip':
       addPayslipDetails(doc, json, yPos)
       break
-    case 'rejection-letter':
-      addRejectionLetter(doc, json, yPos)
+    case 'job-rejection':
+      addJobRejectionDetails(doc, json, yPos)
+      break
+    case 'rent-reference':
+      addRentReferenceDetails(doc, json, yPos)
       break
     default:
       addGenericDetails(doc, json, yPos)
@@ -904,6 +910,251 @@ function addUniversalCreditDetails(doc: jsPDF, json: any, startY: number) {
   }
 }
 
+function addCreditScoreDetails(doc: jsPDF, json: any, startY: number) {
+  let yPos = startY
+  
+  // Add logo/header simulation
+  doc.setFontSize(12)
+  doc.setFont('helvetica', 'bold')
+  doc.text(json.logo || '╔═══ CREDIT AGENCY', 20, yPos)
+  doc.text(json.letterhead || 'Credit Reference Agency Report', 20, yPos + 8)
+  
+  // Official border
+  doc.setDrawColor(0, 0, 0)
+  doc.setLineWidth(0.8)
+  doc.rect(15, yPos - 8, 165, 25)
+  
+  yPos += 30
+  
+  // Subject Information Table
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.text('SUBJECT INFORMATION', 20, yPos)
+  yPos += 15
+  
+  drawTableHeader(doc, 'FIELD', 'DETAILS', yPos)
+  yPos += 8
+  
+  const subjectData = [
+    ['Name', json.subject?.name || 'REDACTED'],
+    ['Income', json.subject?.income || 'REDACTED'],
+    ['Address', json.subject?.address || 'REDACTED'],
+    ['Employment', json.subject?.employment || 'REDACTED'],
+    ['Report ID', json.report_id || 'REDACTED'],
+    ['Report Date', json.report_date || 'REDACTED']
+  ]
+  
+  subjectData.forEach(([field, value]) => {
+    drawTableRow(doc, field, value, yPos)
+    yPos += 10
+  })
+  
+  yPos += 10
+  
+  // Credit Score Display
+  if (json.credit_summary) {
+    doc.setFontSize(18)
+    doc.setFont('helvetica', 'bold')
+    const score = json.credit_summary.overall_score
+    const rating = json.credit_summary.score_rating
+    
+    // Color-code score
+    if (parseInt(score) >= 740) doc.setTextColor(0, 150, 0) // Green for excellent
+    else if (parseInt(score) >= 670) doc.setTextColor(200, 200, 0) // Yellow for good
+    else if (parseInt(score) >= 580) doc.setTextColor(255, 140, 0) // Orange for fair
+    else doc.setTextColor(200, 0, 0) // Red for poor
+    
+    doc.text(`CREDIT SCORE: ${score}/850`, 95, yPos, { align: 'center' })
+    doc.setTextColor(0, 0, 0) // Reset
+    
+    doc.setFontSize(16)
+    doc.text(`RATING: ${rating.toUpperCase()}`, 95, yPos + 10, { align: 'center' })
+    
+    if (json.credit_summary.previous_score && json.credit_summary.score_change) {
+      doc.setFontSize(14)
+      const change = json.credit_summary.score_change
+      if (change.startsWith('+')) doc.setTextColor(0, 150, 0) // Green for positive
+      else if (change.startsWith('-')) doc.setTextColor(200, 0, 0) // Red for negative
+      doc.text(`Change: ${change}`, 95, yPos + 20, { align: 'center' })
+      doc.setTextColor(0, 0, 0) // Reset
+    }
+    
+    yPos += 40
+  }
+  
+  // Financial Summary Table
+  if (json.financial_summary) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('FINANCIAL SUMMARY', 20, yPos)
+    yPos += 15
+    
+    const financial = json.financial_summary
+    
+    doc.setFillColor(240, 240, 240)
+    doc.rect(20, yPos - 5, 170, 8, 'F')
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Category', 25, yPos + 2)
+    doc.text('Amount', 140, yPos + 2)
+    yPos += 8
+    
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    
+    const financialDetails = [
+      ['Total Debt', `£${financial.total_debt || '0'}`],
+      ['Available Credit', `£${financial.available_credit || '0'}`],
+      ['Credit Utilization', `${financial.credit_utilisation || '0'}%`],
+      ['Monthly Debt Payments', `£${financial.monthly_debt_payments || '0'}`],
+      ['Debt to Income Ratio', `${financial.debt_to_income_ratio || '0'}%`]
+    ]
+    
+    financialDetails.forEach(([category, amount]) => {
+      doc.text(category, 25, yPos + 2)
+      doc.text(amount, 140, yPos + 2)
+      yPos += 8
+    })
+    
+    yPos += 15
+  }
+  
+  // Account Details Section
+  if (json.account_details && Array.isArray(json.account_details)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('ACCOUNT DETAILS', 20, yPos)
+    yPos += 15
+    
+    json.account_details.forEach((account: any, index: number) => {
+      if (yPos > 200) return // Start new page if needed
+      
+      // Account header
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text(`${index + 1}. ${account.account_name || 'ACCOUNT'} - ${account.provider || 'PROVIDER'}`, 20, yPos)
+      yPos += 10
+      
+      // Account details
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(10)
+      
+      const accountData = [
+        ['Account Number', account.account_number || 'REDACTED'],
+        ['Opened', account.opened_date || 'REDACTED'],
+        ['Credit Limit', `£${account.credit_limit || '0'}`],
+        ['Current Balance', `£${account.current_balance || '0'}`],
+        ['Monthly Payment', `£${account.monthly_payment || '0'}`],
+        ['Status', account.payment_status || 'REDACTED']
+      ]
+      
+      accountData.forEach(([field, value]) => {
+        doc.text(`${field}: ${value}`, 30, yPos)
+        yPos += 6
+      })
+      
+      yPos += 5
+    })
+    yPos += 10
+  }
+  
+  // Payment History Table
+  if (json.payment_history && Array.isArray(json.payment_history)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('RECENT PAYMENT HISTORY', 20, yPos)
+    yPos += 15
+    
+    // Table headers
+    doc.setFillColor(240, 240, 240)
+    doc.rect(20, yPos - 5, 170, 12, 'F')
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Date', 25, yPos + 2)
+    doc.text('Account', 60, yPos + 2)
+    doc.text('Amount', 120, yPos + 2)
+    doc.text('Status', 160, yPos + 2)
+    yPos += 10
+    
+    // Payment entries
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(9)
+    json.payment_history.forEach((payment: any) => {
+      if (yPos > 250) return
+      doc.text(payment.date || 'REDACTED', 25, yPos + 2)
+      doc.text(payment.account || 'REDACTED', 60, yPos + 2)
+      doc.text(`£${payment.amount || '0'}`, 120, yPos + 2)
+      
+      // Color-code payment status
+      const status = payment.status || 'unknown'
+      if (status === 'on_time') doc.setTextColor(0, 150, 0) // Green
+      else if (status === 'late') doc.setTextColor(200, 100, 0) // Orange
+      else if (status === 'missed') doc.setTextColor(200, 0, 0) // Red
+      
+      doc.text(status.toUpperCase(), 160, yPos + 2)
+      doc.setTextColor(0, 0, 0) // Reset color
+      
+      yPos += 8
+    })
+    yPos += 15
+  }
+  
+  // Score Factors
+  if (json.score_factors && Array.isArray(json.score_factors)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('SCORE FACTORS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    json.score_factors.forEach((factor: string, index: number) => {
+      const isPositive = factor.toLowerCase().includes('positive:')
+      if (isPositive) doc.setTextColor(0, 150, 0) // Green for positive
+      else if (factor.toLowerCase().includes('negative:')) doc.setTextColor(200, 0, 0) // Red for negative
+      
+      doc.text(`${index + 1}. ${factor}`, 25, yPos)
+      doc.setTextColor(0, 0, 0) // Reset color
+      yPos += 8
+    })
+    yPos += 10
+  }
+  
+  // Recommendations
+  if (json.recommendations && Array.isArray(json.recommendations)) {
+    doc.setFontSize(14)  
+    doc.setFont('helvetica', 'bold')
+    doc.text('RECOMMENDATIONS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    json.recommendations.forEach((rec: string, index: number) => {
+      doc.text(`${index + 1}. ${rec}`, 25, yPos)
+      yPos += 12
+    })
+    yPos += 10
+  }
+  
+  // Risk Assessment Stamp
+  if (json.credit_summary?.risk_assessment) {
+    yPos += 20
+    const risk = json.credit_summary.risk_assessment.toLowerCase()
+    
+    if (risk === 'low') {
+      doc.setTextColor(0, 150, 0) // Green
+      doc.text('✓ LOW RISK', 95, yPos, { align: 'center' })
+    } else if (risk === 'medium') {
+      doc.setTextColor(200, 100, 0) // Orange
+      doc.text('◐ MEDIUM RISK', 95, yPos, { align: 'center' })
+    } else if (risk === 'high') {
+      doc.setTextColor(200, 0, 0) // Red
+      doc.text('⚠ HIGH RISK', 95, yPos, { align: 'center' })
+    }
+    doc.setTextColor(0, 0, 0) // Reset
+  }
+}
+
 function addPayslipDetails(doc: jsPDF, json: any, startY: number) {
   let yPos = startY
   
@@ -1002,50 +1253,332 @@ function addPayslipDetails(doc: jsPDF, json: any, startY: number) {
   }
 }
 
-function addRejectionLetter(doc: jsPDF, json: any, startY: number) {
+function addJobRejectionDetails(doc: jsPDF, json: any, startY: number) {
   let yPos = startY
   
-  if (json.date) {
-    doc.setFontSize(12)
-    doc.text(`Date: ${new Date(json.date).toLocaleDateString()}`, 20, yPos)
-    yPos += 20
-  }
+  // Add logo/header simulation
+  doc.setFontSize(12)
+  doc.setFont('helvetica', 'bold')
+  doc.text(json.logo || '╔═══ COMPANY OFFICIAL', 20, yPos)
+  doc.text(json.letterhead || 'Human Resources Department', 20, yPos + 8)
   
-  if (json.salutation) {
-    doc.text(json.salutation, 20, yPos)
+  // Official border
+  doc.setDrawColor(0, 0, 0)
+  doc.setLineWidth(0.8)
+  doc.rect(15, yPos - 8, 165, 25)
+  
+  yPos += 30
+  
+  // Application Reference
+  if (json.applicant?.application_reference) {
+    doc.setFontSize(16)
+    doc.setFont('helvetica', 'bold')
+    doc.text(`APPLICATION REF: ${json.applicant.application_reference}`, 20, yPos)
     yPos += 15
   }
   
+  // Applicant Information Table
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.text('APPLICATION SUMMARY', 20, yPos)
+  yPos += 15
+  
+  drawTableHeader(doc, 'FIELD', 'DETAILS', yPos)
+  yPos += 8
+  
+  const applicantData = [
+    ['Applicant Name', json.applicant?.name || 'REDACTED'],
+    ['Position Applied', json.applicant?.position_applied || 'REDACTED'],
+    ['Company', json.applicant?.company || 'REDACTED'],
+    ['Experience', json.applicant?.experience_years || 'REDACTED'],
+    ['Application Date', json.applicant?.application_date || 'REDACTED'],
+    ['Interview Date', json.applicant?.interview_date || 'N/A']
+  ]
+  
+  applicantData.forEach(([field, value]) => {
+    drawTableRow(doc, field, value, yPos)
+    yPos += 10
+  })
+  
+  yPos += 10
+  
+  // Letter Content
+  if (json.salutation) {
+    doc.setFontSize(12)
+    doc.text(json.salutation, 20, yPos)
+    yPos += 10
+  }
+  
   if (json.opening) {
+    doc.setFontSize(11)
     const openingLines = doc.splitTextToSize(json.opening, 170)
     doc.text(openingLines as string[], 20, yPos)
     yPos += openingLines.length * 6 + 10
   }
   
-  if (json.reasoning && Array.isArray(json.reasoning)) {
-    doc.text('Key considerations included:', 20, yPos)
-    yPos += 10
-    json.reasoning.forEach((reason: string) => {
-      doc.text(`• ${reason}`, 30, yPos)
-      yPos += 6
+  // Specific Reasons
+  if (json.specific_reasons) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('DECISION REASONS', 20, yPos)
+    yPos += 15
+    
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(11)
+    
+    if (json.specific_reasons.primary_reason) {
+      doc.text(`Primary Reason: ${json.specific_reasons.primary_reason}`, 25, yPos)
+      yPos += 15
+    }
+    
+    if (json.specific_reasons.secondary_factors) {
+      doc.text('Secondary Factors:', 25, yPos)
+      yPos += 8
+      json.specific_reasons.secondary_factors.forEach((factor: string) => {
+        doc.text(`• ${factor}`, 30, yPos)
+        yPos += 8
+      })
+      yPos += 10
+    }
+  }
+  
+  // Constructive Feedback
+  if (json.constructive_feedback) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('CONSTRUCTIVE FEEDBACK', 20, yPos)
+    yPos += 15
+    
+    const feedback = json.constructive_feedback
+    
+    if (feedback.development_suggestions) {
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text('DEVELOPMENT SUGGESTIONS', 25, yPos)
+      yPos += 10
+      
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(10)
+      feedback.development_suggestions.forEach((suggestion: string) => {
+        doc.text(`• ${suggestion}`, 30, yPos)
+        yPos += 8
+      })
+      yPos += 10
+    }
+  }
+  
+  // Next Steps
+  if (json.next_steps && Array.isArray(json.next_steps)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('NEXT STEPS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    json.next_steps.forEach((step: string, index: number) => {
+      doc.text(`${index + 1}. ${step}`, 25, yPos)
+      yPos += 8
     })
     yPos += 10
   }
   
-  if (json.closing) {
-    const closingLines = doc.splitTextToSize(json.closing, 170)
-    doc.text(closingLines as string[], 20, yPos)
-    yPos += closingLines.length * 6 + 15
+  // Signature Block
+  if (json.signature_block) {
+    yPos += 20
+    doc.text('Sincerely,', 20, yPos)
+    yPos += 10
+    
+    doc.setFont('helvetica', 'bold')
+    doc.text(json.signature_block.name || 'HR Manager', 20, yPos)
+    yPos += 8
+    
+    doc.setFont('helvetica', 'normal')
+    doc.text(json.signature_block.title || 'Human Resources', 20, yPos)
+    yPos += 8
+    doc.text(json.signature_block.company || 'Company Name', 20, yPos)
+  }
+}
+
+function addRentReferenceDetails(doc: jsPDF, json: any, startY: number) {
+  let yPos = startY
+  
+  // Add logo/header simulation
+  doc.setFontSize(12)
+  doc.setFont('helvetica', 'bold')
+  doc.text(json.logo || '╔═══ PROPERTY MANAGEMENT', 20, yPos)
+  doc.text(json.letterhead || 'Professional Property Management Services', 20, yPos + 8)
+  
+  // Official border
+  doc.setDrawColor(0, 0, 0)
+  doc.setLineWidth(0.8)
+  doc.rect(15, yPos - 8, 165, 25)
+  
+  yPos += 30
+  
+  // Reference Number
+  if (json.reference_number) {
+    doc.setFontSize(16)
+    doc.setFont('helvetica', 'bold')
+    doc.text(`REFERENCE NUMBER: ${json.reference_number}`, 20, yPos)
+    yPos += 15
   }
   
-  if (json.signature_block) {
+  // Property Details Table
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.text('PROPERTY & TENANCY DETAILS', 20, yPos)
+  yPos += 15
+  
+  drawTableHeader(doc, 'FIELD', 'DETAILS', yPos)
+  yPos += 8
+  
+  const propertyData = [
+    ['Property Address', json.property_details?.address || 'REDACTED'],
+    ['Property Type', json.property_details?.property_type || 'REDACTED'],
+    ['Landlord', json.property_details?.landlord_name || 'REDACTED'],
+    ['Monthly Rent', `£${json.financial_assessment?.monthly_rent_gbp || '0'}`],
+    ['Tenancy Duration', json.tenant_information?.tenancy_duration || 'REDACTED'],
+    ['Current Status', json.tenant_information?.current_status || 'REDACTED']
+  ]
+  
+  propertyData.forEach(([field, value]) => {
+    drawTableRow(doc, field, value, yPos)
+    yPos += 10
+  })
+  
+  yPos += 10
+  
+  // Payment History Table
+  if (json.financial_assessment?.payment_history) {
+    doc.setFontSize(14)
     doc.setFont('helvetica', 'bold')
-    doc.text(json.signature_block.name, 20, yPos)
-    yPos += 8
+    doc.text('PAYMENT HISTORY', 20, yPos)
+    yPos += 15
+    
+    // Table headers
+    doc.setFillColor(240, 240, 240)
+    doc.rect(20, yPos - 5, 170, 12, 'F')
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Month', 25, yPos + 2)
+    doc.text('Amount', 80, yPos + 2)
+    doc.text('Date Paid', 110, yPos + 2)
+    doc.text('Status', 150, yPos + 2)
+    yPos += 10
+    
+    // Payment entries
     doc.setFont('helvetica', 'normal')
-    doc.text(json.signature_block.title, 20, yPos)
+    doc.setFontSize(9)
+    json.financial_assessment.payment_history.forEach((payment: any) => {
+      if (yPos > 250) return
+      doc.text(payment.month || 'REDACTED', 25, yPos + 2)
+      doc.text(`£${payment.amount || '0'}`, 80, yPos + 2)
+      doc.text(payment.date_paid || 'REDACTED', 110, yPos + 2)
+      
+      // Color-code payment status
+      const status = payment.status || 'unknown'
+      if (status === 'on_time' || status === 'early') doc.setTextColor(0, 150, 0) // Green
+      else if (status === 'late') doc.setTextColor(200, 100, 0) // Orange
+      
+      doc.text(status.toUpperCase(), 150, yPos + 2)
+      doc.setTextColor(0, 0, 0) // Reset color
+      
+      yPos += 8
+    })
+    yPos += 15
+  }
+  
+  // Reference Assessment Scores
+  if (json.reference_assessment) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('TENANT ASSESSMENT SCORES', 20, yPos)
+    yPos += 15
+    
+    const assessment = json.reference_assessment
+    
+    doc.setFillColor(220, 235, 255)
+    doc.rect(20, yPos - 5, 170, 8, 'F')
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Assessment Category', 25, yPos + 2)
+    doc.text('Score', 150, yPos + 2)
     yPos += 8
-    doc.text(json.signature_block.company, 20, yPos)
+    
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    
+    const assessmentDetails = [
+      ['Rent Reliability', `${assessment.rent_reliability_score || 0}/10`],
+      ['Property Care', `${assessment.property_care_score || 0}/10`],
+      ['Communication', `${assessment.communication_score || 0}/10`],
+      ['Overall Score', `${assessment.overall_tenant_score || 0}/10`]
+    ]
+    
+    assessmentDetails.forEach(([category, score]) => {
+      doc.text(category, 25, yPos + 2)
+      doc.text(score, 150, yPos + 2)
+      yPos += 8
+    })
+    
+    yPos += 15
+  }
+  
+  // Recommendation Stamp
+  if (json.reference_assessment?.overall_rating) {
+    yPos += 10
+    const rating = json.reference_assessment.overall_rating.toLowerCase()
+    
+    if (rating === 'excellent') {
+      doc.setTextColor(0, 150, 0) // Green
+      doc.setFontSize(16)
+      doc.setFont('helvetica', 'bold')
+      doc.text('✓ EXCELLENT TENANT', 95, yPos, { align: 'center' })
+    } else if (rating === 'good') {
+      doc.setTextColor(200, 200, 0) // Yellow
+      doc.setFontSize(16)
+      doc.setFont('helvetica', 'bold')
+      doc.text('◐ GOOD TENANT', 95, yPos, { align: 'center' })
+    } else if (rating === 'fair') {
+      doc.setTextColor(200, 100, 0) // Orange
+      doc.setFontSize(16)
+      doc.setFont('helvetica', 'bold')
+      doc.text('○ FAIR TENANT', 95, yPos, { align: 'center' })
+    } else {
+      doc.setTextColor(200, 0, 0) // Red
+      doc.setFontSize(16)
+      doc.setFont('helvetica', 'bold')
+      doc.text('⚠ POOR TENANT', 95, yPos, { align: 'center' })
+    }
+    doc.setTextColor(0, 0, 0) // Reset
+    
+    yPos += 20
+  }
+  
+  // Additional Comments
+  if (json.additional_comments && Array.isArray(json.additional_comments)) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('ADDITIONAL COMMENTS', 20, yPos)
+    yPos += 15
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    json.additional_comments.forEach((comment: string, index: number) => {
+      doc.text(`${index + 1}. ${comment}`, 25, yPos)
+      yPos += 12
+    })
+    yPos += 10
+  }
+  
+  // Reference Validity
+  if (json.reference_validity) {
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'normal')
+    doc.text(`Reference valid until: ${json.reference_validity.valid_until || 'N/A'}`, 20, yPos)
+    yPos += 8
+    doc.text(`For verification contact: ${json.reference_validity.contact_for_verification || 'N/A'}`, 20, yPos)
   }
 }
 

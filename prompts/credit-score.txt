@@ -1,63 +1,129 @@
-CREDIT SCORE REPORT
+Create an extremely detailed fictional credit score report for entertainment purposes.
+STRICT JSON. Realistic but not claiming to be real credit agency documents.
 
-Subject: {{fullName}}
-DOB: {{dateOfBirth}}
-Address: {{address}}
-Employment: {{employmentStatus}}
+Constraints:
+- Generate comprehensive credit report content that fills 2-3 pages
+- Each string ≤ 140 chars for readability
+- Include detailed account history, payment patterns, and financial assessments
+- Create realistic credit accounts and transaction histories
 
-CREDIT REFERENCE AGENCY
-REPORT ID: CRA-{{randomReportId}}
-DATE: {{currentDate}}
+Placeholders: {{name}}, {{income}}
 
-PERSONAL INFORMATION
-====================
-Full Name: {{fullName}}
-Date of Birth: {{dateOfBirth}}
-Address: {{address}}
-Employment Status: {{employmentStatus}}
-Credit Reference Number: {{creditReferenceNumber}}
+JSON schema:
+{
+  "document_title": "CREDIT SCORE REPORT & ANALYSIS",
+  "logo": "CREDIT-AGENCY-SEAL",
+  "letterhead": "Credit Reference Agency Report",
+  "subject": { 
+    "name": "{{name}}", 
+    "income": "{{income}}",
+    "address": "<realistic UK address with postcode>",
+    "phone": "<realistic UK mobile>",
+    "email": "<email address>",
+    "employment": "<employment status>",
+    "occupation": "<job title>"
+  },
+  "report_id": "<CRA-12-char-alnum>",
+  "report_date": "<ISO date>",
+  "credit_summary": {
+    "overall_score": "<integer 300-850>",
+    "score_rating": "<Excellent|Good|Fair|Poor|Very Poor>",
+    "previous_score": "<previous score if available>",
+    "score_change": "<+/- amount and direction>",
+    "credit_rating": "<A+|A|B|C|D|F rating>",
+    "risk_assessment": "<low|medium|high|very_high>"
+  },
+  "account_details": [
+    {
+      "account_name": "<credit card|personal_loan|mortgage|overdraft>",
+      "provider": "<realistic bank/lender name>",
+      "account_number": "<masked account number>",
+      "opened_date": "<ISO date>",
+      "credit_limit": "<credit limit amount>",
+      "current_balance": "<current outstanding balance>",
+      "monthly_payment": "<minimum/required monthly payment>",
+      "payment_status": "<up_to_date|late|default|settled>",
+      "last_payment": "<last payment amount and date>"
+    },
+    {
+      "account_name": "<credit card|personal_loan|mortgage|overdraft>",
+      "provider": "<realistic bank/lender name>",
+      "account_number": "<masked account number>",
+      "opened_date": "<ISO date>",
+      "credit_limit": "<credit limit amount>",
+      "current_balance": "<current outstanding balance>",
+      "monthly_payment": "<minimum/required monthly payment>",
+      "payment_status": "<up_to_date|late|default|settled>",
+      "last_payment": "<last payment amount and date>"
+    },
+    {
+      "account_name": "<credit card|personal_loan|mortgage|overdraft>",
+    "provider": "<realistic bank/lender name>",
+      "account_number": "<masked account number>",
+      "opened_date": "<ISO date>",
+      "credit_limit": "<credit limit amount>",
+      "current_balance": "<current outstanding balance>",
+      "monthly_payment": "<minimum/required monthly payment>",
+      "payment_status": "<up_to_date|late|default|settled>",
+      "last_payment": "<last payment amount and date>"
+    }
+  ],
+  "payment_history": [
+    { "date": "<ISO date>", "account": "<account name>", "amount": "<payment amount>", "status": "<on_time|late|missed>" },
+    { "date": "<ISO date>", "account": "<account name>", "amount": "<payment amount>", "status": "<on_time|late|missed>" },
+    { "date": "<ISO date>", "account": "<account name>", "amount": "<payment amount>", "status": "<on_time|late|missed>" },
+    { "date": "<ISO date>", "account": "<account name>", "amount": "<payment amount>", "status": "<on_time|late|missed>" },
+    { "date": "<ISO date>", "account": "<account name>", "amount": "<payment amount>", "status": "<on_time|late|missed>" }
+  ],
+  "financial_summary": {
+    "total_debt": "<total outstanding debt across all accounts>",
+    "available_credit": "<total unused credit available>",
+    "debt_to_income_ratio": "<percentage ratio>",
+    "credit_utilisation": "<percentage of available credit being used>",
+    "monthly_debt_payments": "<total monthly debt obligations>",
+    "disposable_income": "<income remaining after essential expenses>"
+  },
+  "credit_applications": [
+    { "date": "<ISO date>", "provider": "<lender name>", "type": "<credit_card|loan|mortgage>", "status": "<approved|declined|pending>", "amount": "<amount applied for>" },
+    { "date": "<ISO ISO date>", "provider": "<lender name>", "type": "<credit_card|loan|mortgage>", "status": "<approved|declined|pending>", "amount": "<amount applied for>" }
+  ],
+  "public_records": {
+    "county_court_judgments": [
+      { "date": "<date if any>", "amount": "<amount>", "status": "<satisfied|unsatisfied>" }
+    ],
+    "bankruptcies": [
+      { "date": "<date if any>", "type": "<bankruptcy|individual_voluntary_arrangement>" }
+    ],
+    "insolvency_notices": "<any current insolvency notices>"
+  },
+  "score_factors": [
+    "<positive: Payment history consistently on time over last 24 months>",
+    "<positive: Credit utilization maintained below 30% usage>",
+    "<negative: Recent missed payments on personal loan account in March 2024>",
+    "<negative: High number of recent credit applications may indicate financial stress>",
+    "<negative: Average account age is relatively young suggesting limited credit history>"
+  ],
+  "recommendations": [
+    "<detailed_recommendation: Reduce credit card balances to below 25% of total limits to improve utilization score>",
+    "<detailed_recommendation: Avoid applying for new credit for next 6 months to reduce application frequency impact>",
+    "<detailed_recommendation: Set up payment reminders or automatic payments to prevent future missed payments>",
+    "<detailed_recommendation: Consider consolidating high-interest debts into single loan with lower rate>"
+  ],
+  "threshold_analysis": {
+    "affordability_assessment": "<credit affordability rating>",
+    "default_probability": "<percentage chance of default in next 12 months>",
+    "credit_application_success_rate": "<predicted approval rate for future applications>",
+    "maximum_credit_limit_recommended": "<recommended maximum single credit limit>"
+  },
+  "credit_coach_advice": [
+    "<advice_item: Regularly monitor credit report monthly through free services to identify errors quickly>",
+    "<advice_item: Contact creditors directly if experiencing financial difficulties before missing payments>",
+    "<advice_item: Build credit history gradually with small manageable amounts if limited credit experience>",
+    "<advice_item: Consider secured credit cards if struggling to qualify for traditional credit products>"
+  ],
+  "next_review": "<date for next automatic credit review>",
+  "issued_at": "<ISO date>",
+  "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"
+}
 
-CREDIT SCORE
-=============
-Overall Score: {{creditScore}}/999
-Risk Category: {{riskCategory}}
-Score Factors: {{scoreFactors}}
-Previous Score: {{previousScore}}
-
-CREDIT HISTORY
-===============
-Account Details: {{accountDetails}}
-Payment History: {{paymentHistory}}
-Credit Utilization: {{creditUtilization}}
-Recent Applications: {{recentApplications}}
-
-FINANCIAL SUMMARY
-=================
-Total Debt: {{totalDebt}}
-Available Credit: {{availableCredit}}
-Monthly Payments: {{monthlyPayments}}
-Credit Recommendations: {{creditRecommendations}}
-
-PUBLIC RECORDS
-===============
-County Court Judgments: {{countyCourtJudgments}}
-Bankruptcies: {{bankruptcies}}
-Individual Voluntary Arrangements: {{iva}}
-
-ACCOUNT INFORMATION
-===================
-Credit Cards: {{creditCards}}
-Loans: {{loans}}
-Mortgages: {{mortgages}}
-Overdrafts: {{overdrafts}}
-
-FINAL ASSESSMENT
-================
-Credit Rating: {{creditRating}}
-Recommendations: {{recommendations}}
-Next Review: {{nextReview}}
-
-Analyst Signature: {{analystSignature}}
-Date: {{currentDate}}
-
-CREDIT REFERENCE AGENCY
+Temperature 0.5. JSON only.

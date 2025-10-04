@@ -1,19 +1,130 @@
-Create a fictional landlord-style reference.
-STRICT JSON. Positive/neutral tone.
+Create an extremely detailed fictional landlord tenancy reference letter for entertainment purposes.
+STRICT JSON. Realistic but not claiming to be real landlord documents.
 
-Placeholders: {{fullName}}, {{landlordName}}, {{propertyAddress}}, {{rentAmount}}, {{tenancyPeriod}}
+Constraints:
+- Generate comprehensive reference content that fills 2-3 pages
+- Each string ≤ 140 chars for readability
+- Include detailed tenancy history, payment records, and character assessment
+- Create realistic property management and tenant evaluation details
+
+Placeholders: {{tenantName}}, {{landlordName}}, {{propertyAddress}}, {{rentAmount}}, {{tenancyPeriod}}
 
 JSON schema:
 {
-  "document_title": "Tenancy Reference (Fictional)",
-  "tenant": { "name": "{{fullName}}", "address": "{{propertyAddress}}" },
-  "landlord": { "name": "{{landlordName}}" },
-  "tenancy": { "duration": "{{tenancyPeriod}}", "monthly_rent_gbp": "{{rentAmount}}" },
-  "rating": "<Excellent|Good|Fair>",
-  "remarks": ["<short>", "..."],
-  "landlord_contact": "<fake contact line>",
+  "document_title": "TENANCY REFERENCE LETTER",
+  "logo": "PROPERTY-MANAGEMENT-SEAL",
+  "letterhead": "Professional Property Management Services",
+  "reference_number": "<REF-10-char-alnum>",
+  "issue_date": "<ISO date>",
+  "property_details": {
+    "address": "{{propertyAddress}}",
+    "property_type": "<flat|house|apartment|studio|bedroom_property>",
+    "postcode": "<realistic UK postcode>",
+    "management_company": "<realistic property company>",
+    "landlord_name": "{{landlordName}}",
+    "landlord_contact": "<professional contact details>"
+  },
+  "tenant_information": {
+    "name": "{{tenantName}}",
+    "tenancy_start": "<ISO date>",
+    "tenancy_end": "<ISO date or 'current'>",
+    "tenancy_duration": "{{tenancyPeriod}}",
+    "tenancy_type": "<assured_shorthold_tenancy|fixed_term|monthly|periodic>",
+    "deposit_amount": "<security deposit amount>",
+    "current_status": "<tenant|former_tenant|checking_out>"
+  },
+  "financial_assessment": {
+    "monthly_rent_gbp": "{{rentAmount}}",
+    "payment_history": [
+      { "month": "<Month Year>", "amount": "<rent amount>", "date_paid": "<date>", "status": "<on_time|late|early>" },
+      { "month": "<Month Year>", "amount": "<rent amount>", "date_paid": "<date>", "status": "<on_time|late|early>" },
+      { "month": "<Month Year>", "amount": "<rent amount>", "date_paid": "<date>", "status": "<on_time|late|early>" },
+      { "month": "<Month Year>", "amount": "<rent amount>", "date_paid": "<date>", "status": "<on_time|late|early>" },
+      { "month": "<Month Year>", "amount": "<rent amount>", "date_paid": "<date>", "status": "<on_time|late|early>" },
+      { "month": "<Month Year>", "amount": "<rent amount>", "date_paid": "<date>", "status": "<on_time|late|early>" }
+    ],
+    "payment_reliability": "<excellent|good|fair|poor>",
+    "additional_costs": [
+      { "type": "<utilities|council_tax|service_charges>", "amount": "<monthly cost>", "responsibility": "<tenant|landlord|shared>" },
+      { "type": "<utilities|council_tax|service_charges>", "amount": "<monthly cost>", "responsibility": "<tenant|landlord|shared>" }
+    ],
+    "security_deposit_status": "<full_refund|partial_deductions|outstanding_disputes>",
+    "outstanding_balances": "<any outstanding rent or charges>"
+  },
+  "property_maintenance": {
+    "tenant_conduct": "<property_care|maintenance_issues|damage_reports>",
+    "reporting_behaviour": "<proactive_in_reporting|responsive_to_issues|reactive_only>",
+    "property_condition": {
+      "move_in_condition": "<excellent|good|fair|poor>",
+      "care_maintenance": "<very_careful|careful|normal_wear|neglectful>",
+      "damage_assessment": "<no_damage|minor_wear_and_tear|noticeable_damage|significant_damage>",
+      "improvements_made": "<any improvements tenant made>"
+    },
+    "repairs_needed": [
+      { "date": "<ISO date>", "issue": "<specific maintenance issue>", "tenant_response": "<how tenant handled it>", "resolution": "<how it was resolved>" },
+      { "date": "<ISO date>", "issue": "<specific maintenance issue>", "tenant_response": "<how tenant handled it>", "resolution": "<how it was resolved>" }
+    ]
+  },
+  "tenant_behaviour": {
+    "noise_levels": "<quiet|respectful|occasionally_noisy|consistently_disruptive>",
+    "neighbour_relations": "<excellent|good|neutral|poor>",
+    "anti_social_behaviour": "<none_reported|minor_incidents|ongoing_concerns|serious_noted>",
+    "communication_style": "<professional|friendly|business_like|difficult>",
+    "rule_compliance": {
+      "smoking_policy": "<compliant|violations_registered>",
+      "pet_policy": "<compliant|unauthorized_pets|approved_pets>",
+      "parking_regulations": "<follows_rules|occasional_violations|frequent_violations>",
+      "property_access": "<reasonable_access|comprised_access|resistant_to_access>"
+    }
+  },
+  "character_assessment": {
+    "reliability": "<highly_reliable|generally_reliable|sometimes_unreliable|unreliable>",
+    "responsibility": "<very_responsible|responsible|somewhat_irresponsible|irresponsible>",
+    "professionalism": "<professional|appropriate|informal|inappropriate>",
+    "communication": {
+      "responsiveness": "<immediate|within_24hrs|within_48hrs|delayed|poor>",
+      "clarity": "<clear_and_direct|occasionally_unclear|generally_confusing>",
+      "courtesy": "<very_polite|polite|neutral|sometimes_rude|rude>"
+    },
+    "work_arrangements": "<employed|self_employed|student|benefits|other>",
+    "financial_stability": "<stable|generally_stable|variable|concerning>"
+  },
+  "incidents_and_complaints": [
+    { "date": "<ISO date>", "type": "<formal_complaint|informal_concern|minor_incident>", "description": "<what happened>", "resolution": "<how it was resolved>", "outcome": "<impact on tenancy>" },
+    { "date": "<ISO date>", "type": "<formal_complaint|informal_concern|minor_incident>", "description": "<what happened>", "resolution": "<how it was resolved>", "outcome": "<impact on tenancy>" }
+  ],
+  "reference_assessment": {
+    "overall_rating": "<Excellent|Good|Fair|Poor>",
+    "suitability_for_new_tenancy": "<strongly_recommended|recommended|neutral|not_recommended>",
+    "rent_reliability_score": "<integer out of 10>",
+    "property_care_score": "<integer out of 10>",
+    "communication_score": "<integer out of 10>",
+    "overall_tenant_score": "<integer out of 10>"
+  },
+  "specific_recommendations": [
+    "<specific_recommendation: Tenant would be suitable for properties in [price range] rental bracket>",
+    "<specific_recommendation: Excellent reference for families due to good property maintenance>",
+    "<specific_recommendation: Ideal for long-term tenancies based on reliability patterns>",
+    "<specific_recommendation: Strong communication skills make them easy to work with>"
+  ],
+  "additional_comments": [
+    "<additional_comment: Tenant always responded promptly to property maintenance requests>",
+    "<additional_comment: Clean and respectful of communal areas and neighbors>",
+    "<additional_comment: Flexible regarding property inspections and reasonable access>",
+    "<additional_comment: Demonstrates good financial management with consistent rent payments>"
+  ],
+  "reference_validity": {
+    "valid_until": "<ISO date 12 months from issue>",
+    "issued_by": "<property manager name>",
+    "contact_for_verification": "<phone> <email>",
+    "alternate_contacts": ["<additional contact methods>"]
+  },
+  "legal_disclaimer": {
+    "statement": "<This reference is provided for entertainment purposes only and does not constitute professional landlord evaluation>",
+    "liability": "<No liability accepted for decisions made based on this fictional reference>"
+  },
   "issued_at": "<ISO date>",
-  "disclaimer": "FOR ENTERTAINMENT ONLY."
+  "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"
 }
 
-Temperature 0.3. JSON only.
+Temperature 0.4. JSON only.

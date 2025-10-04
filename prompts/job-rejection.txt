@@ -1,46 +1,143 @@
-JOB APPLICATION REJECTION LETTER
+Create an extremely detailed fictional job application rejection letter for entertainment purposes.
+STRICT JSON. Realistic but not claiming to be real employment documents.
 
-Applicant: {{fullName}}
-Company: {{companyName}}
-Position: {{jobTitle}}
-Application Date: {{applicationDate}}
+Constraints:
+- Generate comprehensive rejection letter content that fills 2-3 pages
+- Each string ≤ 140 chars for readability
+- Include detailed feedback, reasoning, and professional insights
+- Create realistic assessment sections and constructive recommendations
 
-{{companyName}}
-REFERENCE: REJ-{{randomReferenceId}}
-DATE: {{currentDate}}
+Placeholders: {{applicantName}}, {{jobPosition}}, {{companyName}}, {{experienceYears}}
 
-Dear {{fullName}},
+JSON schema:
+{
+  "document_title": "JOB APPLICATION DECISION",
+  "logo": "COMPANY-OFFICIAL-SEAL",
+  "letterhead": "Human Resources Department",
+  "applicant": { 
+    "name": "{{applicantName}}", 
+    "position_applied": "{{jobPosition}}",
+    "company": "{{companyName}}",
+    "experience_years": "{{experienceYears}}",
+    "application_date": "<ISO date when application was submitted>",
+    "interview_date": "<ISO date of interview if applicable>",
+    "application_reference": "<APPLICATION-8-char-alnum>"
+  },
+  "letter_date": "<ISO date>",
+  "salutation": "<Dear {{applicantName}},>",
+  "opening": "<Thank you for your interest in the {{jobPosition}} position at {{companyName}}. After careful consideration of your application and interview, we regret to inform you that we have decided to move forward with other candidates.>",
+  "assessment_summary": {
+    "overall_assessment": "<positive|mixed|negative>",
+    "decision_category": "<interview_performance|qualifications|cultural_fit|competition|budget_constraints>",
+    "process_stage": "<application_review|phone_screen|video_interview|on_site_interview|final_review>"
+  },
+  "detailed_review": {
+    "qualifications_evaluation": {
+      "strengths": ["<specific qualification strength>", "<another strength>"],
+      "areas_for_improvement": ["<specific area needing improvement>", "<another area>"],
+      "education_fit": "<assessment of educational background relevance>",
+      "certification_gaps": ["<missing certification>", "<another gap>"]
+    },
+    "experience_assessment": {
+      "relevant_experience": "<assessment of experience relevance to role>",
+      "industry_knowledge": "<evaluation of recent industry knowledge demonstrated>",
+      "transferable_skills": ["<identified transferable skill>", "<another skill>"],
+      "experience_gaps": ["<identified gap in experience>", "<another gap>"]
+    },
+    "interview_feedback": {
+      "communication_skills": "<assessment of communication abilities>",
+      "technical_competence": "<evaluation of technical knowledge>",
+      "problem_solving": "<assessment of problem-solving approach>",
+      "questions_quality": "<evaluation of questions asked during interview>",
+      "overall_presentation": "<assessment of professional presentation>"
+    }
+  },
+  "specific_reasons": {
+    "primary_reason": "<detailed primary reason for rejection>",
+    "secondary_factors": [
+      "<detailed secondary reason 1>",
+      "<detailed secondary reason 2>",
+      "<detailed secondary reason 3>"
+    ],
+    "decision_committee_notes": [
+      "<HR committee note about candidate>",
+      "<Manager assessment comment>",
+      "<Team fit evaluation>"
+    ]
+  },
+  "constructive_feedback": {
+    "positive_attributes": [
+      "<positive feedback 1>",
+      "<positive feedback 2>",
+      "<positive feedback 3>"
+    ],
+    "development_suggestions": [
+      "<detailed improvement suggestion 1>",
+      "<detailed improvement suggestion 2>",
+      "<detailed improvement suggestion 3>"
+    ],
+    "skill_recommendations": [
+      "<specific skill to develop>",
+      "<specific training recommendation>",
+      "<specific experience suggestion>"
+    ]
+  },
+  "alternative_opportunities": {
+    "current_vacancies": [
+      { "position": "<alternative position title>", "department": "<department>", "match_reason": "<why this might fit>" },
+      { "position": "<another position title>", "department": "<department>", "match_reason": "<why this might Fit>" }
+    ],
+    "future_positions": "<information about upcoming positions>",
+    "company_programs": [
+      "<internship program available>",
+      "<part-time opportunity>",
+      "<contract work option>"
+    ]
+  },
+  "industry_advice": {
+    "market_trends": "<insights about industry trends relevant to candidate>",
+    "skill_demand": "<information about in-demand skills>",
+    "networking_tips": ["<networking advice tip 1>", "<networking advice tip 2>"],
+    "career_path_suggestions": [
+      "<suggested career path 1>",
+      "<suggested career path 2>"
+    ]
+  },
+  "recommendations": [
+    "<detailed_recommendation: Gain additional 6-12 months experience in [specific area] before reapplying>",
+    "<detailed_recommendation: Consider obtaining [specific certification] to strengthen qualifications>",
+    "<detailed_recommendation: Build portfolio showcasing [specific skills] demonstrated through sample projects>",
+    "<detailed_recommendation: Practice technical interviews and coding challenges in [specific technology stack]>"
+  ],
+  "next_steps": [
+    "<step: Check our careers page regularly for new opportunities>",
+    "<step: Follow up in 3-6 months for future consideration>",
+    "<step: Apply for [targeted position] when available>",
+    "<step: Connect with our recruiting team on LinkedIn for updates>"
+  ],
+  "company_feedback": {
+    "application_process": "<short feedback about application process>",
+    "company_culture": "<brief description relevant to candidate's interests>",
+    "team_dynamics": "<information about team structure>"
+  },
+  "contact_information": {
+    "hr_contact": {
+      "name": "<HR representative name>",
+      "email": "<HR email>",
+      "phone": "<HR phone number>"
+    },
+    "recruiting_team": "<recruiting team contact information>",
+    "careers_website": "<company careers page URL>"
+  },
+  "signature_block": {
+    "name": "<signatory name>",
+    "title": "<signatory title>",
+    "department": "Human Resources",
+    "company": "{{companyName}}",
+    "date": "<ISO date>"
+  },
+  "issued_at": "<ISO date>",
+  "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"
+}
 
-Thank you for your interest in the {{jobTitle}} position at {{companyName}} and for taking the time to submit your application on {{applicationDate}}.
-
-After careful consideration of all applications received, we have decided to move forward with other candidates whose qualifications more closely match our current needs.
-
-APPLICATION FEEDBACK
-====================
-Strengths Identified: {{strengthsIdentified}}
-Areas for Improvement: {{areasForImprovement}}
-Specific Reasons: {{specificReasons}}
-Constructive Suggestions: {{constructiveSuggestions}}
-
-COMPANY INFORMATION
-===================
-Company Address: {{companyAddress}}
-Contact Information: {{contactInformation}}
-Website: {{website}}
-Future Opportunities: {{futureOpportunities}}
-
-We encourage you to apply for future positions that may be a better fit for your skills and experience. We will keep your application on file for six months and may contact you if a suitable position becomes available.
-
-Thank you again for your interest in {{companyName}}.
-
-Sincerely,
-
-{{hrRepresentative}}
-Human Resources Manager
-{{companyName}}
-
-Contact: {{hrEmail}}
-Phone: {{hrPhone}}
-
-{{companyName}}
-Human Resources Department
+Temperature 0.6. JSON only.
