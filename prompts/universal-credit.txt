@@ -1,14 +1,129 @@
-You MUST ONLY respond with one valid JSON object. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
 
-If unsure, output empty arrays/strings, but do not add text outside JSON.
+{
+  "structured": {
+    "document_title": "Universal Credit Assessment Report (Fictional)",
+    "case_reference": "<UC-case-num-12-chars>",
+    "applicant": {
+      "name": "{{fullName}}",
+      "dob": "{{dateOfBirth}}",
+      "address": "<UK address>",
+      "city": "{{city}}",
+      "postcode": "<realistic UK postcode>",
+      "phone": "<UK phone number>",
+      "email": "<email>",
+      "occupation": "{{occupation}}",
+      "employer": "<company name>",
+      "weekly_hours": "<hours per week>"
+    },
+    "assessment_period": {
+      "start_date": "<first_day_of_month>",
+      "end_date": "<last_day_of_month>",
+      "total_months": 1
+    },
+    "income_assessment": {
+      "monthly_income": "{{income}}",
+      "salary_type": "<employed|self-employed|unemployed>",
+      "employment_status": "<full-time|part-time|casual>",
+      "employer_details": {
+        "name": "<company_name>",
+        "address": "<business_address>",
+        "contact_person": "<HR_name>"
+      },
+      "additional_income": ["<benefits|overtime|cash_in_hand>"],
+      "income_sources": [
+        {"source": "<primary_job>", "amount": "<monthly_amount>", "frequency": "<weekly|monthly>"},
+        {"source": "<side_jobs>", "amount": "<amount>", "frequency": "<weekly|monthly>"}
+      ]
+    },
+    "housing_costs": {
+      "rent_amount": "<monthly_rent>",
+      "council_tax": "<monthly_amount>",
+      "utilities": "<gas+electric+water>",
+      "service_charges": "<any_service_fees>"
+    },
+    "childcare_costs": {
+      "registered_provider": "<yes|no>",
+      "monthly_costs": "<amount>",
+      "provider_name": "<childcare_name>"
+    },
+    "health_conditions": {
+      "disability_status": "<has_disability|fit_for_work>",
+      "limited_capability": "<limited_by_health>",
+      "support_needs": ["<medical_accommodations>"]
+    },
+    "assets_and_savings": {
+      "bank_accounts": "<total_balance>",
+      "property_value": "<if_owns_property>",
+      "vehicle_value": "<vehicle_worth>",
+      "investment_value": "<investment_assets>"
+    },
+    "calculated_entitlements": {
+      "standard_allowance": "<basic_UC_amount>",
+      "housing_element": "<housing_costs_coverage>",
+      "child_element": "<child_benefits>",
+      "work_capability": "<health_allowances>",
+      "total_monthly_entitlement": "<total_amount>"
+    },
+    "deductions": {
+      "earned_income_reduction": "<taper_reduction>",
+      "unearned_income_reduction": "<other_income_impact>",
+      "sanctions": ["<benefit_sanctions>"],
+      "recoveries": ["<debt_recoveries>"]
+    },
+    "work_coach_interactions": [
+      {"coach_name": "<advisor_name>", "meeting_date": "<ISO_date>", "focus_area": "<job_search|skills|cv_help>", "actions_agreed": ["<specific_activities>"], "next_steps": ["<follow_up_tasks>"]},
+      {"coach_name": "<advisor_name>", "meeting_date": "<ISO_date>", "focus_area": "<job_search|skills|cv_help>", "actions_agreed": ["<specific_activities>"], "next_steps": ["<follow_up_tasks>"]},
+      {"coach_name": "<advisor_name>", "meeting_date": "<ISO_date>", "focus_area": "<job_search|skills|cv_help>", "actions_agreed": ["<specific_activities>"], "next_steps": ["<follow_up_tasks>"]}
+    ],
+    "job_search_requirements": {
+      "minimum_applications": "<number_per_week>",
+      "travel_distance": "<miles_radius>",
+      "job_types_suitable": ["<approved_job_types>"],
+      "work_preparation_courses": ["<mandatory_training>"]
+    },
+    "sanctions_history": [
+      {"sanction_date": "<ISO_date>", "reason": "<sanction_reason>", "duration": "<weeks>", "status": "<current|ended>"},
+      {"sanction_date": "<ISO_date>", "reason": "<sanction_reason>", "duration": "<weeks>", "status": "<current|ended>"}
+    ],
+    "appeals_and_decisions": [
+      {"appeal_reference": "<reference_number>", "issue": "<benefit_decision>", "outcome": "<appeal_result>", "date": "<ISO_date>"},
+      {"appeal_reference": "<reference_number>", "issue": "<benefit_decision>", "outcome": "<appeal_result>", "date": "<ISO_date>"}
+    ],
+    "assessment_officer": {
+      "name": "<caseworker_name>",
+      "department": "<work_and_pensions_department>",
+      "phone": "<contact_number>",
+      "escalation_level": "<line_manager>"
+    },
+    "next_payment": {
+      "payment_date": "<next_UC_payment>",
+      "amount": "<clean_payment_amount>",
+      "bank_account": "<sort_code_account_number>"
+    },
+    "work_search_evidence": [
+      "<job_applications_logged>",
+      "<interview_attendance>",
+      "<cv_updates>"
+    ],
+    "health_assessments": [
+      {"assessment_date": "<ISO_date>", "healthcare_professional": "<GP_name>", "capability_findings": "<health_limitations>", "duration_recommended": "<assessment_validity>"},
+      {"assessment_date": "<ISO_date>", "healthcare_professional": "<GP_name>", "capability_findings": "<health_limitations>", "duration_recommended": "<assessment_validity>"}
+    ],
+    "issued_at": "<ISO timestamp>"
+  },
+  "narrative": {
+    "executive_summary": "<2-3 paragraph executive summary using formal DWP language, include benefit acronyms like UC, JSA, ESA. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on entitlement calculation and work requirements.>",
+    "analyst_notes": [
+      "<First paragraph of detailed caseworker assessment using formal DWP language, include specific benefit details and acronyms.>",
+      "<Second paragraph focusing on work search activities and compliance, use technical benefit terminology.>",
+      "<Third paragraph with financial assessment and entitlement calculation, include welfare terminology.>"
+    ],
+    "work_assessment": "<Comprehensive work capability assessment using formal DWP analysis language, include employment support terminology and work preparation observations.>",
+    "financial_analysis": "<Detailed financial analysis using welfare language, include income calculations and benefit entitlement matrices with formal assessment terminology.>"
+  }
+}
 
-Actual content:
-  
+Generate 3+ work coach interactions, 2+ sanctions history entries, 2+ appeals/decisions, 2+ health assessments. Use formal DWP/welfare language with acronyms (UC, JSA, ESA, DWP, HMRC). Vary narrative sentence length and include domain-specific terminology.
 
-Generate a fictional Universal Credit assessment report. Complete the exact JSON structure below.
-
-Placeholders: {{fullName}}, {{dateOfBirth}}, {{city}}, {{occupation}}, {{income}}
-
-{"document_title": "Universal Credit Assessment Report (Fictional)", "case_reference": "<UC-case-num-12-chars>", "applicant": {"name": "{{fullName}}", "dob": "{{dateOfBirth}}", "address": "<UK address>", "city": "{{city}}", "postcode": "<realistic UK postcode>", "phone": "<UK phone number>", "email": "<email>", "occupation": "{{occupation}}", "employer": "<company name>", "weekly_hours": "<hours per week>"}, "assessment_period": {"start_date": "<first_day_of_month>", "end_date": "<last_day_of_month>", "total_months": 1}, "income_assessment": {"monthly_income": "{{income}}", "salary_type": "<employed|self-employed|unemployed>", "employment_status": "<full-time|part-time|casual>", "employer_details": {"name": "<company_name>", "address": "<business_address>", "contact_person": "<HR_name>"}, "additional_income": ["<benefits|overtime|cash_in_hand>"], "income_sources": [{"source": "<primary_job>", "amount": "<monthly_amount>", "frequency": "<weekly|monthly>"}, {"source": "<side_jobs>", "amount": "<amount>", "frequency": "<weekly|monthly>"}]}, "housing_costs": {"rent_amount": "<monthly_rent>", "council_tax": "<monthly_amount>", "utilities": "<gas+electric+water>", "service_charges": "<any_service_fees>"}, "childcare_costs": {"registered_provider": "<yes|no>", "monthly_costs": "<amount>", "provider_name": "<childcare_name>"}, "health_conditions": {"disability_status": "<has_disability|fit_for_work>", "limited_capability": "<limited_by_health>", "support_needs": ["<medical_accommodations>"]}, "assets_and_savings": {"bank_accounts": "<total_balance>", "property_value": "<if_owns_property>", "vehicle_value": "<vehicle_worth>", "investment_value": "<investment_assets>"}, "calculated_entitlements": {"standard_allowance": "<basic_UC_amount>", "housing_element": "<housing_costs_coverage>", "child_element": "<child_benefits>", "work_capability": "<health_allowances>", "total_monthly_entitlement": "<total_amount>"}, "deductions": {"earned_income_reduction": "<taper_reduction>", "unearned_income_reduction": "<other_income_impact>", "sanctions": ["<benefit_sanctions>"], "recoveries": ["<debt_recoveries>"]}, "work_coach_interactions": [{"coach_name": "<advisor_name>", "meeting_date": "<ISO_date>", "focus_area": "<job_search|skills|cv_help>", "actions_agreed": ["<specific_activities>"], "next_steps": ["<follow_up_tasks>"]}, {"coach_name": "<advisor_name>", "meeting_date": "<ISO_date>", "focus_area": "<job_search|skills|cv_help>", "actions_agreed": ["<specific_activities>"], "next_steps": ["<follow_up_tasks>"]}], "job_search_requirements": {"minimum_applications": "<number_per_week>", "travel_distance": "<miles_radius>", "job_types_suitable": ["<approved_job_types>"], "work_preparation_courses": ["<mandatory_training>"]}, "sanctions_history": [{"sanction_date": "<ISO_date>", "reason": "<sanction_reason>", "duration": "<weeks>", "status": "<current|ended>"}], "appeals_and_decisions": [{"appeal_reference": "<reference_number>", "issue": "<benefit_decision>", "outcome": "<appeal_result>", "date": "<ISO_date>"}], "assessment_officer": {"name": "<caseworker_name>", "department": "<work_and_pensions_department>", "phone": "<contact_number>", "escalation_level": "<line_manager>"}, "next_payment": {"payment_date": "<next_UC_payment>", "amount": "<clean_payment_amount>", "bank_account": "<sort_code_account_number>"}, "work_search_evidence": ["<job_applications_logged>", "<interview_attendance>", "<cv_updates>"], "health_assessments": [{"assessment_date": "<ISO_date>", "healthcare_professional": "<GP_name>", "capability_findings": "<health_limitations>", "duration_recommended": "<assessment_validity>"}], "issued_at": "<ISO timestamp>", "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"}
-
-Temperature 0.4. Generate ONE VALID JSON OBJECT only.
+Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.

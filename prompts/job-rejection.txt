@@ -1,14 +1,99 @@
-You MUST ONLY respond with one valid JSON object. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
 
-If unsure, output empty arrays/strings, but do not add text outside JSON.
+{
+  "structured": {
+    "document_title": "Application Outcome Letter (Fictional)",
+    "company": {
+      "name": "{{companyName}}",
+      "address": "<realistic_business_address>",
+      "logo": "<company_initials>",
+      "website": "<company_website>"
+    },
+    "applicant": {
+      "name": "{{fullName}}",
+      "title": "{{jobTitle}}",
+      "application_id": "<APP-8-digit-number>"
+    },
+    "letter_head": "Dear {{fullName}}",
+    "response_type": "Rejection",
+    "application_reference": "<REF-number>",
+    "position_applied_for": "{{jobTitle}}",
+    "application_date": "<ISO_date>",
+    "review_timeline": "<weeks_to_decision>",
+    "primary_reasons": [
+      "<detailed_reason_1>",
+      "<detailed_reason_2>",
+      "<detailed_reason_3>"
+    ],
+    "specific_feedback": {
+      "experience_level": "<assessment_of_experience>",
+      "skills_gaps": ["<missing_skills>"],
+      "cultural_fit": "<team_dynamics_assessment>"
+    },
+    "interview_performance": {
+      "interview_dates": ["<interview_dates>"],
+      "interviewer_names": ["<panel_members>"],
+      "performance_notes": ["<positive_aspects>", "<areas_for_improvement>"],
+      "technical_assessment": "<technical_evaluation>"
+    },
+    "competition_analysis": {
+      "total_applications": "<number>",
+      "interviews_conducted": "<number>",
+      "finalists_count": "<number>",
+      "hired_candidate": "<successful_candidate_background>"
+    },
+    "strengths_noted": [
+      "<applicant_strengths>",
+      "<positive_aspects>"
+    ],
+    "improvement_suggestions": {
+      "professional_development": ["<development_areas>"],
+      "skill_enhancement": ["<skills_to_develop>"],
+      "application_tips": ["<future_application_advice>"]
+    },
+    "company_resources": {
+      "career_guidance": "<available_resources>",
+      "internship_programs": "<alternative_opportunities>",
+      "staff_referral_network": "<networking_options>"
+    },
+    "next_steps": {
+      "policy_reapplication": "<time_before_reapplying>",
+      "other_positions": ["<positions_to_consider>"],
+      "follow_up_permitted": "<contact_timeline>"
+    },
+    "feedback_channels": {
+      "request_more_feedback": "<contact_for_feedback>",
+      "appeal_process": "<grievance_procedure>"
+    },
+    "company_policy": {
+      "equal_opportunities": "<commitment_to_EEO>",
+      "complaint_procedures": "<policy_details>"
+    },
+    "timeline": {
+      "application_received": "<ISO_date>",
+      "screening_complete": "<ISO_date>",
+      "interview_complete": "<ISO_date>",
+      "final_decision": "<ISO_date>"
+    },
+    "signature": {
+      "hr_manager": "<HR_manager_name>",
+      "position": "Human Resources Manager",
+      "contact": "<hr_contact_details>"
+    },
+    "issued_at": "<ISO timestamp>"
+  },
+  "narrative": {
+    "executive_summary": "<2-3 paragraph executive summary using formal HR language, include recruitment acronyms like ATS, HRIS, EEO. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on recruitment process and candidate assessment.>",
+    "analyst_notes": [
+      "<First paragraph of detailed HR assessment using formal recruitment language, include specific hiring details and acronyms.>",
+      "<Second paragraph focusing on candidate evaluation and interview performance, use technical HR terminology.>",
+      "<Third paragraph with recruitment metrics and selection criteria, include talent acquisition terminology.>"
+    ],
+    "candidate_assessment": "<Comprehensive candidate evaluation using formal HR analysis language, include recruitment terminology and hiring process observations.>",
+    "recruitment_analysis": "<Detailed recruitment analysis using HR language, include hiring metrics and selection indicators with formal assessment terminology.>"
+  }
+}
 
-Actual content:
-  
+Generate 3+ primary reasons, 2+ strengths noted, 3+ improvement suggestions. Use formal HR/recruitment language with acronyms (ATS, HRIS, EEO, KPI, ROI). Vary narrative sentence length and include domain-specific terminology.
 
-Generate a fictional job application rejection letter. Complete the exact JSON structure below.
-
-Placeholders: {{fullName}}, {{jobTitle}}, {{companyName}}
-
-{"document_title": "Application Outcome Letter (Fictional)", "company": {"name": "{{companyName}}", "address": "<realistic_business_address>", "logo": "<company_initials>", "website": "<company_website>"}, "applicant": {"name": "{{fullName}}", "title": "{{jobTitle}}", "application_id": "<APP-8-digit-number>"}, "letter_head": "Dear {{fullName}}", "response_type": "Rejection", "application_reference": "<REF-number>", "position_applied_for": "{{jobTitle}}", "application_date": "<ISO_date>", "review_timeline": "<weeks_to_decision>", "primary_reasons": ["<detailed_reason_1>", "<detailed_reason_2>"], "specific_feedback": {"experience_level": "<assessment_of_experience>", "skills_gaps": ["<missing_skills>"], "cultural_fit": "<team_dynamics_assessment>"}, "interview_performance": {"interview_dates": ["<interview_dates>"], "interviewer_names": ["<panel_members>"], "performance_notes": ["<positive_aspects>", "<areas_for_improvement>"], "technical_assessment": "<technical_evaluation>"}, "competition_analysis": {"total_applications": "<number>", "interviews_conducted": "<number>", "finalists_count": "<number>", "hired_candidate": "<successful_candidate_background>"}, "strengths_noted": ["<applicant_strengths>", "<positive_aspects>"], "improvement_suggestions": {"professional_development": ["<development_areas>"], "skill_enhancement": ["<skills_to_develop>"], "application_tips": ["<future_application_advice>"]}, "company_resources": {"career_guidance": "<available_resources>", "internship_programs": "<alternative_opportunities>", "staff_referral_network": "<networking_options>"}, "next_steps": {"policy_reapplication": "<time_before_reapplying>", "other_positions": ["<positions_to_consider>"], "follow_up_permitted": "<contact_timeline>"}, "feedback_channels": {"request_more_feedback": "<contact_for_feedback>", "appeal_process": "<grievance_procedure>"}, "company_policy": {"equal_opportunities": "<commitment_to_EEO>", "complaint_procedures": "<policy_details>"}, "timeline": {"application_received": "<ISO_date>", "screening_complete": "<ISO_date>", "interview_complete": "<ISO_date>", "final_decision": "<ISO_date>"}, "signature": {"hr_manager": "<HR_manager_name>", "position": "Human Resources Manager", "contact": "<hr_contact_details>"}, "issued_at": "<ISO timestamp>", "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"}
-
-Temperature 0.6. Generate ONE VALID JSON OBJECT only.
+Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.

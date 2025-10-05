@@ -1,14 +1,102 @@
-You MUST ONLY respond with one valid JSON object. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
 
-If unsure, output empty arrays/strings, but do not add text outside JSON.
+{
+  "structured": {
+    "document_title": "Credit Score Report (Fictional)",
+    "report_reference": "<CRB-report-num-10-chars>",
+    "subject": {
+      "name": "{{fullName}}",
+      "dob": "{{dateOfBirth}}",
+      "address": "<current_address>",
+      "city": "{{city}}",
+      "postcode": "<realistic_postcode>"
+    },
+    "credit_agency": "<Equifax|Experian|TransUnion>",
+    "report_date": "<current_date>",
+    "score_summary": {
+      "overall_score": "{{creditScore}}",
+      "score_band": "<poor|fair|good|very_good|excellent>",
+      "factors_affecting": ["<positive_factor>", "<negative_factor>"]
+    },
+    "accounts_summary": {
+      "active_accounts": "<number>",
+      "open_accounts": "<number>",
+      "closed_accounts": "<number>",
+      "delinquent_accounts": "<number>"
+    },
+    "account_details": [
+      {"creditor": "<bank_or_lender>", "account_type": "<credit_card|loan|mortgage>", "account_number": "<masked_account_number>", "date_opened": "<ISO_date>", "credit_limit": "<available_credit>", "current_balance": "<outstanding_amount>", "payment_status": "<current|overdue|defaulted>", "last_payment": "<ISO_date>"},
+      {"creditor": "<bank_or_lender>", "account_type": "<credit_card|loan|mortgage>", "account_number": "<masked_account_number>", "date_opened": "<ISO_date>", "credit_limit": "<available_credit>", "current_balance": "<outstanding_amount>", "payment_status": "<current|overdue|defaulted>", "last_payment": "<ISO_date>"},
+      {"creditor": "<bank_or_lender>", "account_type": "<credit_card|loan|mortgage>", "account_number": "<masked_account_number>", "date_opened": "<ISO_date>", "credit_limit": "<available_credit>", "current_balance": "<outstanding_amount>", "payment_status": "<current|overdue|defaulted>", "last_payment": "<ISO_date>"}
+    ],
+    "payment_history": {
+      "months_reported": 24,
+      "payments_on_time": "<percentage>",
+      "late_payments": "<count>",
+      "missed_payments": "<count>",
+      "defaults": "<count>",
+      "bankruptcies": "<count>"
+    },
+    "credit_inquiries": [
+      {"date": "<ISO_date>", "creditor": "<company_name>", "type": "<hard|soft>", "purpose": "<application_type>"},
+      {"date": "<ISO_date>", "creditor": "<company_name>", "type": "<hard|soft>", "purpose": "<application_type>"},
+      {"date": "<ISO_date>", "creditor": "<company_name>", "type": "<hard|soft>", "purpose": "<application_type>"}
+    ],
+    "address_history": [
+      {"address": "<previous_address>", "period": "<move_date_range>", "status": "<current|previous>"},
+      {"address": "<previous_address>", "period": "<move_date_range>", "status": "<current|previous>"}
+    ],
+    "employment_history": [
+      {"employer": "<company_name>", "position": "<job_title>", "start_date": "<ISO_date>", "status": "<current|previous>"},
+      {"employer": "<company_name>", "position": "<job_title>", "start_date": "<ISO_date>", "status": "<current|previous>"}
+    ],
+    "financial_summary": {
+      "total_debt": "<sum_of_all_balances>",
+      "available_credit": "<remaining_credit_limits>",
+      "debt_to_income_ratio": "<percentage>",
+      "monthly_income": "<declared_income>"
+    },
+    "fraud_alerts": [
+      "<any_reported_fraud>"
+    ],
+    "public_records": [
+      {"type": "<bankruptcy|tax_lien|court_judgment>", "date": "<record_date>", "amount": "<involved_amount>"},
+      {"type": "<bankruptcy|tax_lien|court_judgment>", "date": "<record_date>", "amount": "<involved_amount>"}
+    ],
+    "score_factor_analysis": {
+      "positive_factors": [
+        "<good_payment_history>",
+        "<low_debt_utilization>"
+      ],
+      "negative_factors": [
+        "<recent_missed_payments>",
+        "<high_debt_ratio>"
+      ]
+    },
+    "recommendations": [
+      "<specific_improvement_strategy>",
+      "<credit_building_tips>"
+    ],
+    "report_access_info": {
+      "generated_for": "{{fullName}}",
+      "report_period": "<date_range>",
+      "access_level": "personal",
+      "sharing_rights": "none"
+    },
+    "issued_at": "<ISO timestamp>"
+  },
+  "narrative": {
+    "executive_summary": "<2-3 paragraph executive summary using formal credit bureau language, include credit acronyms like CRA, FICO, VantageScore. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on creditworthiness and risk assessment.>",
+    "analyst_notes": [
+      "<First paragraph of detailed credit analyst assessment using formal credit bureau language, include specific credit details and acronyms.>",
+      "<Second paragraph focusing on payment patterns and credit utilization, use technical credit terminology.>",
+      "<Third paragraph with risk assessment and credit scoring factors, include financial terminology.>"
+    ],
+    "credit_assessment": "<Comprehensive creditworthiness assessment using formal credit analysis language, include financial risk terminology and credit behavior observations.>",
+    "risk_analysis": "<Detailed credit risk analysis using financial language, include risk matrices and credit indicators with formal assessment terminology.>"
+  }
+}
 
-Actual content:
-  
+Generate 3+ account details, 3+ credit inquiries, 2+ address history entries, 2+ employment history entries, 2+ public records. Use formal credit bureau/financial language with acronyms (CRA, FICO, VantageScore, APR, DTI). Vary narrative sentence length and include domain-specific terminology.
 
-Generate a fictional credit score report. Complete the exact JSON structure below.
-
-Placeholders: {{fullName}}, {{dateOfBirth}}, {{city}}, {{creditScore}}
-
-{"document_title": "Credit Score Report (Fictional)", "report_reference": "<CRB-report-num-10-chars>", "subject": {"name": "{{fullName}}", "dob": "{{dateOfBirth}}", "address": "<current_address>", "city": "{{city}}", "postcode": "<realistic_postcode>"}, "credit_agency": "<Equifax|Experian|TransUnion>", "report_date": "<current_date>", "score_summary": {"overall_score": "{{creditScore}}", "score_band": "<poor|fair|good|very_good|excellent>", "factors_affecting": ["<positive_factor>", "<negative_factor>"]}, "accounts_summary": {"active_accounts": "<number>", "open_accounts": "<number>", "closed_accounts": "<number>", "delinquent_accounts": "<number>"}, "account_details": [{"creditor": "<bank_or_lender>", "account_type": "<credit_card|loan|mortgage>", "account_number": "<masked_account_number>", "date_opened": "<ISO_date>", "credit_limit": "<available_credit>", "current_balance": "<outstanding_amount>", "payment_status": "<current|overdue|defaulted>", "last_payment": "<ISO_date>"}, {"creditor": "<bank_or_lender>", "account_type": "<credit_card|loan|mortgage>", "account_number": "<masked_account_number>", "date_opened": "<ISO_date>", "credit_limit": "<available_credit>", "current_balance": "<outstanding_amount>", "payment_status": "<current|overdue|defaulted>", "last_payment": "<ISO_date>"}], "payment_history": {"months_reported": 24, "payments_on_time": "<percentage>", "late_payments": "<count>", "missed_payments": "<count>", "defaults": "<count>", "bankruptcies": "<count>"}, "credit_inquiries": [{"date": "<ISO_date>", "creditor": "<company_name>", "type": "<hard|soft>", "purpose": "<application_type>"}, {"date": "<ISO_date>", "creditor": "<company_name>", "type": "<hard|soft>", "purpose": "<application_type>"}], "address_history": [{"address": "<previous_address>", "period": "<move_date_range>", "status": "<current|previous>"}, {"address": "<previous_address>", "period": "<move_date_range>", "status": "<current|previous>"}], "employment_history": [{"employer": "<company_name>", "position": "<job_title>", "start_date": "<ISO_date>", "status": "<current|previous>"}], "financial_summary": {"total_debt": "<sum_of_all_balances>", "available_credit": "<remaining_credit_limits>", "debt_to_income_ratio": "<percentage>", "monthly_income": "<declared_income>"}, "fraud_alerts": ["<any_reported_fraud>"], "public_records": [{"type": "<bankruptcy|tax_lien|court_judgment>", "date": "<record_date>", "amount": "<involved_amount>"}], "score_factor_analysis": {"positive_factors": ["<good_payment_history>", "<low_debt_utilization>"], "negative_factors": ["<recent_missed_payments>", "<high_debt_ratio>"]}, "recommendations": ["<specific_improvement_strategy>", "<credit_building_tips>"], "report_access_info": {"generated_for": "{{fullName}}", "report_period": "<date_range>", "access_level": "personal", "sharing_rights": "none"}, "issued_at": "<ISO timestamp>", "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"}
-
-Temperature 0.5. Generate ONE VALID JSON OBJECT only.
+Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.

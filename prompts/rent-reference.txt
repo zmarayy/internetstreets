@@ -1,14 +1,89 @@
-You MUST ONLY respond with one valid JSON object. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
 
-If unsure, output empty arrays/strings, but do not add text outside JSON.
+{
+  "structured": {
+    "document_title": "Landlord Reference Letter (Fictional)",
+    "landlord": {
+      "name": "{{landlordName}}",
+      "address": "<landlord_address>",
+      "phone": "<contact_number>",
+      "email": "<email_address>"
+    },
+    "tenant": {
+      "name": "{{fullName}}",
+      "property_address": "{{propertyAddress}}",
+      "tenancy_period": "{{tenancyPeriod}}",
+      "monthly_rent": "{{rentAmount}}"
+    },
+    "property_details": {
+      "address": "{{propertyAddress}}",
+      "property_type": "<flat|house|studio>",
+      "bedrooms": "<number>",
+      "furnished_status": "<furnished|unfurnished|part_furnished>"
+    },
+    "tenancy_history": {
+      "start_date": "<tenancy_start_date>",
+      "end_date": "<tenancy_end_date>",
+      "duration_months": "<tenancy_duration>",
+      "rent_payment_method": "<bank_transfer|cash|cheque>"
+    },
+    "rent_payment_record": [
+      {"month": "<month_year>", "amount": "{{rentAmount}}", "status": "<paid_on_time|late|overdue>", "days_late": "<if_applicable>"},
+      {"month": "<month_year>", "amount": "{{rentAmount}}", "status": "<paid_on_time|late|overdue>", "days_late": "<if_applicable>"},
+      {"month": "<month_year>", "amount": "{{rentAmount}}", "status": "<paid_on_time|late|overdue>", "days_late": "<if_applicable>"},
+      {"month": "<month_year>", "amount": "{{rentAmount}}", "status": "<paid_on_time|late|overdue>", "days_late": "<if_applicable>"},
+      {"month": "<month_year>", "amount": "{{rentAmount}}", "status": "<paid_on_time|late|overdue>", "days_late": "<if_applicable>"}
+    ],
+    "property_condition": {
+      "initial_condition": "<excellent|good|fair|poor>",
+      "final_condition": "<excellent|good|fair|poor>",
+      "damage_assessment": ["<any_damage_noted>"],
+      "cleaning_standard": "<excellent|good|fair|poor>"
+    },
+    "tenant_behavior": {
+      "noise_level": "<quiet|moderate|loud>",
+      "neighbor_complaints": "<none|minor|major>",
+      "property_maintenance": "<excellent|good|fair|poor>",
+      "communication": "<excellent|good|fair|poor>"
+    },
+    "incidents": [
+      {"date": "<ISO_date>", "type": "<incident_type>", "description": "<incident_details>", "resolution": "<how_resolved>"},
+      {"date": "<ISO_date>", "type": "<incident_type>", "description": "<incident_details>", "resolution": "<how_resolved>"}
+    ],
+    "recommendations": {
+      "rental_suitability": "<highly_recommended|recommended|not_recommended>",
+      "renewal_willingness": "<yes|no|conditional>",
+      "reference_quality": "<excellent|good|fair|poor>"
+    },
+    "financial_summary": {
+      "total_rent_paid": "<total_amount>",
+      "deposit_returned": "<amount>",
+      "outstanding_amounts": "<any_outstanding>",
+      "late_payment_count": "<number>"
+    },
+    "additional_notes": [
+      "<additional_landlord_observations>",
+      "<special_circumstances>"
+    ],
+    "contact_information": {
+      "landlord_phone": "<contact_number>",
+      "landlord_email": "<email_address>",
+      "availability": "<contact_hours>"
+    },
+    "issued_at": "<ISO timestamp>"
+  },
+  "narrative": {
+    "executive_summary": "<2-3 paragraph executive summary using formal landlord language, include property management acronyms like AST, EPC, HMO. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on tenancy assessment and property management.>",
+    "analyst_notes": [
+      "<First paragraph of detailed landlord assessment using formal property management language, include specific tenancy details and acronyms.>",
+      "<Second paragraph focusing on tenant behavior and property maintenance, use technical property terminology.>",
+      "<Third paragraph with tenancy evaluation and recommendation rationale, include rental terminology.>"
+    ],
+    "tenant_assessment": "<Comprehensive tenant evaluation using formal landlord analysis language, include property management terminology and tenancy behavior observations.>",
+    "property_analysis": "<Detailed property management analysis using rental language, include tenancy metrics and property indicators with formal assessment terminology.>"
+  }
+}
 
-Actual content:
-  
+Generate 5+ rent payment records, 2+ incidents, 2+ additional notes. Use formal landlord/property management language with acronyms (AST, EPC, HMO, DPS, ARLA). Vary narrative sentence length and include domain-specific terminology.
 
-Generate a fictional rent reference letter. Complete the exact JSON structure below.
-
-Placeholders: {{fullName}}, {{propertyAddress}}, {{landlordName}}
-
-{"document_title": "Tenant Reference Letter (Fictional)", "landlord_name": "{{landlordName}}", "landlord_address": "<property_address>", "property_address": "{{propertyAddress}}", "tenant_name": "{{fullName}}", "reference_number": "<REF-8-digit-number>", "letting_period": {"start_date": "<tenancy_start>", "end_date": "<tenancy_end>", "duration_months": "<tenancy_length>"}, "rent_payment": {"monthly_rent": "<rent_amount>", "payment_method": "<bank_transfer|cash|standing_order>", "payment_consistency": "<excellent|good|variable>", "late_payments": "<count_or_none>"}, "property_condition": {"move_in_condition": "<property_description>", "move_out_condition": "<condition_on_departure>", "damages": ["<any_damage_noted>"], "normal_wear_tear": "<acceptable_deterioration>"}, "tenant_behaviour": {"noise_level": "<considerate|acceptable|disruptive>", "respect_for_neighbours": "<good|average>", "maintenance_calls": "<reasonable|excessive>", "communication_quality": "<responsive|acceptable>"}, "utility_management": {"utility_bills": "<up_to_date|outstanding>", "council_tax": "<paid|outstanding>", "broadband": "<paid|outstanding>", "service_advisors_contact": "<utility_provider_details>"}, "property_upkeep": {"garden_maintenance": "<well_kept|acceptable|neglected>", "cleaning_standard": "<good|average>", "pets": "<no_pets|pets_maintained_well>", "minor_repairs": "<tenant_handled|landlord_called>"}, "legal_compliance": {"right_to_rent_checks": "<passed|status>", "immigration_status": "<legal_residency>", "insurance": "<tenant_insured>", "subletting": "<no_unauthorized>"}, "financial_stability": {"employment_status": "<employed|self_employed|unemployed>", "income_verification": "<salary_confirmed>", "bank_references": "<satisfactory>", "credit_check": "<passed>", "guarantor_provided": "<yes_no>"}, "rent_increases": {"increase_history": ["<date_and_percentage>"], "tenant_response": "<accepted|negotiated>", "reason_acceptance": "<market_rates>"}, "tenant_relationships": {"communication_style": "<professional|friendly|formal>", "responsive_to_requests": "<quick|reasonable>", "complaint_resolution": ["<resolved_issues>"], "emergency_contact": "<available>"}, "positive_aspects": ["<positive_tenancy_aspects>", "<tenant_strengths>"], "areas_for_improvement": ["<minor_improvements_needed>"], "overall_recommendation": "<recommended|recommended_with_conditions|not_recommended>", "strength_rating": "<8_10|9_10|7_10>"}, "deposit_return": {"deposit_amount": "<initial_deposit>", "deductions": ["<damage_deductions>"], "return_amount": "<refunded_amount>", "return_timeline": "<days_to_process>"}, "additional_comments": ["<extra_observations>", "<landlord_notes>"], "contact_verified": "<reference_details_confirmed>", "issuer": {"landlord_signature": "<landlord_name>", "contact_info": "<landlord_email_phone>", "date_issued": "<ISO_date>"}, "issued_at": "<ISO timestamp>", "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"}
-
-Temperature 0.5. Generate ONE VALID JSON OBJECT only.
+Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.

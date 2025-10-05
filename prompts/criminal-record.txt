@@ -1,14 +1,82 @@
-You MUST ONLY respond with one valid JSON object. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
 
-If unsure, output empty arrays/strings, but do not add text outside JSON.
+{
+  "structured": {
+    "document_title": "Police National Computer Record (Fictional)",
+    "subject": {
+      "name": "{{fullName}}",
+      "dob": "{{dateOfBirth}}",
+      "address": "<realistic UK address>",
+      "city": "{{city}}",
+      "occupation": "{{occupation}}",
+      "nationality": "<country>",
+      "aliases": ["<realistic alias>"]
+    },
+    "record_number": "<PNC-8-digit-number>",
+    "court_of_record": "<court jurisdiction>",
+    "classification": "<CONFIDENTIAL|RESTRICTED|OFFICIAL>",
+    "issuing_officer": "<police officer name and rank>",
+    "issue_date": "<ISO date>",
+    "charges": [
+      {"charge_code": "<crime code>", "offense": "<detailed offense description>", "date_of_offense": "<ISO date>", "court": "<court name>", "sentence": "<sentence imposed>", "status": "<CONVICTED|PENDING|ACQUITTED>"},
+      {"charge_code": "<crime code>", "offense": "<detailed offense description>", "date_of_offense": "<ISO date>", "court": "<court name>", "sentence": "<sentence imposed>", "status": "<CONVICTED|PENDING|ACQUITTED>"},
+      {"charge_code": "<crime code>", "offense": "<detailed offense description>", "date_of_offense": "<ISO date>", "court": "<court name>", "sentence": "<sentence imposed>", "status": "<CONVICTED|PENDING|ACQUITTED>"}
+    ],
+    "arrest_history": [
+      {"arrest_date": "<ISO date>", "location": "<arrest location>", "arresting_officer": "<officer name and number>", "reason_for_arrest": "<detailed reason>", "custody_period": "<duration>"},
+      {"arrest_date": "<ISO date>", "location": "<arrest location>", "arresting_officer": "<officer name and number>", "reason_for_arrest": "<detailed reason>", "custody_period": "<duration>"}
+    ],
+    "personal_circumstances": {
+      "employment_history": "<detailed employment background>",
+      "family_obligations": "<family status and dependents>",
+      "health_issues": ["<medical conditions if relevant>"],
+      "substance_abuse": "<extent of substance issues>"
+    },
+    "risk_assessment": {
+      "recoffending_risk": "<low|medium|high>",
+      "violence_risk": "<low|medium|high>",
+      "factors": ["<risk factors present>", "<protective factors present>"]
+    },
+    "current_status": {
+      "supervision_level": "<probation|parole|none>",
+      "conditions": ["<specific supervision conditions>"],
+      "next_review": "<ISO date>"
+    },
+    "warnings_and_cautions": [
+      {"type": "<formal_warning|cautions>", "date": "<ISO date>", "issuing_officer": "<officer name>", "details": "<warning details>"},
+      {"type": "<formal_warning|cautions>", "date": "<ISO date>", "issuing_officer": "<officer name>", "details": "<warning details>"}
+    ],
+    "related_incidents": [
+      {"incident_number": "<incident reference>", "date": "<ISO date>", "nature": "<incident description>", "outcome": "<investigation result>"},
+      {"incident_number": "<incident reference>", "date": "<ISO date>", "nature": "<incident description>", "outcome": "<investigation result>"}
+    ],
+    "witnesses": [
+      {"witness_name": "<name>", "statement_date": "<ISO date>", "type": "<victim|witness|expert>", "credibility": "<high|medium|low>"},
+      {"witness_name": "<name>", "statement_date": "<ISO date>", "type": "<victim|witness|expert>", "credibility": "<high|medium|low>"}
+    ],
+    "officer_notes": [
+      "<detailed police notes and observations>",
+      "<additional investigative findings>",
+      "<behavioral observations>"
+    ],
+    "review_history": [
+      {"review_date": "<ISO date>", "reviewing_officer": "<officer name>", "outcome": "<review findings>", "recommendations": ["<recommendations from review>"]},
+      {"review_date": "<ISO date>", "reviewing_officer": "<officer name>", "outcome": "<review findings>", "recommendations": ["<recommendations from review>"]}
+    ],
+    "issued_at": "<ISO timestamp>"
+  },
+  "narrative": {
+    "executive_summary": "<2-3 paragraph executive summary using formal police language, include police acronyms like PNC, CPS, HMCTS. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on criminal history and risk assessment.>",
+    "analyst_notes": [
+      "<First paragraph of detailed police analyst assessment using formal law enforcement language, include specific operational details and acronyms.>",
+      "<Second paragraph focusing on behavioral patterns and criminal analysis, use technical police terminology.>",
+      "<Third paragraph with risk assessment and recidivism evaluation, include criminal justice terminology.>"
+    ],
+    "behavioral_assessment": "<Comprehensive behavioral profile using formal police analysis language, include psychological assessment terminology and criminal behavior observations.>",
+    "risk_analysis": "<Detailed risk analysis using criminal justice language, include risk matrices and threat indicators with formal assessment terminology.>"
+  }
+}
 
-Actual content:
-  
+Generate 3+ charges, 2+ arrest history entries, 2+ warnings/cautions, 2+ related incidents, 2+ witnesses, 3+ officer notes, 2+ review history entries. Use formal police/criminal justice language with acronyms (PNC, CPS, HMCTS, PACE). Vary narrative sentence length and include domain-specific terminology.
 
-Generate a fictional criminal record. Complete the exact JSON structure below.
-
-Placeholders: {{fullName}}, {{dateOfBirth}}, {{city}}, {{occupation}}
-
-{"document_title": "Police National Computer Record (Fictional)", "subject": {"name": "{{fullName}}", "dob": "{{dateOfBirth}}", "address": "<realistic UK address>", "city": "{{city}}", "occupation": "{{occupation}}", "nationality": "<country>", "aliases": ["<realistic alias>"]}, "record_number": "<PNC-8-digit-number>", "court_of_record": "<court jurisdiction>", "classification": "<CONFIDENTIAL|RESTRICTED|OFFICIAL>", "issuing_officer": "<police officer name and rank>", "issue_date": "<ISO date>", "summary": "<detailed summary of recorded activities and alleged offenses>", "charges": [{"charge_code": "<crime code>", "offense": "<detailed offense description>", "date_of_offense": "<ISO date>", "court": "<court name>", "sentence": "<sentence imposed>", "status": "<CONVICTED|PENDING|ACQUITTED>"}, {"charge_code": "<crime code>", "offense": "<detailed offense description>", "date_of_offense": "<ISO date>", "court": "<court name>", "sentence": "<sentence imposed>", "status": "<CONVICTED|PENDING|ACQUITTED>"}], "arrest_history": [{"arrest_date": "<ISO date>", "location": "<arrest location>", "arresting_officer": "<officer name and number>", "reason_for_arrest": "<detailed reason>", "custody_period": "<duration>"}], "personal_circumstances": {"employment_history": "<detailed employment background>", "family_obligations": "<family status and dependents>", "health_issues": ["<medical conditions if relevant>"], "substance_abuse": "<extent of substance issues>"}, "risk_assessment": {"recoffending_risk": "<low|medium|high>", "violence_risk": "<low|medium|high>", "factors": ["<risk factors present>", "<protective factors present>"]}, "current_status": {"supervision_level": "<probation|parole|none>", "conditions": ["<specific supervision conditions>"], "next_review": "<ISO date>"}, "warnings_and_cautions": [{"type": "<formal_warning|cautions>", "date": "<ISO date>", "issuing_officer": "<officer name>", "details": "<warning details>"}], "related_incidents": [{"incident_number": "<incident reference>", "date": "<ISO date>", "nature": "<incident description>", "outcome": "<investigation result>"}], "witnesses": [{"witness_name": "<name>", "statement_date": "<ISO date>", "type": "<victim|witness|expert>", "credibility": "<high|medium|low>"}], "officer_notes": ["<detailed police notes and observations>", "<additional investigative findings>"], "review_history": [{"review_date": "<ISO date>", "reviewing_officer": "<officer name>", "outcome": "<review findings>", "recommendations": ["<recommendations from review>"]}, {"review_date": "<ISO date>", "reviewing_officer": "<officer name>", "outcome": "<review findings>", "recommendations": ["<recommendations from review>"]}], "issued_at": "<ISO timestamp>", "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"}
-
-Temperature 0.5. Generate ONE VALID JSON OBJECT only.
+Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.

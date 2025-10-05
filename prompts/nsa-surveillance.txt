@@ -1,14 +1,72 @@
-You MUST ONLY respond with one valid JSON object. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
 
-If unsure, output empty arrays/strings, but do not add text outside JSON.
+{
+  "structured": {
+    "document_title": "NSA Surveillance Activity Log (Fictional)",
+    "subject": {
+      "name": "{{fullName}}",
+      "location": "{{city}}",
+      "email": "{{email}}",
+      "phone": "{{phoneNumber}}",
+      "aliases": ["<realistic alias>", "<another alias>"],
+      "nationality": "<country>",
+      "device_count": "<2-5>",
+      "ip_addresses": ["<realistic IP>", "<another IP>"]
+    },
+    "report_id": "<NSA-10-char-alnum>",
+    "classification": "<TOP SECRET|CONFIDENTIAL|UNCLASSIFIED>",
+    "analyst": "<fictitious analyst name>",
+    "report_date": "<ISO date>",
+    "surveillance_logs": [
+      {"timestamp": "<ISO datetime>", "type": "<Communication Intercept|Digital Footprint Analysis|Physical Surveillance|Financial Monitoring>", "details": "<detailed activity description>", "outcome": "<outcome: Identified new contact|Detected suspicious transaction>", "location": "<surveillance location>", "equipment_used": ["<surveillance equipment>"], "duration": "<time span>"},
+      {"timestamp": "<ISO datetime>", "type": "<Communication Intercept|Digital Footprint Analysis|Physical Surveillance|Financial Monitoring>", "details": "<detailed activity description>", "outcome": "<outcome: Identified new contact|Detected suspicious transaction>", "location": "<surveillance location>", "equipment_used": ["<surveillance equipment>"], "duration": "<time span>"},
+      {"timestamp": "<ISO datetime>", "type": "<Communication Intercept|Digital Footprint Analysis|Physical Surveillance|Financial Monitoring>", "details": "<detailed activity description>", "outcome": "<outcome: Identified new contact|Detected suspicious transaction>", "location": "<surveillance location>", "equipment_used": ["<surveillance equipment>"], "duration": "<time span>"},
+      {"timestamp": "<ISO datetime>", "type": "<Communication Intercept|Digital Footprint Analysis|Physical Surveillance|Financial Monitoring>", "details": "<detailed activity description>", "outcome": "<outcome: Identified new contact|Detected suspicious transaction>", "location": "<surveillance location>", "equipment_used": ["<surveillance equipment>"], "duration": "<time span>"},
+      {"timestamp": "<ISO datetime>", "type": "<Communication Intercept|Digital Footprint Analysis|Physical Surveillance|Financial Monitoring>", "details": "<detailed activity description>", "outcome": "<outcome: Identified new contact|Detected suspicious transaction>", "location": "<surveillance location>", "equipment_used": ["<surveillance equipment>"], "duration": "<time span>"}
+    ],
+    "communication_intercepts": [
+      {"date": "<ISO date>", "platform": "<WhatsApp|Signal|Email|Phone Call>", "participants": "<names>", "keywords": ["<keyword1>", "<keyword2>"], "summary": "<brief summary of communication>", "encryption_status": "<encrypted|unencrypted>"},
+      {"date": "<ISO date>", "platform": "<WhatsApp|Signal|Email|Phone Call>", "participants": "<names>", "keywords": ["<keyword1>", "<keyword2>"], "summary": "<brief summary of communication>", "encryption_status": "<encrypted|unencrypted>"},
+      {"date": "<ISO date>", "platform": "<WhatsApp|Signal|Email|Phone Call>", "participants": "<names>", "keywords": ["<keyword1>", "<keyword2>"], "summary": "<brief summary of communication>", "encryption_status": "<encrypted|unencrypted>"}
+    ],
+    "digital_footprint": {
+      "social_media_presence": ["<platform: Twitter, Facebook>", "<platform: Instagram, LinkedIn>"],
+      "dark_web_activity": "<Yes|No>",
+      "known_websites_visited": ["<URL>", "<URL>"],
+      "cloud_storage_accounts": ["<provider: Dropbox, Google Drive>", "<provider: OneDrive>"],
+      "device_fingerprints": ["<device signature>", "<another device signature>"]
+    },
+    "key_findings": [
+      "<specific surveillance finding with operational significance>",
+      "<intelligence assessment conclusion>",
+      "<threat indicator or pattern>",
+      "<recommended course of action>",
+      "<resource requirement or constraint>"
+    ],
+    "recommendations": [
+      "<specific operational recommendation with justification>",
+      "<resource allocation recommendation>",
+      "<surveillance enhancement with operational parameters>"
+    ],
+    "next_actions": [
+      "<immediate action item with assigned responsibility>",
+      "<surveillance enhancement with operational parameters>",
+      "<coordination requirement with partner agencies>"
+    ],
+    "issued_at": "<ISO timestamp>"
+  },
+  "narrative": {
+    "executive_summary": "<2-3 paragraph executive summary using formal intelligence language, include NSA acronyms like SIGINT, COMINT, ELINT. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on operational significance and threat assessment.>",
+    "analyst_notes": [
+      "<First paragraph of detailed analyst assessment using formal intelligence language, include specific operational details and acronyms.>",
+      "<Second paragraph focusing on behavioral patterns and communication analysis, use technical surveillance terminology.>",
+      "<Third paragraph with threat assessment and risk evaluation, include intelligence community terminology.>"
+    ],
+    "behavioral_assessment": "<Comprehensive behavioral profile using formal intelligence analysis language, include psychological assessment terminology and operational security observations.>",
+    "threat_analysis": "<Detailed threat analysis using intelligence community language, include risk matrices and threat indicators with formal assessment terminology.>"
+  }
+}
 
-Actual content:
-  
+Generate 5+ surveillance logs, 3+ communication intercepts, 5+ key findings, 3+ analyst note paragraphs. Use formal NSA/intelligence language with acronyms (NSA, CIA, FBI, DHS, SIGINT, COMINT, ELINT). Vary narrative sentence length and include domain-specific terminology.
 
-Generate a fictional NSA surveillance log. Complete the exact JSON structure below.
-
-Placeholders: {{fullName}}, {{city}}, {{email}}, {{phoneNumber}}
-
-{"document_title": "NSA Surveillance Activity Log (Fictional)", "subject": {"name": "{{fullName}}", "location": "{{city}}", "email": "{{email}}", "phone": "{{phoneNumber}}", "aliases": ["<realistic alias>", "<another alias>"], "nationality": "<country>", "device_count": "<2-5>", "ip_addresses": ["<realistic IP>", "<another IP>"]}, "report_id": "<NSA-10-char-alnum>", "classification": "<TOP SECRET|CONFIDENTIAL|UNCLASSIFIED>", "analyst": "<fictitious analyst name>", "report_date": "<ISO date>", "summary": "<detailed summary of surveillance findings, 3-5 sentences>", "activity_log": [{"timestamp": "<ISO datetime>", "type": "<Communication Intercept|Digital Footprint Analysis|Physical Surveillance|Financial Monitoring>", "details": "<detailed activity description>", "outcome": "<outcome: Identified new contact|Detected suspicious transaction>"}, {"timestamp": "<ISO datetime>", "type": "<Communication Intercept|Digital Footprint Analysis|Physical Surveillance|Financial Monitoring>", "details": "<detailed activity description>", "outcome": "<outcome: Identified new contact|Detected suspicious transaction>"}, {"timestamp": "<ISO datetime>", "type": "<Communication Intercept|Digital Footprint Analysis|Physical Surveillance|Financial Monitoring>", "details": "<detailed activity description>", "outcome": "<outcome: Identified new contact|Detected suspicious transaction>"}], "communication_intercepts": [{"date": "<ISO date>", "platform": "<WhatsApp|Signal|Email|Phone Call>", "participants": "<names>", "keywords": ["<keyword1>", "<keyword2>"], "summary": "<brief summary of communication>"}, {"date": "<ISO date>", "platform": "<WhatsApp|Signal|Email|Phone Call>", "participants": "<names>", "keywords": ["<keyword1>", "<keyword2>"], "summary": "<brief summary of communication>"}], "digital_footprint": {"social_media_presence": ["<platform: Twitter, Facebook>", "<platform: Instagram, LinkedIn>"], "dark_web_activity": "<Yes|No>", "known_websites_visited": ["<URL>", "<URL>"], "cloud_storage_accounts": ["<provider: Dropbox, Google Drive>", "<provider: OneDrive>"]}, "recommendations": ["<recommendation: Increase monitoring frequency>", "<recommendation: Initiate targeted phishing campaign>", "<recommendation: Collaborate with international partners>"], "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"}
-
-Temperature 0.7. Generate ONE VALID JSON OBJECT only.
+Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.

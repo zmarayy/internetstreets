@@ -1,71 +1,94 @@
-You MUST ONLY respond with one valid JSON object. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
 
-If unsure, output empty arrays/strings, but do not add text outside JSON.
+{
+  "structured": {
+    "document_title": "School Behaviour Record Reprint (Fictional)",
+    "student": {
+      "name": "{{fullName}}",
+      "date_of_birth": "{{dateOfBirth}}",
+      "student_id": "{{studentId}}",
+      "year_group": "{{yearGroup}}"
+    },
+    "school": {
+      "name": "{{schoolName}}",
+      "address": "<school_address>",
+      "head_teacher": "<head_teacher_name>",
+      "school_type": "<primary|secondary|college>"
+    },
+    "academic_year": {
+      "year": "<academic_year>",
+      "term": "<autumn|spring|summer>",
+      "reporting_period": "<date_range>"
+    },
+    "attendance_record": {
+      "total_days": "<total_school_days>",
+      "days_present": "<days_attended>",
+      "days_absent": "<days_missed>",
+      "attendance_percentage": "<percentage>",
+      "late_arrivals": "<number>"
+    },
+    "behavior_incidents": [
+      {"date": "<ISO_date>", "incident_type": "<behavior_issue>", "description": "<detailed_description>", "location": "<where_occurred>", "staff_involved": "<staff_member>", "action_taken": "<consequence>", "severity": "<low|medium|high>"},
+      {"date": "<ISO_date>", "incident_type": "<behavior_issue>", "description": "<detailed_description>", "location": "<where_occurred>", "staff_involved": "<staff_member>", "action_taken": "<consequence>", "severity": "<low|medium|high>"},
+      {"date": "<ISO_date>", "incident_type": "<behavior_issue>", "description": "<detailed_description>", "location": "<where_occurred>", "staff_involved": "<staff_member>", "action_taken": "<consequence>", "severity": "<low|medium|high>"},
+      {"date": "<ISO_date>", "incident_type": "<behavior_issue>", "description": "<detailed_description>", "location": "<where_occurred>", "staff_involved": "<staff_member>", "action_taken": "<consequence>", "severity": "<low|medium|high>"}
+    ],
+    "positive_achievements": [
+      {"date": "<ISO_date>", "achievement": "<positive_behavior>", "description": "<detailed_description>", "recognized_by": "<staff_member>", "reward": "<recognition_given>"},
+      {"date": "<ISO_date>", "achievement": "<positive_behavior>", "description": "<detailed_description>", "recognized_by": "<staff_member>", "reward": "<recognition_given>"},
+      {"date": "<ISO_date>", "achievement": "<positive_behavior>", "description": "<detailed_description>", "recognized_by": "<staff_member>", "reward": "<recognition_given>"}
+    ],
+    "disciplinary_actions": [
+      {"date": "<ISO_date>", "action_type": "<detention|warning|suspension>", "reason": "<disciplinary_reason>", "duration": "<if_applicable>", "staff_member": "<issuing_staff>", "parent_notified": "<yes|no>"},
+      {"date": "<ISO_date>", "action_type": "<detention|warning|suspension>", "reason": "<disciplinary_reason>", "duration": "<if_applicable>", "staff_member": "<issuing_staff>", "parent_notified": "<yes|no>"}
+    ],
+    "support_interventions": [
+      {"date": "<ISO_date>", "intervention_type": "<counseling|mentoring|behavior_plan>", "provider": "<staff_member>", "frequency": "<how_often>", "effectiveness": "<effective|partially_effective|ineffective>"},
+      {"date": "<ISO_date>", "intervention_type": "<counseling|mentoring|behavior_plan>", "provider": "<staff_member>", "frequency": "<how_often>", "effectiveness": "<effective|partially_effective|ineffective>"}
+    ],
+    "peer_relationships": {
+      "social_interaction": "<excellent|good|fair|poor>",
+      "friendship_groups": ["<friend_names>"],
+      "conflict_resolution": "<excellent|good|fair|poor>",
+      "leadership_qualities": "<strong|moderate|weak>"
+    },
+    "academic_engagement": {
+      "classroom_behavior": "<excellent|good|fair|poor>",
+      "homework_completion": "<excellent|good|fair|poor>",
+      "participation_level": "<high|moderate|low>",
+      "teacher_feedback": ["<teacher_comments>"]
+    },
+    "parental_involvement": {
+      "parent_meetings": "<number_attended>",
+      "communication_frequency": "<regular|occasional|rare>",
+      "support_level": "<high|moderate|low>",
+      "home_support": "<excellent|good|fair|poor>"
+    },
+    "overall_assessment": {
+      "behavior_rating": "<excellent|good|satisfactory|needs_improvement>",
+      "improvement_trend": "<improving|stable|declining>",
+      "recommendations": ["<specific_recommendations>"],
+      "next_review_date": "<ISO_date>"
+    },
+    "staff_signatures": {
+      "form_tutor": "<tutor_name>",
+      "head_of_year": "<head_of_year_name>",
+      "head_teacher": "<head_teacher_name>"
+    },
+    "issued_at": "<ISO timestamp>"
+  },
+  "narrative": {
+    "executive_summary": "<2-3 paragraph executive summary using formal education language, include school acronyms like SEN, EHC, PSHE. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on student development and behavior management.>",
+    "analyst_notes": [
+      "<First paragraph of detailed teacher assessment using formal education language, include specific student details and acronyms.>",
+      "<Second paragraph focusing on behavior patterns and academic engagement, use technical education terminology.>",
+      "<Third paragraph with student development evaluation and intervention effectiveness, include pastoral terminology.>"
+    ],
+    "student_assessment": "<Comprehensive student evaluation using formal education analysis language, include pastoral care terminology and behavioral development observations.>",
+    "educational_analysis": "<Detailed educational analysis using school language, include behavior metrics and development indicators with formal assessment terminology.>"
+  }
+}
 
-Actual content:
-  
-SCHOOL BEHAVIOUR RECORD
+Generate 4+ behavior incidents, 3+ positive achievements, 2+ disciplinary actions, 2+ support interventions. Use formal education/school language with acronyms (SEN, EHC, PSHE, GCSE, A-Level). Vary narrative sentence length and include domain-specific terminology.
 
-Student: {{fullName}}
-DOB: {{dateOfBirth}}
-School: {{schoolName}}
-Year Group: {{yearGroup}}
-Student ID: {{studentId}}
-
-{{schoolName}}
-RECORD ID: SBR-{{randomRecordId}}
-ACADEMIC YEAR: {{academicYear}}
-TERM: {{term}}
-
-STUDENT INFORMATION
-===================
-Full Name: {{fullName}}
-Date of Birth: {{dateOfBirth}}
-Student ID: {{studentId}}
-School: {{schoolName}}
-Year Group: {{yearGroup}}
-
-ATTENDANCE RECORD
-=================
-Overall Attendance: {{attendancePercentage}}%
-Absences: {{absences}}
-Reasons for Absence: {{absenceReasons}}
-Lateness Incidents: {{latenessIncidents}}
-Attendance Trends: {{attendanceTrends}}
-
-BEHAVIOUR ASSESSMENT
-====================
-Positive Behaviours: {{positiveBehaviours}}
-Areas of Concern: {{areasOfConcern}}
-Disciplinary Incidents: {{disciplinaryIncidents}}
-Improvement Over Time: {{improvementOverTime}}
-
-ACADEMIC PERFORMANCE
-====================
-Subject Grades: {{subjectGrades}}
-Effort Levels: {{effortLevels}}
-Homework Completion: {{homeworkCompletion}}
-Teacher Comments: {{teacherComments}}
-
-SUPPORT AND INTERVENTIONS
-==========================
-Pastoral Support: {{pastoralSupport}}
-Parent/Carer Involvement: {{parentInvolvement}}
-External Agency Involvement: {{externalAgency}}
-Action Plans: {{actionPlans}}
-
-FUTURE RECOMMENDATIONS
-=======================
-Areas for Improvement: {{areasForImprovement}}
-Support Strategies: {{supportStrategies}}
-Expected Outcomes: {{expectedOutcomes}}
-Next Review Date: {{nextReviewDate}}
-
-TEACHER SIGNATURES
-==================
-Form Tutor: {{formTutorSignature}}
-Head of Year: {{headOfYearSignature}}
-Date: {{currentDate}}
-
-{{schoolName}}
-Pastoral Care Department
+Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.

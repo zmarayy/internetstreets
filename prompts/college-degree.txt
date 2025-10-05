@@ -1,14 +1,96 @@
-You MUST ONLY respond with one valid JSON object. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
 
-If unsure, output empty arrays/strings, but do not add text outside JSON.
+{
+  "structured": {
+    "document_title": "University Degree Certificate (Fictional)",
+    "student_information": {
+      "name": "{{fullName}}",
+      "date_of_birth": "{{dateOfBirth}}",
+      "student_id": "<university_student_number>",
+      "nationality": "<country>"
+    },
+    "university_details": {
+      "name": "{{universityName}}",
+      "address": "<university_address>",
+      "founded": "<year_founded>",
+      "accreditation": "<accrediting_body>"
+    },
+    "degree_information": {
+      "degree_type": "{{degreeType}}",
+      "subject": "{{subject}}",
+      "classification": "<First Class|Upper Second|Lower Second|Third Class|Pass>",
+      "graduation_date": "{{graduationYear}}-07-15",
+      "degree_title": "{{degreeType}} in {{subject}}"
+    },
+    "academic_performance": {
+      "overall_grade": "<percentage_or_GPA>",
+      "dissertation_title": "<thesis_title>",
+      "dissertation_grade": "<grade>",
+      "final_year_average": "<percentage>"
+    },
+    "course_modules": [
+      {"module_name": "<core_module>", "credits": "<credit_value>", "grade": "<module_grade>", "year": "<academic_year>"},
+      {"module_name": "<core_module>", "credits": "<credit_value>", "grade": "<module_grade>", "year": "<academic_year>"},
+      {"module_name": "<core_module>", "credits": "<credit_value>", "grade": "<module_grade>", "year": "<academic_year>"},
+      {"module_name": "<core_module>", "credits": "<credit_value>", "grade": "<module_grade>", "year": "<academic_year>"},
+      {"module_name": "<core_module>", "credits": "<credit_value>", "grade": "<module_grade>", "year": "<academic_year>"}
+    ],
+    "academic_achievements": [
+      {"achievement": "<academic_honor>", "date": "<ISO_date>", "description": "<achievement_details>", "awarded_by": "<department_or_faculty>"},
+      {"achievement": "<academic_honor>", "date": "<ISO_date>", "description": "<achievement_details>", "awarded_by": "<department_or_faculty>"},
+      {"achievement": "<academic_honor>", "date": "<ISO_date>", "description": "<achievement_details>", "awarded_by": "<department_or_faculty>"}
+    ],
+    "extracurricular_activities": [
+      {"activity": "<society_or_club>", "role": "<position_held>", "duration": "<time_period>", "description": "<activity_description>"},
+      {"activity": "<society_or_club>", "role": "<position_held>", "duration": "<time_period>", "description": "<activity_description>"},
+      {"activity": "<society_or_club>", "role": "<position_held>", "duration": "<time_period>", "description": "<activity_description>"}
+    ],
+    "work_experience": [
+      {"position": "<job_title>", "company": "<company_name>", "duration": "<time_period>", "description": "<role_description>"},
+      {"position": "<job_title>", "company": "<company_name>", "duration": "<time_period>", "description": "<role_description>"}
+    ],
+    "research_projects": [
+      {"project_title": "<research_project>", "supervisor": "<academic_supervisor>", "duration": "<project_duration>", "outcome": "<project_results>"},
+      {"project_title": "<research_project>", "supervisor": "<academic_supervisor>", "duration": "<project_duration>", "outcome": "<project_results>"}
+    ],
+    "certification_details": {
+      "certificate_number": "<certificate_reference>",
+      "issue_date": "<ISO_date>",
+      "validity": "<permanent|time_limited>",
+      "verification_code": "<verification_reference>"
+    },
+    "academic_officials": {
+      "vice_chancellor": "<university_head_name>",
+      "dean": "<faculty_dean_name>",
+      "registrar": "<registrar_name>",
+      "head_of_department": "<department_head_name>"
+    },
+    "degree_requirements": {
+      "total_credits": "<total_credit_hours>",
+      "core_modules": "<number>",
+      "optional_modules": "<number>",
+      "dissertation_credits": "<credit_value>"
+    },
+    "graduation_ceremony": {
+      "ceremony_date": "<graduation_date>",
+      "venue": "<graduation_venue>",
+      "guest_tickets": "<number_allowed>",
+      "academic_dress": "<required|optional>"
+    },
+    "issued_at": "<ISO timestamp>"
+  },
+  "narrative": {
+    "executive_summary": "<2-3 paragraph executive summary using formal university language, include academic acronyms like UCAS, QAA, HESA. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on academic achievement and educational excellence.>",
+    "analyst_notes": [
+      "<First paragraph of detailed academic assessment using formal university language, include specific degree details and acronyms.>",
+      "<Second paragraph focusing on academic performance and research contributions, use technical education terminology.>",
+      "<Third paragraph with degree evaluation and graduate readiness, include higher education terminology.>"
+    ],
+    "academic_assessment": "<Comprehensive academic evaluation using formal university analysis language, include higher education terminology and academic achievement observations.>",
+    "educational_analysis": "<Detailed educational analysis using university language, include academic metrics and achievement indicators with formal assessment terminology.>"
+  }
+}
 
-Actual content:
-  
+Generate 5+ course modules, 3+ academic achievements, 3+ extracurricular activities, 2+ work experience entries, 2+ research projects. Use formal university/higher education language with acronyms (UCAS, QAA, HESA, PhD, MA). Vary narrative sentence length and include domain-specific terminology.
 
-Generate a fictional college degree certificate. Complete the exact JSON structure below.
-
-Placeholders: {{fullName}}, {{universityName}}, {{degreeTitle}}, {{subjectArea}}
-
-{"document_title": "DEGREE CERTIFICATE (Fictional)", "logo": "UNIVERSITY-CREST-SEAL", "letterhead": "Academic Registry & Certification Services", "university_details": {"official_name": "{{universityName}}", "address": "<realistic_UK_university_address>", "chancellor": "<fictitious_chancellor_name>", "vice_chancellor": "<fictitious_vice_chancellor_name>", "founding_year": "<year>"}, "student_information": {"full_name": "{{fullName}}", "student_number": "<unique_9_digit_student_ID>", "date_of_birth": "<ISO_date>", "nationality": "<nationality>", "mode_of_study": "<Full_time|Part_time|Distance_Learning>", "enrollment_date": "<ISO_date>"}, "degree_details": {"degree_title": "{{degreeTitle}}", "subject_area": "{{subjectArea}}", "degree_classification": "<First_Class_Honours|Upper_Second_Class_Honours|Lower_Second_Class_Honours|Third_Class_Honours|Pass|Distinction|Merit>", "graduation_date": "<ISO_date>", "award_date": "<ISO_date>", "thesis_title": "<optional_realistic_thesis_title>", "specialisation": "<optional_specific_area_of_study>"}, "module_results": [{"module_title": "<Module_Name>", "module_code": "<MOD101>", "credits": "<10|20|30>", "mark_achieved": "<percentage_40_100>", "grade": "<A|B|C|D|F>", "status": "<Passed|Failed|Resit>"}, {"module_title": "<Module_Name>", "module_code": "<MOD102>", "credits": "<10|20|30>", "mark_achieved": "<percentage_40_100>", "grade": "<A|B|C|D|F>", "status": "<Passed|Failed|Resit>"}, {"module_title": "<Module_Name>", "module_code": "<MOD201>", "credits": "<10|20|30>", "mark_achieved": "<percentage_40_100>", "grade": "<A|B|C|D|F>", "status": "<Passed|Failed|Resit>"}], "final_results": {"overall_classification": "<First_Class_Honours|Upper_Second_Class_Honours|Lower_Second_Class_Honours|Third_Class_Honours|Pass|Distinction|Merit>", "final_average": "<percentage_40_100>", "grade_point_average": "<GPA_value>", "distinctions_achieved": "<list_of_distinctions_or_N_A>"}, "special_achievements": ["<achievement_Deans_List_2023>", "<achievement_University_Scholarship_Recipient>"], "verification_information": {"certificate_number": "<unique_12_char_alnum_certificate_ID>", "verification_code": "<unique_10_char_alnum_verification_code>", "issuance_authority": "<Academic_Registry>", "online_verification_link": "<URL>"}, "signatories": {"vice_chancellor": {"name": "<Vice_Chancellor_Name>", "title": "Vice_Chancellor"}, "registrar": {"name": "<Registrar_Name>", "title": "University_Registrar"}}, "disclaimer": "FOR ENTERTAINMENT PURPOSES ONLY – NOT A REAL DOCUMENT"}
-
-Temperature 0.5. Generate ONE VALID JSON OBJECT only.
+Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.
