@@ -33,12 +33,6 @@ export default function Navbar() {
               All Services
             </Link>
             <Link 
-              href="/blog" 
-              className="text-gray-300 hover:text-neon-green transition-colors duration-300 font-medium"
-            >
-              Blog
-            </Link>
-            <Link 
               href="/contact" 
               className="text-gray-300 hover:text-neon-green transition-colors duration-300 font-medium"
             >
@@ -74,13 +68,6 @@ export default function Navbar() {
                 onClick={() => setIsOpen(false)}
               >
                 All Services
-              </Link>
-              <Link 
-                href="/blog" 
-                className="block px-3 py-2 text-gray-300 hover:text-neon-green transition-colors duration-300"
-                onClick={() => setIsOpen(false)}
-              >
-                Blog
               </Link>
               <Link 
                 href="/contact" 

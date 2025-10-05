@@ -24,12 +24,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: 'https://internetstreets.uk/blog',
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
       url: 'https://internetstreets.uk/contact',
       lastModified: new Date(),
       changeFrequency: 'monthly',

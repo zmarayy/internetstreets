@@ -165,61 +165,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FAQ Section for SEO */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-dark-card">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-neon-green mb-12">
-            Frequently Asked Questions - AI Black Market
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-bold text-neon-pink mb-3">What is the AI Black Market?</h3>
-                <p className="text-gray-300">Internet Streets is the #1 AI black market for generating fake documents, prank papers, and novelty certificates. We create realistic-looking documents for entertainment purposes only.</p>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-bold text-neon-pink mb-3">How do I generate fake documents?</h3>
-                <p className="text-gray-300">Simply choose a service like fake FBI file generator, fake payslip maker, or fake degree creator. Fill out the form with your details and our AI will generate a realistic prank document instantly.</p>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-bold text-neon-pink mb-3">What fake documents can I create?</h3>
-                <p className="text-gray-300">We offer fake FBI files, fake payslips, fake degrees, fake criminal records, fake credit reports, fake job rejection letters, fake rent references, fake school records, and more prank documents.</p>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-bold text-neon-pink mb-3">Are these documents legal?</h3>
-                <p className="text-gray-300">All documents are for novelty and entertainment purposes only. They are not real documents and should never be used for fraudulent purposes or to deceive anyone.</p>
-              </div>
-            </div>
-            
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-bold text-neon-pink mb-3">How realistic do the fake documents look?</h3>
-                <p className="text-gray-300">Our AI-powered fake document generator creates highly realistic prank papers with professional formatting, official-looking headers, and authentic styling that looks convincing for entertainment purposes.</p>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-bold text-neon-pink mb-3">Can I customize my prank documents?</h3>
-                <p className="text-gray-300">Yes! Our fake document generator allows you to customize names, dates, locations, and other details to create personalized prank papers and novelty certificates.</p>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-bold text-neon-pink mb-3">How much does fake document generation cost?</h3>
-                <p className="text-gray-300">Each fake document costs £2.50. We offer instant generation and download of your prank papers, fake certificates, and novelty documents.</p>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-bold text-neon-pink mb-3">Is this the best fake document generator?</h3>
-                <p className="text-gray-300">Internet Streets is the #1 AI black market for fake documents, prank papers, and novelty certificates. We offer the most realistic and customizable fake document generation online.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Warning Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
