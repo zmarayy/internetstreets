@@ -183,7 +183,7 @@ export async function renderServiceToPdf(
     doc.text('Internet Streets Entertainment – Not a Real Document', pageWidth / 2, pageHeight - 10, { align: 'center' })
     
     // Add watermark
-    doc.setGState(new doc.GState({ opacity: 0.1 }))
+    doc.setGState((doc as any).GState({ opacity: 0.1 }))
     doc.setFontSize(48)
     doc.setTextColor(200, 200, 200)
     doc.text('INTERNET STREETS ENTERTAINMENT', pageWidth / 2, pageHeight / 2, { 
