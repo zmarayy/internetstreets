@@ -59,7 +59,7 @@ export async function renderServiceToPdf(
     // Add seal text
     doc.setFontSize(8)
     doc.setTextColor(100, 100, 100)
-    doc.text(brand.organizationName, sealX, sealY - 5, { align: 'center' })
+    doc.text(brand.text, sealX, sealY - 5, { align: 'center' })
     doc.text('OFFICIAL', sealX, sealY + 5, { align: 'center' })
   }
   
