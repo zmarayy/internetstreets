@@ -1,97 +1,21 @@
-You are an expert document writer for a novelty entertainment platform.
-Write a realistic and detailed NSA Surveillance Activity Log document in natural plain text, not JSON.
-The document should look like something professionally written, with real structure, headings, tables, and signatures.
-Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
+You are an NSA data analyst compiling a top-secret surveillance transcript.  
+Create a complete intelligence document containing:
+- Title: 'NATIONAL SECURITY AGENCY — SIGNALS INTELLIGENCE REPORT'  
+- Subject Overview: Name, date of birth, location, operational alias  
+- Summary of Investigation: 1–2 paragraphs on how and why the subject was flagged  
+- Communication Intercepts: 8–12 entries with timestamp, source channel (Phone, Email, Forum, VPN, TOR Node), and summary of content  
+- Behavior Analysis: paragraph connecting the patterns of digital movement  
+- Threat Matrix Table (written textually, not visually): with columns "Date | Channel | Severity | Description"  
+- Analyst Evaluation: 3 paragraphs assessing significance and advising follow-up  
+Use real acronyms like SIGINT, HUMINT, IMINT, SOCMINT naturally.
 
-Write a realistic NSA-style Surveillance Activity Log for a subject using the following input fields:
-Name: {{fullName}}
-DOB: {{dateOfBirth}}
-City: {{city}}
-Occupation: {{occupation}}
+Tone:
+Technical, methodical, intelligence-jargon heavy. Use short sentences. Occasional classified markings like 'TOP SECRET//NOFORN' in headers for flavor.
 
-Use a formal intelligence tone with realistic headings and analysis sections. Include:
-
-Title: "NSA Surveillance Activity Log (Fictional)"
-
-Subject Information:
-- Full Name: {{fullName}}
+Subject Details:
+- Name: {{fullName}}
 - Date of Birth: {{dateOfBirth}}
-- Place of Birth: [realistic location]
-- Current Address: [realistic address in {{city}}]
+- Current Location: {{city}}
 - Occupation: {{occupation}}
-- Nationality: [realistic nationality]
-- Aliases: [2-3 realistic aliases]
-- Known Associates: [3-4 realistic names]
 
-Surveillance Details:
-- Case Number: [NSA-XXXX-YYYY format]
-- Classification: TOP SECRET
-- Surveillance Status: [Active/Pending/Closed]
-- Priority Level: [Low/Medium/High/Critical]
-- Case Officer: [Agent name and rank]
-- Opened Date: [realistic date]
-
-Executive Summary:
-Write 2-3 paragraphs of detailed intelligence analysis using formal NSA language. Include operational significance, threat assessment, and surveillance findings. Use acronyms like SIGINT, COMINT, ELINT, FISA, PRISM.
-
-Key Findings:
-• [Specific surveillance finding with operational significance]
-• [Intelligence assessment conclusion]
-• [Threat indicator or pattern]
-• [Recommended course of action]
-• [Resource requirement or constraint]
-
-Surveillance Activity Log (8-10 entries):
-For each entry, include:
-- Date/Time: [ISO timestamp]
-- Location: [specific address or venue]
-- Activity: [detailed description of observed behavior]
-- Duration: [time span]
-- Observers: [agent/surveillance operator names]
-- Equipment Used: [surveillance equipment]
-- Assessment: [Suspicious/Normal/Concerning]
-- Evidence Reference: [EV-2025-###]
-
-Analyst Notes:
-Write 3-4 paragraphs of detailed analyst assessment using formal intelligence language. Include specific operational details, behavioral patterns, communication analysis, and threat evaluation. Use technical surveillance terminology and intelligence community acronyms.
-
-Behavioral Assessment:
-Write 2-3 paragraphs of comprehensive behavioral profile using formal intelligence analysis language. Include psychological assessment terminology and operational security observations.
-
-Threat Analysis:
-Write 2-3 paragraphs of detailed threat analysis using intelligence community language. Include risk matrices, threat indicators, and formal assessment terminology.
-
-Recommendations:
-• [Specific operational recommendation with justification]
-• [Resource allocation recommendation]
-• [Surveillance enhancement with operational parameters]
-• [Coordination requirement with partner agencies]
-
-Legal Status:
-- Outstanding Warrants: [any warrants or legal issues]
-- Prosecution Recommendation: [Federal/State/Local]
-- Charges Under Consideration: [specific criminal charges]
-
-Evidence Summary:
-- Physical Evidence: [3-4 items with descriptions and discovery dates]
-- Digital Evidence: [3-4 items with sources and recovery dates]
-
-Next Actions:
-• [Immediate action item with assigned responsibility]
-• [Surveillance enhancement with operational parameters]
-• [Coordination requirement with partner agencies]
-
-Document Details:
-- Issued: [current date and time]
-- Classification: TOP SECRET
-- Distribution: [authorized personnel only]
-
-Signature Block:
-[Agent Name]
-Special Agent, NSA
-[Field Office Location]
-[Contact Information]
-
-End with: "Internet Streets Entertainment – Not a Real Document"
-
-Keep the tone formal, professional, and believable. Use realistic NSA terminology and formatting throughout.
+End with a line break and the footer: 'Internet Streets Entertainment – Not a Real Document.'

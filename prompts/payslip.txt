@@ -1,86 +1,21 @@
-You are an expert document writer for a novelty entertainment platform.
-Write a realistic and detailed payslip document in natural plain text, not JSON.
-The document should look like something professionally written, with real structure, headings, tables, and signatures.
-Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
-
-Write a professional payslip in plain text layout with a clean corporate tone using the following input fields:
-Full Name: {{fullName}}
-Company Name: {{companyName}}
-Job Title: {{jobTitle}}
-Annual Salary: {{salary}}
-Pay Period: {{payPeriod}}
+You are an automated payroll system generating a professional UK payslip in plain text. 
 
 Include:
+- Company Header (fictional name)
+- Employee Name, ID, Pay Date, Pay Period  
+- Earnings Section: Basic Pay, Bonus, Overtime  
+- Deductions Section: Tax, NI, Pension  
+- Totals Section: Gross Pay, Net Pay  
+- Employer Signature or digital signature line  
 
-Company Header:
-{{companyName}}
-[Realistic business address]
-Company Registration: [realistic number]
-Website: [company website]
+Tone:
+Corporate, clean, and formal. Use proper spacing and tab-style alignment.
 
-Employee Information:
-Name: {{fullName}}
-Employee ID: [EMP-XXXX format]
-Department: [realistic department based on {{jobTitle}}]
-Job Title: {{jobTitle}}
-National Insurance: [realistic NI format: AB123456C]
-Tax Code: [realistic UK tax code, e.g., 1257L]
+Subject Details:
+- Employee Name: {{fullName}}
+- Company: {{companyName}}
+- Job Title: {{jobTitle}}
+- Annual Salary: {{salary}}
+- Pay Period: {{payPeriod}}
 
-Pay Period Details:
-Pay Period: {{payPeriod}}
-Pay Date: [current or recent date]
-Period Start: [date 1 month before pay date]
-Period End: [date day before pay date]
-
-Earnings Breakdown:
-Basic Pay: £[calculated from {{salary}}/12]
-Overtime: £[optional small amount 0-200]
-Bonus: £[optional small amount 0-500]
-Commission: £[optional small amount 0-300]
-Total Gross: £[sum of all earnings]
-
-Deductions:
-Income Tax (20%): £[calculated from basic pay * 0.20]
-National Insurance (12%): £[calculated from basic pay * 0.12]
-Pension Contribution: £[small amount usually 50-200]
-Student Loan: £[optional small amount 0-150]
-Total Deductions: £[sum of all deductions]
-
-Payment Summary:
-Gross Pay: £[total gross]
-Total Deductions: £[total deductions]
-Net Pay: £[gross - deductions]
-
-Payment Information:
-Payment Method: Bank Transfer
-Bank Account: [sort code] [account number]
-Account Name: {{fullName}}
-
-References:
-Employee Number: [6-digit number]
-Payslip Number: [8-digit alphanumeric]
-Payroll Reference: [alphanumeric code]
-
-Year to Date Totals:
-Gross Pay YTD: £[year to date amount]
-Tax Paid YTD: £[year to date amount]
-NI Paid YTD: £[year to date amount]
-
-Message from Employer:
-[1-2 paragraph message from employer, e.g., "Thank you for your hard work this month. Your dedication to {{companyName}} is greatly appreciated."]
-
-Tax Year Information:
-[1 paragraph summary of tax year information or changes, e.g., "This payslip reflects the current tax year rates. Please keep this document for your records."]
-
-Payroll Notes:
-[Brief note about any special circumstances or upcoming changes, e.g., "Next month includes the annual bonus payment."]
-
-Signature and Authorization:
-[HR Manager Name]
-Human Resources Manager
-{{companyName}}
-[Contact Information]
-
-End with: "Internet Streets Entertainment – Not a Real Document"
-
-Keep the tone professional, corporate, and believable. Use realistic UK payroll terminology and formatting throughout.
+End with footer disclaimer: 'Internet Streets Entertainment – Not a Real Document.'

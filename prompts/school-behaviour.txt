@@ -1,95 +1,21 @@
-You are an expert document writer for a novelty entertainment platform.
-Write a realistic and detailed School Behaviour Record Reprint document in natural plain text, not JSON.
-The document should look like something professionally written, with real structure, headings, tables, and signatures.
-Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
+You are a teacher writing a behaviour and performance report.
 
-Write a realistic School Behaviour Record Reprint for a student using the following input fields:
-Name: {{fullName}}
-DOB: {{dateOfBirth}}
-School: {{schoolName}}
-Year Group: {{yearGroup}}
+Include:
+- Header: 'SCHOOL BEHAVIOUR REPORT'  
+- Student Info: Name, Year, Age, Favorite Subject  
+- Academic Performance: 1 paragraph  
+- Behaviour Evaluation: 1–2 paragraphs  
+- Attendance Rate (%)  
+- List of Incidents or Achievements (4–6 entries)  
+- Teacher Comments and Signature  
 
-Use a formal educational tone with realistic headings and analysis sections. Include:
+Tone:
+Balanced between formal and personal. Feels like a real teacher wrote it.
 
-Title: "School Behaviour Record Reprint (Fictional)"
-
-Student Information:
-- Full Name: {{fullName}}
+Subject Details:
+- Student Name: {{fullName}}
 - Date of Birth: {{dateOfBirth}}
 - School: {{schoolName}}
 - Year Group: {{yearGroup}}
-- Student ID: [realistic student ID]
-- Class: [realistic class name]
-- Form Tutor: [realistic teacher name]
 
-Record Details:
-- Record ID: [realistic record ID]
-- Classification: CONFIDENTIAL
-- Record Status: [Active/Pending/Closed]
-- Priority Level: [Low/Medium/High/Critical]
-- Head Teacher: [Head teacher name and title]
-- Record Date: [realistic date]
-
-Executive Summary:
-Write 2-3 paragraphs of detailed educational analysis using formal school language. Include operational significance, threat assessment, and investigative findings. Use acronyms like SEN, EHC, LAC, DSL.
-
-Key Findings:
-• [Specific educational finding with operational significance]
-• [School assessment conclusion]
-• [Threat indicator or pattern]
-• [Recommended course of action]
-• [Resource requirement or constraint]
-
-Behaviour Incidents (4-6 entries):
-For each entry, include:
-- Date: [realistic date]
-- Incident Type: [Behaviour/Discipline/Achievement]
-- Location: [classroom/playground/assembly]
-- Description: [detailed description of incident]
-- Outcome: [Positive/Negative/Neutral]
-- Teacher: [teacher name]
-- Notes: [additional details]
-
-Analyst Notes:
-Write 3-4 paragraphs of detailed analyst assessment using formal educational language. Include specific operational details, behavioral patterns, communication analysis, and threat evaluation. Use technical educational terminology and school acronyms.
-
-Behavioral Assessment:
-Write 2-3 paragraphs of comprehensive behavioral profile using formal educational analysis language. Include psychological assessment terminology and operational security observations.
-
-Threat Analysis:
-Write 2-3 paragraphs of detailed threat analysis using educational language. Include risk matrices, threat indicators, and formal assessment terminology.
-
-Recommendations:
-• [Specific operational recommendation with justification]
-• [Resource allocation recommendation]
-• [Surveillance enhancement with operational parameters]
-• [Coordination requirement with partner agencies]
-
-Legal Status:
-- Outstanding Warrants: [any warrants or legal issues]
-- Prosecution Recommendation: [Federal/State/Local]
-- Charges Under Consideration: [specific criminal charges]
-
-Evidence Summary:
-- Physical Evidence: [3-4 items with descriptions and discovery dates]
-- Digital Evidence: [3-4 items with sources and recovery dates]
-
-Next Actions:
-• [Immediate action item with assigned responsibility]
-• [Surveillance enhancement with operational parameters]
-• [Coordination requirement with partner agencies]
-
-Document Details:
-- Issued: [current date and time]
-- Classification: CONFIDENTIAL
-- Distribution: [authorized personnel only]
-
-Signature Block:
-[Head Teacher Name]
-Head Teacher, {{schoolName}}
-[School Address]
-[Contact Information]
-
-End with: "Internet Streets Entertainment – Not a Real Document"
-
-Keep the tone formal, professional, and believable. Use realistic educational terminology and formatting throughout.
+End with disclaimer footer: 'Internet Streets Entertainment – Not a Real Document.'

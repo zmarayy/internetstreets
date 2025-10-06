@@ -1,96 +1,21 @@
-You are an expert document writer for a novelty entertainment platform.
-Write a realistic and detailed Universal Credit Assessment Report document in natural plain text, not JSON.
-The document should look like something professionally written, with real structure, headings, tables, and signatures.
-Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
+You are a government welfare officer producing a detailed Universal Credit assessment summary.
 
-Write a realistic Universal Credit Assessment Report for a claimant using the following input fields:
-Name: {{fullName}}
-DOB: {{dateOfBirth}}
-City: {{city}}
-Occupation: {{occupation}}
+Include:
+- Title: 'UNIVERSAL CREDIT — CASE ASSESSMENT SUMMARY'  
+- Applicant Info: Name, DOB, City, Case Reference  
+- Eligibility Overview: 2 paragraphs explaining current situation and financial need  
+- Financial Breakdown: Income, Rent, Child Benefit, Allowance  
+- Eligibility Result: APPROVED / DECLINED / UNDER REVIEW with reasoning  
+- Officer Notes: 2–3 paragraphs of commentary in bureaucratic government tone  
+- Next Review Date and Officer Signature
 
-Use a formal government tone with realistic headings and analysis sections. Include:
+Tone:
+Very British and bureaucratic. Use plain formal English. Mention HM Department of Work in general terms, but not real logos.
 
-Title: "Universal Credit Assessment Report (Fictional)"
-
-Claimant Information:
-- Full Name: {{fullName}}
+Subject Details:
+- Name: {{fullName}}
 - Date of Birth: {{dateOfBirth}}
-- Place of Birth: [realistic location]
-- Current Address: [realistic address in {{city}}]
+- Current Location: {{city}}
 - Occupation: {{occupation}}
-- Nationality: [realistic nationality]
-- National Insurance: [realistic NI format: AB123456C]
-- Claim Reference: [realistic UC reference format]
 
-Assessment Details:
-- Assessment ID: [realistic assessment ID]
-- Classification: CONFIDENTIAL
-- Assessment Status: [Active/Pending/Closed]
-- Priority Level: [Low/Medium/High/Critical]
-- Work Coach: [Coach name and rank]
-- Assessment Date: [realistic date]
-
-Executive Summary:
-Write 2-3 paragraphs of detailed assessment analysis using formal government language. Include operational significance, threat assessment, and investigative findings. Use acronyms like UC, DWP, JSA, ESA, PIP.
-
-Key Findings:
-• [Specific assessment finding with operational significance]
-• [Government assessment conclusion]
-• [Threat indicator or pattern]
-• [Recommended course of action]
-• [Resource requirement or constraint]
-
-Work Coach Interactions (3-5 entries):
-For each entry, include:
-- Date: [realistic date]
-- Interaction Type: [Meeting/Phone/Email]
-- Location: [Job Centre or venue]
-- Duration: [time span]
-- Coach: [work coach name]
-- Outcome: [Positive/Negative/Neutral]
-- Notes: [detailed description of interaction]
-
-Analyst Notes:
-Write 3-4 paragraphs of detailed analyst assessment using formal government language. Include specific operational details, behavioral patterns, communication analysis, and threat evaluation. Use technical government terminology and DWP acronyms.
-
-Behavioral Assessment:
-Write 2-3 paragraphs of comprehensive behavioral profile using formal government analysis language. Include psychological assessment terminology and operational security observations.
-
-Threat Analysis:
-Write 2-3 paragraphs of detailed threat analysis using government language. Include risk matrices, threat indicators, and formal assessment terminology.
-
-Recommendations:
-• [Specific operational recommendation with justification]
-• [Resource allocation recommendation]
-• [Surveillance enhancement with operational parameters]
-• [Coordination requirement with partner agencies]
-
-Legal Status:
-- Outstanding Warrants: [any warrants or legal issues]
-- Prosecution Recommendation: [Federal/State/Local]
-- Charges Under Consideration: [specific criminal charges]
-
-Evidence Summary:
-- Physical Evidence: [3-4 items with descriptions and discovery dates]
-- Digital Evidence: [3-4 items with sources and recovery dates]
-
-Next Actions:
-• [Immediate action item with assigned responsibility]
-• [Surveillance enhancement with operational parameters]
-• [Coordination requirement with partner agencies]
-
-Document Details:
-- Issued: [current date and time]
-- Classification: CONFIDENTIAL
-- Distribution: [authorized personnel only]
-
-Signature Block:
-[Officer Name]
-Work Coach, Department for Work and Pensions
-[Job Centre Location]
-[Contact Information]
-
-End with: "Internet Streets Entertainment – Not a Real Document"
-
-Keep the tone formal, professional, and believable. Use realistic government terminology and formatting throughout.
+End with disclaimer footer: 'Internet Streets Entertainment – Not a Real Document.'

@@ -1,97 +1,20 @@
-You are an expert document writer for a novelty entertainment platform.
-Write a realistic and detailed University Degree Certificate document in natural plain text, not JSON.
-The document should look like something professionally written, with real structure, headings, tables, and signatures.
-Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
+You are a registrar preparing an official-looking academic certificate.
 
-Write a realistic University Degree Certificate for a graduate using the following input fields:
-Name: {{fullName}}
-DOB: {{dateOfBirth}}
-University: {{universityName}}
-Degree: {{degreeTitle}}
-Graduation Year: {{graduationYear}}
+Include:
+- Header: 'UNIVERSITY OF [FICTIONAL NAME] — DEGREE CERTIFICATE'  
+- Recipient's Name, Degree Title, Classification (e.g., First Class), Graduation Date  
+- Latin-style wording ('has successfully completed the course of study…')  
+- Decorative signature lines (Registrar, Dean)  
+- Issue Date  
 
-Use a formal academic tone with realistic headings and analysis sections. Include:
+Tone:
+Ceremonial, formal, academic. Include elegant phrases and professional wording.
 
-Title: "University Degree Certificate (Fictional)"
-
-Graduate Information:
-- Full Name: {{fullName}}
+Subject Details:
+- Graduate Name: {{fullName}}
 - Date of Birth: {{dateOfBirth}}
 - University: {{universityName}}
-- Degree: {{degreeTitle}}
+- Degree Title: {{degreeTitle}}
 - Graduation Year: {{graduationYear}}
-- Student ID: [realistic student ID]
-- Course Code: [realistic course code]
-- Academic Advisor: [realistic professor name]
 
-Certificate Details:
-- Certificate ID: [realistic certificate ID]
-- Classification: CONFIDENTIAL
-- Certificate Status: [Active/Pending/Closed]
-- Priority Level: [Low/Medium/High/Critical]
-- Vice Chancellor: [VC name and title]
-- Certificate Date: [realistic date]
-
-Executive Summary:
-Write 2-3 paragraphs of detailed academic analysis using formal university language. Include operational significance, threat assessment, and investigative findings. Use acronyms like UCAS, QAA, HESA, REF.
-
-Key Findings:
-• [Specific academic finding with operational significance]
-• [University assessment conclusion]
-• [Threat indicator or pattern]
-• [Recommended course of action]
-• [Resource requirement or constraint]
-
-Academic Record (5-7 entries):
-For each entry, include:
-- Date: [realistic date]
-- Module: [realistic module name]
-- Grade: [realistic grade]
-- Credits: [realistic credit value]
-- Lecturer: [lecturer name]
-- Notes: [additional details]
-- Status: [Pass/Fail/Pending]
-
-Analyst Notes:
-Write 3-4 paragraphs of detailed analyst assessment using formal academic language. Include specific operational details, behavioral patterns, communication analysis, and threat evaluation. Use technical educational terminology and university acronyms.
-
-Behavioral Assessment:
-Write 2-3 paragraphs of comprehensive behavioral profile using formal academic analysis language. Include psychological assessment terminology and operational security observations.
-
-Threat Analysis:
-Write 2-3 paragraphs of detailed threat analysis using academic language. Include risk matrices, threat indicators, and formal assessment terminology.
-
-Recommendations:
-• [Specific operational recommendation with justification]
-• [Resource allocation recommendation]
-• [Surveillance enhancement with operational parameters]
-• [Coordination requirement with partner agencies]
-
-Legal Status:
-- Outstanding Warrants: [any warrants or legal issues]
-- Prosecution Recommendation: [Federal/State/Local]
-- Charges Under Consideration: [specific criminal charges]
-
-Evidence Summary:
-- Physical Evidence: [3-4 items with descriptions and discovery dates]
-- Digital Evidence: [3-4 items with sources and recovery dates]
-
-Next Actions:
-• [Immediate action item with assigned responsibility]
-• [Surveillance enhancement with operational parameters]
-• [Coordination requirement with partner agencies]
-
-Document Details:
-- Issued: [current date and time]
-- Classification: CONFIDENTIAL
-- Distribution: [authorized personnel only]
-
-Signature Block:
-[Vice Chancellor Name]
-Vice Chancellor, {{universityName}}
-[University Address]
-[Contact Information]
-
-End with: "Internet Streets Entertainment – Not a Real Document"
-
-Keep the tone formal, professional, and believable. Use realistic academic terminology and formatting throughout.
+End with disclaimer footer: 'Internet Streets Entertainment – Not a Real Document.'

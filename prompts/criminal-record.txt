@@ -1,96 +1,18 @@
-You are an expert document writer for a novelty entertainment platform.
-Write a realistic and detailed Police National Computer Record document in natural plain text, not JSON.
-The document should look like something professionally written, with real structure, headings, tables, and signatures.
-Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
+You are a records officer at a national criminal database. Write a complete extract of a subject's criminal record, formatted like an official law enforcement report.
 
-Write a realistic Police National Computer Record for a subject using the following input fields:
-Name: {{fullName}}
-DOB: {{dateOfBirth}}
-City: {{city}}
-Occupation: {{occupation}}
+Include:
+- Header: 'GOVERNMENT CRIMINAL RECORD EXTRACT'  
+- Subject Details: Name, DOB, National ID (fictional), City  
+- Record ID and Issue Date  
+- Table-like listing of 4–6 offenses with: Offense Type, Date, Case Status, Sentence Outcome  
+- Additional Notes: parole history, probation, appeals  
+- Analyst Comment: 2–3 paragraphs of administrative or legal tone commentary.  
+Use believable legal terminology and neutral tone.
 
-Use a formal police tone with realistic headings and analysis sections. Include:
-
-Title: "Police National Computer Record (Fictional)"
-
-Subject Information:
-- Full Name: {{fullName}}
+Subject Details:
+- Name: {{fullName}}
 - Date of Birth: {{dateOfBirth}}
-- Place of Birth: [realistic location]
-- Current Address: [realistic address in {{city}}]
+- Current Location: {{city}}
 - Occupation: {{occupation}}
-- Nationality: [realistic nationality]
-- Aliases: [2-3 realistic aliases]
-- Known Associates: [3-4 realistic names]
 
-Record Details:
-- PNC ID: [realistic PNC format]
-- Classification: CONFIDENTIAL
-- Record Status: [Active/Pending/Closed]
-- Priority Level: [Low/Medium/High/Critical]
-- Case Officer: [Officer name and rank]
-- Opened Date: [realistic date]
-
-Executive Summary:
-Write 2-3 paragraphs of detailed police analysis using formal law enforcement language. Include operational significance, threat assessment, and investigative findings. Use acronyms like PNC, PACE, CPS, NCA.
-
-Key Findings:
-• [Specific police finding with operational significance]
-• [Law enforcement assessment conclusion]
-• [Threat indicator or pattern]
-• [Recommended course of action]
-• [Resource requirement or constraint]
-
-Criminal History (3-5 entries):
-For each entry, include:
-- Date: [realistic date]
-- Offence: [specific criminal offence]
-- Location: [specific address or venue]
-- Outcome: [Convicted/Acquitted/Pending]
-- Sentence: [if convicted]
-- Court: [court name and location]
-- Officer: [arresting officer name]
-
-Analyst Notes:
-Write 3-4 paragraphs of detailed analyst assessment using formal police language. Include specific operational details, behavioral patterns, communication analysis, and threat evaluation. Use technical law enforcement terminology and police acronyms.
-
-Behavioral Assessment:
-Write 2-3 paragraphs of comprehensive behavioral profile using formal police analysis language. Include psychological assessment terminology and operational security observations.
-
-Threat Analysis:
-Write 2-3 paragraphs of detailed threat analysis using law enforcement language. Include risk matrices, threat indicators, and formal assessment terminology.
-
-Recommendations:
-• [Specific operational recommendation with justification]
-• [Resource allocation recommendation]
-• [Surveillance enhancement with operational parameters]
-• [Coordination requirement with partner agencies]
-
-Legal Status:
-- Outstanding Warrants: [any warrants or legal issues]
-- Prosecution Recommendation: [Federal/State/Local]
-- Charges Under Consideration: [specific criminal charges]
-
-Evidence Summary:
-- Physical Evidence: [3-4 items with descriptions and discovery dates]
-- Digital Evidence: [3-4 items with sources and recovery dates]
-
-Next Actions:
-• [Immediate action item with assigned responsibility]
-• [Surveillance enhancement with operational parameters]
-• [Coordination requirement with partner agencies]
-
-Document Details:
-- Issued: [current date and time]
-- Classification: CONFIDENTIAL
-- Distribution: [authorized personnel only]
-
-Signature Block:
-[Officer Name]
-Police Officer, [Force Name]
-[Station Location]
-[Contact Information]
-
-End with: "Internet Streets Entertainment – Not a Real Document"
-
-Keep the tone formal, professional, and believable. Use realistic police terminology and formatting throughout.
+End with disclaimer footer: 'Internet Streets Entertainment – Not a Real Document.'
