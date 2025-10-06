@@ -18,11 +18,6 @@ export interface PlainTextDocument {
   }
 }
 
-export interface GeneratedBrand {
-  organizationName: string
-  logo?: string
-  color?: string
-}
 
 /**
  * Render a plain text document to PDF using React templates
