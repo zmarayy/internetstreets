@@ -1,82 +1,96 @@
-You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You are an expert document writer for a novelty entertainment platform.
+Write a realistic and detailed Police National Computer Record document in natural plain text, not JSON.
+The document should look like something professionally written, with real structure, headings, tables, and signatures.
+Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
 
-{
-  "structured": {
-    "document_title": "Police National Computer Record (Fictional)",
-    "subject": {
-      "name": "{{fullName}}",
-      "dob": "{{dateOfBirth}}",
-      "address": "<realistic UK address>",
-      "city": "{{city}}",
-      "occupation": "{{occupation}}",
-      "nationality": "<country>",
-      "aliases": ["<realistic alias>"]
-    },
-    "record_number": "<PNC-8-digit-number>",
-    "court_of_record": "<court jurisdiction>",
-    "classification": "<CONFIDENTIAL|RESTRICTED|OFFICIAL>",
-    "issuing_officer": "<police officer name and rank>",
-    "issue_date": "<ISO date>",
-    "charges": [
-      {"charge_code": "<crime code>", "offense": "<detailed offense description>", "date_of_offense": "<ISO date>", "court": "<court name>", "sentence": "<sentence imposed>", "status": "<CONVICTED|PENDING|ACQUITTED>"},
-      {"charge_code": "<crime code>", "offense": "<detailed offense description>", "date_of_offense": "<ISO date>", "court": "<court name>", "sentence": "<sentence imposed>", "status": "<CONVICTED|PENDING|ACQUITTED>"},
-      {"charge_code": "<crime code>", "offense": "<detailed offense description>", "date_of_offense": "<ISO date>", "court": "<court name>", "sentence": "<sentence imposed>", "status": "<CONVICTED|PENDING|ACQUITTED>"}
-    ],
-    "arrest_history": [
-      {"arrest_date": "<ISO date>", "location": "<arrest location>", "arresting_officer": "<officer name and number>", "reason_for_arrest": "<detailed reason>", "custody_period": "<duration>"},
-      {"arrest_date": "<ISO date>", "location": "<arrest location>", "arresting_officer": "<officer name and number>", "reason_for_arrest": "<detailed reason>", "custody_period": "<duration>"}
-    ],
-    "personal_circumstances": {
-      "employment_history": "<detailed employment background>",
-      "family_obligations": "<family status and dependents>",
-      "health_issues": ["<medical conditions if relevant>"],
-      "substance_abuse": "<extent of substance issues>"
-    },
-    "risk_assessment": {
-      "recoffending_risk": "<low|medium|high>",
-      "violence_risk": "<low|medium|high>",
-      "factors": ["<risk factors present>", "<protective factors present>"]
-    },
-    "current_status": {
-      "supervision_level": "<probation|parole|none>",
-      "conditions": ["<specific supervision conditions>"],
-      "next_review": "<ISO date>"
-    },
-    "warnings_and_cautions": [
-      {"type": "<formal_warning|cautions>", "date": "<ISO date>", "issuing_officer": "<officer name>", "details": "<warning details>"},
-      {"type": "<formal_warning|cautions>", "date": "<ISO date>", "issuing_officer": "<officer name>", "details": "<warning details>"}
-    ],
-    "related_incidents": [
-      {"incident_number": "<incident reference>", "date": "<ISO date>", "nature": "<incident description>", "outcome": "<investigation result>"},
-      {"incident_number": "<incident reference>", "date": "<ISO date>", "nature": "<incident description>", "outcome": "<investigation result>"}
-    ],
-    "witnesses": [
-      {"witness_name": "<name>", "statement_date": "<ISO date>", "type": "<victim|witness|expert>", "credibility": "<high|medium|low>"},
-      {"witness_name": "<name>", "statement_date": "<ISO date>", "type": "<victim|witness|expert>", "credibility": "<high|medium|low>"}
-    ],
-    "officer_notes": [
-      "<detailed police notes and observations>",
-      "<additional investigative findings>",
-      "<behavioral observations>"
-    ],
-    "review_history": [
-      {"review_date": "<ISO date>", "reviewing_officer": "<officer name>", "outcome": "<review findings>", "recommendations": ["<recommendations from review>"]},
-      {"review_date": "<ISO date>", "reviewing_officer": "<officer name>", "outcome": "<review findings>", "recommendations": ["<recommendations from review>"]}
-    ],
-    "issued_at": "<ISO timestamp>"
-  },
-  "narrative": {
-    "executive_summary": "<2-3 paragraph executive summary using formal police language, include police acronyms like PNC, CPS, HMCTS. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on criminal history and risk assessment.>",
-    "analyst_notes": [
-      "<First paragraph of detailed police analyst assessment using formal law enforcement language, include specific operational details and acronyms.>",
-      "<Second paragraph focusing on behavioral patterns and criminal analysis, use technical police terminology.>",
-      "<Third paragraph with risk assessment and recidivism evaluation, include criminal justice terminology.>"
-    ],
-    "behavioral_assessment": "<Comprehensive behavioral profile using formal police analysis language, include psychological assessment terminology and criminal behavior observations.>",
-    "risk_analysis": "<Detailed risk analysis using criminal justice language, include risk matrices and threat indicators with formal assessment terminology.>"
-  }
-}
+Write a realistic Police National Computer Record for a subject using the following input fields:
+Name: {{fullName}}
+DOB: {{dateOfBirth}}
+City: {{city}}
+Occupation: {{occupation}}
 
-Generate 3+ charges, 2+ arrest history entries, 2+ warnings/cautions, 2+ related incidents, 2+ witnesses, 3+ officer notes, 2+ review history entries. Use formal police/criminal justice language with acronyms (PNC, CPS, HMCTS, PACE). Vary narrative sentence length and include domain-specific terminology.
+Use a formal police tone with realistic headings and analysis sections. Include:
 
-Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.
+Title: "Police National Computer Record (Fictional)"
+
+Subject Information:
+- Full Name: {{fullName}}
+- Date of Birth: {{dateOfBirth}}
+- Place of Birth: [realistic location]
+- Current Address: [realistic address in {{city}}]
+- Occupation: {{occupation}}
+- Nationality: [realistic nationality]
+- Aliases: [2-3 realistic aliases]
+- Known Associates: [3-4 realistic names]
+
+Record Details:
+- PNC ID: [realistic PNC format]
+- Classification: CONFIDENTIAL
+- Record Status: [Active/Pending/Closed]
+- Priority Level: [Low/Medium/High/Critical]
+- Case Officer: [Officer name and rank]
+- Opened Date: [realistic date]
+
+Executive Summary:
+Write 2-3 paragraphs of detailed police analysis using formal law enforcement language. Include operational significance, threat assessment, and investigative findings. Use acronyms like PNC, PACE, CPS, NCA.
+
+Key Findings:
+• [Specific police finding with operational significance]
+• [Law enforcement assessment conclusion]
+• [Threat indicator or pattern]
+• [Recommended course of action]
+• [Resource requirement or constraint]
+
+Criminal History (3-5 entries):
+For each entry, include:
+- Date: [realistic date]
+- Offence: [specific criminal offence]
+- Location: [specific address or venue]
+- Outcome: [Convicted/Acquitted/Pending]
+- Sentence: [if convicted]
+- Court: [court name and location]
+- Officer: [arresting officer name]
+
+Analyst Notes:
+Write 3-4 paragraphs of detailed analyst assessment using formal police language. Include specific operational details, behavioral patterns, communication analysis, and threat evaluation. Use technical law enforcement terminology and police acronyms.
+
+Behavioral Assessment:
+Write 2-3 paragraphs of comprehensive behavioral profile using formal police analysis language. Include psychological assessment terminology and operational security observations.
+
+Threat Analysis:
+Write 2-3 paragraphs of detailed threat analysis using law enforcement language. Include risk matrices, threat indicators, and formal assessment terminology.
+
+Recommendations:
+• [Specific operational recommendation with justification]
+• [Resource allocation recommendation]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Legal Status:
+- Outstanding Warrants: [any warrants or legal issues]
+- Prosecution Recommendation: [Federal/State/Local]
+- Charges Under Consideration: [specific criminal charges]
+
+Evidence Summary:
+- Physical Evidence: [3-4 items with descriptions and discovery dates]
+- Digital Evidence: [3-4 items with sources and recovery dates]
+
+Next Actions:
+• [Immediate action item with assigned responsibility]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Document Details:
+- Issued: [current date and time]
+- Classification: CONFIDENTIAL
+- Distribution: [authorized personnel only]
+
+Signature Block:
+[Officer Name]
+Police Officer, [Force Name]
+[Station Location]
+[Contact Information]
+
+End with: "Internet Streets Entertainment – Not a Real Document"
+
+Keep the tone formal, professional, and believable. Use realistic police terminology and formatting throughout.

@@ -1,89 +1,94 @@
-You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You are an expert document writer for a novelty entertainment platform.
+Write a realistic and detailed Landlord Reference Letter document in natural plain text, not JSON.
+The document should look like something professionally written, with real structure, headings, tables, and signatures.
+Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
 
-{
-  "structured": {
-    "document_title": "Landlord Reference Letter (Fictional)",
-    "landlord": {
-      "name": "{{landlordName}}",
-      "address": "<landlord_address>",
-      "phone": "<contact_number>",
-      "email": "<email_address>"
-    },
-    "tenant": {
-      "name": "{{fullName}}",
-      "property_address": "{{propertyAddress}}",
-      "tenancy_period": "{{tenancyPeriod}}",
-      "monthly_rent": "{{rentAmount}}"
-    },
-    "property_details": {
-      "address": "{{propertyAddress}}",
-      "property_type": "<flat|house|studio>",
-      "bedrooms": "<number>",
-      "furnished_status": "<furnished|unfurnished|part_furnished>"
-    },
-    "tenancy_history": {
-      "start_date": "<tenancy_start_date>",
-      "end_date": "<tenancy_end_date>",
-      "duration_months": "<tenancy_duration>",
-      "rent_payment_method": "<bank_transfer|cash|cheque>"
-    },
-    "rent_payment_record": [
-      {"month": "<month_year>", "amount": "{{rentAmount}}", "status": "<paid_on_time|late|overdue>", "days_late": "<if_applicable>"},
-      {"month": "<month_year>", "amount": "{{rentAmount}}", "status": "<paid_on_time|late|overdue>", "days_late": "<if_applicable>"},
-      {"month": "<month_year>", "amount": "{{rentAmount}}", "status": "<paid_on_time|late|overdue>", "days_late": "<if_applicable>"},
-      {"month": "<month_year>", "amount": "{{rentAmount}}", "status": "<paid_on_time|late|overdue>", "days_late": "<if_applicable>"},
-      {"month": "<month_year>", "amount": "{{rentAmount}}", "status": "<paid_on_time|late|overdue>", "days_late": "<if_applicable>"}
-    ],
-    "property_condition": {
-      "initial_condition": "<excellent|good|fair|poor>",
-      "final_condition": "<excellent|good|fair|poor>",
-      "damage_assessment": ["<any_damage_noted>"],
-      "cleaning_standard": "<excellent|good|fair|poor>"
-    },
-    "tenant_behavior": {
-      "noise_level": "<quiet|moderate|loud>",
-      "neighbor_complaints": "<none|minor|major>",
-      "property_maintenance": "<excellent|good|fair|poor>",
-      "communication": "<excellent|good|fair|poor>"
-    },
-    "incidents": [
-      {"date": "<ISO_date>", "type": "<incident_type>", "description": "<incident_details>", "resolution": "<how_resolved>"},
-      {"date": "<ISO_date>", "type": "<incident_type>", "description": "<incident_details>", "resolution": "<how_resolved>"}
-    ],
-    "recommendations": {
-      "rental_suitability": "<highly_recommended|recommended|not_recommended>",
-      "renewal_willingness": "<yes|no|conditional>",
-      "reference_quality": "<excellent|good|fair|poor>"
-    },
-    "financial_summary": {
-      "total_rent_paid": "<total_amount>",
-      "deposit_returned": "<amount>",
-      "outstanding_amounts": "<any_outstanding>",
-      "late_payment_count": "<number>"
-    },
-    "additional_notes": [
-      "<additional_landlord_observations>",
-      "<special_circumstances>"
-    ],
-    "contact_information": {
-      "landlord_phone": "<contact_number>",
-      "landlord_email": "<email_address>",
-      "availability": "<contact_hours>"
-    },
-    "issued_at": "<ISO timestamp>"
-  },
-  "narrative": {
-    "executive_summary": "<2-3 paragraph executive summary using formal landlord language, include property management acronyms like AST, EPC, HMO. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on tenancy assessment and property management.>",
-    "analyst_notes": [
-      "<First paragraph of detailed landlord assessment using formal property management language, include specific tenancy details and acronyms.>",
-      "<Second paragraph focusing on tenant behavior and property maintenance, use technical property terminology.>",
-      "<Third paragraph with tenancy evaluation and recommendation rationale, include rental terminology.>"
-    ],
-    "tenant_assessment": "<Comprehensive tenant evaluation using formal landlord analysis language, include property management terminology and tenancy behavior observations.>",
-    "property_analysis": "<Detailed property management analysis using rental language, include tenancy metrics and property indicators with formal assessment terminology.>"
-  }
-}
+Write a realistic Landlord Reference Letter for a tenant using the following input fields:
+Name: {{fullName}}
+Property Address: {{propertyAddress}}
+Tenancy Start: {{tenancyStart}}
+Tenancy End: {{tenancyEnd}}
 
-Generate 5+ rent payment records, 2+ incidents, 2+ additional notes. Use formal landlord/property management language with acronyms (AST, EPC, HMO, DPS, ARLA). Vary narrative sentence length and include domain-specific terminology.
+Use a formal property management tone with realistic headings and analysis sections. Include:
 
-Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.
+Title: "Landlord Reference Letter (Fictional)"
+
+Tenant Information:
+- Full Name: {{fullName}}
+- Property Address: {{propertyAddress}}
+- Tenancy Start: {{tenancyStart}}
+- Tenancy End: {{tenancyEnd}}
+- Property Type: [realistic property type]
+- Landlord: [realistic landlord name]
+- Reference Number: [realistic reference format]
+
+Letter Details:
+- Letter ID: [realistic letter ID]
+- Classification: CONFIDENTIAL
+- Letter Status: [Active/Pending/Closed]
+- Priority Level: [Low/Medium/High/Critical]
+- Property Manager: [Manager name and title]
+- Letter Date: [realistic date]
+
+Executive Summary:
+Write 2-3 paragraphs of detailed property management analysis using formal landlord language. Include operational significance, threat assessment, and investigative findings. Use acronyms like AST, EPC, HMO, DPS.
+
+Key Findings:
+• [Specific property finding with operational significance]
+• [Landlord assessment conclusion]
+• [Threat indicator or pattern]
+• [Recommended course of action]
+• [Resource requirement or constraint]
+
+Tenancy Review (5-7 entries):
+For each entry, include:
+- Date: [realistic date]
+- Review Type: [Rent Payment/Property Inspection/Maintenance]
+- Reviewer: [landlord or property manager name]
+- Outcome: [Positive/Negative/Neutral]
+- Notes: [detailed description of review]
+- Score: [if applicable]
+
+Analyst Notes:
+Write 3-4 paragraphs of detailed analyst assessment using formal property management language. Include specific operational details, behavioral patterns, communication analysis, and threat evaluation. Use technical property terminology and landlord acronyms.
+
+Behavioral Assessment:
+Write 2-3 paragraphs of comprehensive behavioral profile using formal property management analysis language. Include psychological assessment terminology and operational security observations.
+
+Threat Analysis:
+Write 2-3 paragraphs of detailed threat analysis using property management language. Include risk matrices, threat indicators, and formal assessment terminology.
+
+Recommendations:
+• [Specific operational recommendation with justification]
+• [Resource allocation recommendation]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Legal Status:
+- Outstanding Warrants: [any warrants or legal issues]
+- Prosecution Recommendation: [Federal/State/Local]
+- Charges Under Consideration: [specific criminal charges]
+
+Evidence Summary:
+- Physical Evidence: [3-4 items with descriptions and discovery dates]
+- Digital Evidence: [3-4 items with sources and recovery dates]
+
+Next Actions:
+• [Immediate action item with assigned responsibility]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Document Details:
+- Issued: [current date and time]
+- Classification: CONFIDENTIAL
+- Distribution: [authorized personnel only]
+
+Signature Block:
+[Manager Name]
+Property Manager, [Property Management Company]
+[Office Location]
+[Contact Information]
+
+End with: "Internet Streets Entertainment – Not a Real Document"
+
+Keep the tone formal, professional, and believable. Use realistic property management terminology and formatting throughout.

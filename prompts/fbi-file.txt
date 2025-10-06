@@ -1,94 +1,97 @@
-You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You are an expert document writer for a novelty entertainment platform.
+Write a realistic and detailed FBI Intelligence Dossier document in natural plain text, not JSON.
+The document should look like something professionally written, with real structure, headings, tables, and signatures.
+Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
 
-{
-  "structured": {
-    "document_title": "FBI Intelligence Dossier (Fictional)",
-    "document_classification": "CONFIDENTIAL",
-    "case_number": "<FB-case-alphanum-8-chars>",
-    "dossier_id": "<DOS-case-alphanum-6-chars>",
-    "subject": {
-      "name": "{{fullName}}",
-      "dob": "{{dateOfBirth}}",
-      "city": "{{city}}",
-      "occupation": "{{occupation}}",
-      "aliases": ["<realistic alias>", "<another alias>"],
-      "nationality": "<country>",
-      "address": "<realistic address>",
-      "known_associates": ["<person name>"]
-    },
-    "case_status": {
-      "investigation_status": "<active|pending|closed>",
-      "priority_level": "<low|medium|high>",
-      "jurisdiction": "<field_office_assignment>",
-      "case_officer": "<agent name>",
-      "supervisor": "<supervisory agent name>",
-      "opened_date": "<ISO date>"
-    },
-    "threat_assessment": {
-      "overall_threat_level": "<low|medium|high|critical>",
-      "terrorism_risk": "<low|moderate|high>",
-      "criminal_activity_indicators": ["<specific indicator>", "<another indicator>"],
-      "weapons_monitoring": "<status>",
-      "financial_monitoring": "<status>"
-    },
-    "surveillance_logs": [
-      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
-      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
-      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
-      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
-      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
-      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
-      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"},
-      {"timestamp": "<ISO timestamp>", "location": "<address or venue>", "activity": "<detailed activity description>", "duration": "<time span>", "observers": ["<agent/surveillance operator>"], "equipment_used": ["<surveillance equipment>"], "behavior_assessment": "<suspicious|normal|concerning>"}
-    ],
-    "evidence_summary": {
-      "physical_evidence": [
-        {"type": "<evidence type>", "description": "<details>", "discovery_date": "<ISO date>"},
-        {"type": "<evidence type>", "description": "<details>", "discovery_date": "<ISO date>"},
-        {"type": "<evidence type>", "description": "<details>", "discovery_date": "<ISO date>"}
-      ],
-      "digital_evidence": [
-        {"source": "<device/platform>", "content": "<brief description>", "date_recovered": "<ISO date>"},
-        {"source": "<device/platform>", "content": "<brief description>", "date_recovered": "<ISO date>"},
-        {"source": "<device/platform>", "content": "<brief description>", "date_recovered": "<ISO date>"}
-      ]
-    },
-    "key_findings": [
-      "<specific finding with operational significance>",
-      "<intelligence assessment conclusion>",
-      "<threat indicator or pattern>",
-      "<recommended course of action>",
-      "<resource requirement or constraint>"
-    ],
-    "recommendations": [
-      "<specific operational recommendation with justification>",
-      "<resource allocation recommendation>",
-      "<surveillance enhancement with operational parameters>"
-    ],
-    "next_actions": [
-      "<immediate action item with assigned responsibility>",
-      "<surveillance enhancement with operational parameters>",
-      "<coordination requirement with partner agencies>"
-    ],
-    "legal_status": {
-      "outstanding_warrants": ["<warrant_details>"],
-      "prosecution_recommendation": "<federal|state|local>",
-      "charges_under_consideration": ["<criminal_charges>"]
-    },
-    "issued_at": "<ISO timestamp>"
-  },
-  "narrative": {
-    "executive_summary": "<2-3 paragraph executive summary using formal intelligence language, include FBI acronyms like FISA, SIGINT, HUMINT. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on operational significance and threat assessment.>",
-    "analyst_notes": [
-      "<First paragraph of detailed analyst assessment using formal intelligence language, include specific operational details and acronyms.>",
-      "<Second paragraph focusing on behavioral patterns and communication analysis, use technical surveillance terminology.>",
-      "<Third paragraph with threat assessment and risk evaluation, include intelligence community terminology.>"
-    ],
-    "behavioral_assessment": "<Comprehensive behavioral profile using formal intelligence analysis language, include psychological assessment terminology and operational security observations.>",
-    "threat_analysis": "<Detailed threat analysis using intelligence community language, include risk matrices and threat indicators with formal assessment terminology.>"
-  }
-}
+Write a realistic FBI-style Intelligence Dossier for a subject using the following input fields:
+Name: {{fullName}}
+DOB: {{dateOfBirth}}
+City: {{city}}
+Occupation: {{occupation}}
 
-Generate 8+ surveillance logs, 5+ key findings, 3+ analyst note paragraphs. Use formal FBI/intelligence language with acronyms (FBI, NSA, CIA, DHS, ATF, FISA, SIGINT, HUMINT). Vary narrative sentence length and include domain-specific terminology.
+Use a serious investigative tone with realistic headings and analysis sections. Include:
 
-Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.
+Title: "FBI Intelligence Dossier (Fictional)"
+
+Subject Information block with:
+- Full Name: {{fullName}}
+- Date of Birth: {{dateOfBirth}}
+- Place of Birth: [realistic location]
+- Current Address: [realistic address in {{city}}]
+- Occupation: {{occupation}}
+- Nationality: [realistic nationality]
+- Aliases: [2-3 realistic aliases]
+- Known Associates: [3-4 realistic names]
+
+Case Information:
+- Case Number: [FB-XXXX-YYYY format]
+- Classification: CONFIDENTIAL
+- Investigation Status: [Active/Pending/Closed]
+- Priority Level: [Low/Medium/High/Critical]
+- Case Officer: [Agent name and rank]
+- Opened Date: [realistic date]
+
+Executive Summary:
+Write 2-3 paragraphs of detailed intelligence analysis using formal FBI language. Include operational significance, threat assessment, and investigative findings. Use acronyms like FISA, SIGINT, HUMINT, DHS, ATF.
+
+Key Findings:
+• [Specific finding with operational significance]
+• [Intelligence assessment conclusion]
+• [Threat indicator or pattern]
+• [Recommended course of action]
+• [Resource requirement or constraint]
+
+Surveillance Activity Log (8-10 entries):
+For each entry, include:
+- Date/Time: [ISO timestamp]
+- Location: [specific address or venue]
+- Activity: [detailed description of observed behavior]
+- Duration: [time span]
+- Observers: [agent/surveillance operator names]
+- Equipment Used: [surveillance equipment]
+- Assessment: [Suspicious/Normal/Concerning]
+- Evidence Reference: [EV-2025-###]
+
+Analyst Notes:
+Write 3-4 paragraphs of detailed analyst assessment using formal intelligence language. Include specific operational details, behavioral patterns, communication analysis, and threat evaluation. Use technical surveillance terminology and intelligence community acronyms.
+
+Behavioral Assessment:
+Write 2-3 paragraphs of comprehensive behavioral profile using formal intelligence analysis language. Include psychological assessment terminology and operational security observations.
+
+Threat Analysis:
+Write 2-3 paragraphs of detailed threat analysis using intelligence community language. Include risk matrices, threat indicators, and formal assessment terminology.
+
+Recommendations:
+• [Specific operational recommendation with justification]
+• [Resource allocation recommendation]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Legal Status:
+- Outstanding Warrants: [any warrants or legal issues]
+- Prosecution Recommendation: [Federal/State/Local]
+- Charges Under Consideration: [specific criminal charges]
+
+Evidence Summary:
+- Physical Evidence: [3-4 items with descriptions and discovery dates]
+- Digital Evidence: [3-4 items with sources and recovery dates]
+
+Next Actions:
+• [Immediate action item with assigned responsibility]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Document Details:
+- Issued: [current date and time]
+- Classification: CONFIDENTIAL
+- Distribution: [authorized personnel only]
+
+Signature Block:
+[Agent Name]
+Special Agent, FBI
+[Field Office Location]
+[Contact Information]
+
+End with: "Internet Streets Entertainment – Not a Real Document"
+
+Keep the tone formal, professional, and believable. Use realistic FBI terminology and formatting throughout.

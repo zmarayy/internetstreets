@@ -1,102 +1,96 @@
-You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You are an expert document writer for a novelty entertainment platform.
+Write a realistic and detailed Credit Score Report document in natural plain text, not JSON.
+The document should look like something professionally written, with real structure, headings, tables, and signatures.
+Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
 
-{
-  "structured": {
-    "document_title": "Credit Score Report (Fictional)",
-    "report_reference": "<CRB-report-num-10-chars>",
-    "subject": {
-      "name": "{{fullName}}",
-      "dob": "{{dateOfBirth}}",
-      "address": "<current_address>",
-      "city": "{{city}}",
-      "postcode": "<realistic_postcode>"
-    },
-    "credit_agency": "<Equifax|Experian|TransUnion>",
-    "report_date": "<current_date>",
-    "score_summary": {
-      "overall_score": "{{creditScore}}",
-      "score_band": "<poor|fair|good|very_good|excellent>",
-      "factors_affecting": ["<positive_factor>", "<negative_factor>"]
-    },
-    "accounts_summary": {
-      "active_accounts": "<number>",
-      "open_accounts": "<number>",
-      "closed_accounts": "<number>",
-      "delinquent_accounts": "<number>"
-    },
-    "account_details": [
-      {"creditor": "<bank_or_lender>", "account_type": "<credit_card|loan|mortgage>", "account_number": "<masked_account_number>", "date_opened": "<ISO_date>", "credit_limit": "<available_credit>", "current_balance": "<outstanding_amount>", "payment_status": "<current|overdue|defaulted>", "last_payment": "<ISO_date>"},
-      {"creditor": "<bank_or_lender>", "account_type": "<credit_card|loan|mortgage>", "account_number": "<masked_account_number>", "date_opened": "<ISO_date>", "credit_limit": "<available_credit>", "current_balance": "<outstanding_amount>", "payment_status": "<current|overdue|defaulted>", "last_payment": "<ISO_date>"},
-      {"creditor": "<bank_or_lender>", "account_type": "<credit_card|loan|mortgage>", "account_number": "<masked_account_number>", "date_opened": "<ISO_date>", "credit_limit": "<available_credit>", "current_balance": "<outstanding_amount>", "payment_status": "<current|overdue|defaulted>", "last_payment": "<ISO_date>"}
-    ],
-    "payment_history": {
-      "months_reported": 24,
-      "payments_on_time": "<percentage>",
-      "late_payments": "<count>",
-      "missed_payments": "<count>",
-      "defaults": "<count>",
-      "bankruptcies": "<count>"
-    },
-    "credit_inquiries": [
-      {"date": "<ISO_date>", "creditor": "<company_name>", "type": "<hard|soft>", "purpose": "<application_type>"},
-      {"date": "<ISO_date>", "creditor": "<company_name>", "type": "<hard|soft>", "purpose": "<application_type>"},
-      {"date": "<ISO_date>", "creditor": "<company_name>", "type": "<hard|soft>", "purpose": "<application_type>"}
-    ],
-    "address_history": [
-      {"address": "<previous_address>", "period": "<move_date_range>", "status": "<current|previous>"},
-      {"address": "<previous_address>", "period": "<move_date_range>", "status": "<current|previous>"}
-    ],
-    "employment_history": [
-      {"employer": "<company_name>", "position": "<job_title>", "start_date": "<ISO_date>", "status": "<current|previous>"},
-      {"employer": "<company_name>", "position": "<job_title>", "start_date": "<ISO_date>", "status": "<current|previous>"}
-    ],
-    "financial_summary": {
-      "total_debt": "<sum_of_all_balances>",
-      "available_credit": "<remaining_credit_limits>",
-      "debt_to_income_ratio": "<percentage>",
-      "monthly_income": "<declared_income>"
-    },
-    "fraud_alerts": [
-      "<any_reported_fraud>"
-    ],
-    "public_records": [
-      {"type": "<bankruptcy|tax_lien|court_judgment>", "date": "<record_date>", "amount": "<involved_amount>"},
-      {"type": "<bankruptcy|tax_lien|court_judgment>", "date": "<record_date>", "amount": "<involved_amount>"}
-    ],
-    "score_factor_analysis": {
-      "positive_factors": [
-        "<good_payment_history>",
-        "<low_debt_utilization>"
-      ],
-      "negative_factors": [
-        "<recent_missed_payments>",
-        "<high_debt_ratio>"
-      ]
-    },
-    "recommendations": [
-      "<specific_improvement_strategy>",
-      "<credit_building_tips>"
-    ],
-    "report_access_info": {
-      "generated_for": "{{fullName}}",
-      "report_period": "<date_range>",
-      "access_level": "personal",
-      "sharing_rights": "none"
-    },
-    "issued_at": "<ISO timestamp>"
-  },
-  "narrative": {
-    "executive_summary": "<2-3 paragraph executive summary using formal credit bureau language, include credit acronyms like CRA, FICO, VantageScore. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on creditworthiness and risk assessment.>",
-    "analyst_notes": [
-      "<First paragraph of detailed credit analyst assessment using formal credit bureau language, include specific credit details and acronyms.>",
-      "<Second paragraph focusing on payment patterns and credit utilization, use technical credit terminology.>",
-      "<Third paragraph with risk assessment and credit scoring factors, include financial terminology.>"
-    ],
-    "credit_assessment": "<Comprehensive creditworthiness assessment using formal credit analysis language, include financial risk terminology and credit behavior observations.>",
-    "risk_analysis": "<Detailed credit risk analysis using financial language, include risk matrices and credit indicators with formal assessment terminology.>"
-  }
-}
+Write a realistic Credit Score Report for a subject using the following input fields:
+Name: {{fullName}}
+DOB: {{dateOfBirth}}
+City: {{city}}
+Occupation: {{occupation}}
 
-Generate 3+ account details, 3+ credit inquiries, 2+ address history entries, 2+ employment history entries, 2+ public records. Use formal credit bureau/financial language with acronyms (CRA, FICO, VantageScore, APR, DTI). Vary narrative sentence length and include domain-specific terminology.
+Use a formal financial tone with realistic headings and analysis sections. Include:
 
-Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.
+Title: "Credit Score Report (Fictional)"
+
+Subject Information:
+- Full Name: {{fullName}}
+- Date of Birth: {{dateOfBirth}}
+- Place of Birth: [realistic location]
+- Current Address: [realistic address in {{city}}]
+- Occupation: {{occupation}}
+- Nationality: [realistic nationality]
+- National Insurance: [realistic NI format: AB123456C]
+- Report Reference: [realistic credit report reference]
+
+Report Details:
+- Report ID: [realistic report ID]
+- Classification: CONFIDENTIAL
+- Report Status: [Active/Pending/Closed]
+- Priority Level: [Low/Medium/High/Critical]
+- Analyst: [Analyst name and rank]
+- Report Date: [realistic date]
+
+Executive Summary:
+Write 2-3 paragraphs of detailed financial analysis using formal credit agency language. Include operational significance, threat assessment, and investigative findings. Use acronyms like CRA, FCA, PRA, CIFAS.
+
+Key Findings:
+• [Specific credit finding with operational significance]
+• [Financial assessment conclusion]
+• [Threat indicator or pattern]
+• [Recommended course of action]
+• [Resource requirement or constraint]
+
+Credit History (3-5 entries):
+For each entry, include:
+- Date: [realistic date]
+- Account Type: [Credit Card/Loan/Mortgage]
+- Provider: [realistic financial institution]
+- Amount: [realistic amount]
+- Status: [Current/Closed/Defaulted]
+- Payment History: [Good/Poor/Excellent]
+- Balance: [current or final balance]
+
+Analyst Notes:
+Write 3-4 paragraphs of detailed analyst assessment using formal financial language. Include specific operational details, behavioral patterns, communication analysis, and threat evaluation. Use technical financial terminology and credit agency acronyms.
+
+Behavioral Assessment:
+Write 2-3 paragraphs of comprehensive behavioral profile using formal financial analysis language. Include psychological assessment terminology and operational security observations.
+
+Threat Analysis:
+Write 2-3 paragraphs of detailed threat analysis using financial language. Include risk matrices, threat indicators, and formal assessment terminology.
+
+Recommendations:
+• [Specific operational recommendation with justification]
+• [Resource allocation recommendation]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Legal Status:
+- Outstanding Warrants: [any warrants or legal issues]
+- Prosecution Recommendation: [Federal/State/Local]
+- Charges Under Consideration: [specific criminal charges]
+
+Evidence Summary:
+- Physical Evidence: [3-4 items with descriptions and discovery dates]
+- Digital Evidence: [3-4 items with sources and recovery dates]
+
+Next Actions:
+• [Immediate action item with assigned responsibility]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Document Details:
+- Issued: [current date and time]
+- Classification: CONFIDENTIAL
+- Distribution: [authorized personnel only]
+
+Signature Block:
+[Analyst Name]
+Credit Analyst, [Credit Agency Name]
+[Office Location]
+[Contact Information]
+
+End with: "Internet Streets Entertainment – Not a Real Document"
+
+Keep the tone formal, professional, and believable. Use realistic financial terminology and formatting throughout.

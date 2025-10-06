@@ -1,5 +1,5 @@
 /**
- * Prompt Builder with Input Sanitization & Safety
+ * Plain Text Prompt Builder with Input Sanitization & Safety
  * Handles field mapping, organization blacklisting, and input validation
  */
 
@@ -48,204 +48,144 @@ export interface SanitizedInputs {
 function loadServiceConfig(slug: string): ServiceConfig | null {
   try {
     const servicesPath = path.join(process.cwd(), 'data', 'services.json')
-    const services = JSON.parse(fs.readFileSync(servicesPath, 'utf-8'))
+    const servicesData = fs.readFileSync(servicesPath, 'utf8')
+    const services = JSON.parse(servicesData)
     return services[slug] || null
   } catch (error) {
-    console.error('Failed to load service config:', error)
+    console.error('Error loading service config:', error)
     return null
   }
 }
 
 /**
- * Check if input contains blocked organizations or public figures
+ * Sanitize organization names for safety
  */
-function checkBlacklists(inputs: Record<string, any>): { 
-  sanitized: boolean, 
-  reason?: string, 
-  sanitizedInputs: Record<string, any> 
-} {
-  let sanitized = false
-  let reason = ''
-  const sanitizedInputs = { ...inputs }
-
-  // Check all string inputs for blocked content
-  Object.entries(inputs).forEach(([key, value]) => {
-    if (typeof value === 'string') {
-      const lowerValue = value.toLowerCase()
-      
-      // Check organization blacklist
-      for (const blockedOrg of BLOCKED_ORGANIZATIONS) {
-        if (lowerValue.includes(blockedOrg.toLowerCase())) {
-          sanitizedInputs[key] = 'Organization Name Redacted'
-          sanitizedInputs.org_sanitized = true
-          sanitizedInputs.sanitized_reason = `Blocked organization: ${blockedOrg}`
-          sanitized = true
-          reason = `Organization name sanitized (${blockedOrg} detected)`
-        }
-      }
-      
-      // Check public figures blacklist
-      for (const figure of BLOCKED_PUBLIC_FIGURES) {
-        if (lowerValue.includes(figure.toLowerCase())) {
-          sanitizedInputs[key] = 'Name Redacted for Privacy'
-          sanitizedInputs.figure_sanitized = true
-          sanitizedInputs.sanitized_reason = `Blocked public figure: ${figure}`
-          sanitized = true
-          reason = `Public figure name sanitized (${figure} detected)`
-        }
+function sanitizeOrganizationName(name: string): { sanitized: string; wasSanitized: boolean; reason?: string } {
+  const upperName = name.toUpperCase()
+  
+  for (const blocked of BLOCKED_ORGANIZATIONS) {
+    if (upperName.includes(blocked.toUpperCase())) {
+      return {
+        sanitized: 'Department X',
+        wasSanitized: true,
+        reason: `Organization name "${name}" contains blocked term "${blocked}"`
       }
     }
-  })
-
-  return { sanitized, reason, sanitizedInputs }
-}
-
-/**
- * Sanitize and validate form inputs
- */
-function sanitizeInputs(inputs: Record<string, any>): SanitizedInputs {
-  const sanitized: SanitizedInputs = {}
-  
-  Object.entries(inputs).forEach(([key, value]) => {
-    if (typeof value === 'string') {
-      // Trim whitespace and limit length
-      sanitized[key] = value.trim().slice(0, 200)
-    } else if (typeof value === 'number') {
-      // Validate numeric inputs
-      sanitized[key] = Math.max(0, Math.min(value, 999999999)) // Reasonable bounds
-    } else {
-      sanitized[key] = value
-    }
-  })
-
-  return sanitized
-}
-
-/**
- * Map form field names to prompt placeholders
- */
-function mapFieldsToPlaceholders(config: ServiceConfig, inputs: SanitizedInputs): Record<string, string> {
-  const mappedInputs: Record<string, string> = {}
-  
-  config.fields.forEach(field => {
-    if (inputs[field.name] !== undefined) {
-      mappedInputs[field.name] = String(inputs[field.name])
-    }
-  })
-
-  return mappedInputs
-}
-
-/**
- * Build prompt content with placeholders replaced
- */
-function buildPromptWithInputs(promptTemplate: string, inputs: Record<string, string>): string {
-  let builtPrompt = promptTemplate
-  
-  // Replace all placeholders with actual input values
-  Object.entries(inputs).forEach(([fieldName, value]) => {
-    const placeholder = `{{${fieldName}}}`
-    builtPrompt = builtPrompt.replace(new RegExp(placeholder, 'g'), value)
-  })
-
-  return builtPrompt
-}
-
-/**
- * Load prompt template file
- */
-function loadPromptTemplate(promptFile: string): string | null {
-  try {
-    const promptPath = path.join(process.cwd(), 'prompts', promptFile)
-    return fs.readFileSync(promptPath, 'utf-8')
-  } catch (error) {
-    console.error(`Failed to load prompt template ${promptFile}:`, error)
-    return null
   }
+  
+  return { sanitized: name, wasSanitized: false }
 }
 
 /**
- * Main function: Build sanitized prompt for OpenAI
+ * Sanitize public figure names
+ */
+function sanitizePublicFigureName(name: string): { sanitized: string; wasSanitized: boolean; reason?: string } {
+  const upperName = name.toUpperCase()
+  
+  for (const blocked of BLOCKED_PUBLIC_FIGURES) {
+    if (upperName.includes(blocked.toUpperCase())) {
+      return {
+        sanitized: 'John Smith',
+        wasSanitized: true,
+        reason: `Name "${name}" matches blocked public figure "${blocked}"`
+      }
+    }
+  }
+  
+  return { sanitized: name, wasSanitized: false }
+}
+
+/**
+ * Build plain text prompt for a service
  */
 export async function buildPrompt(
   slug: string, 
-  userInputs: Record<string, any>,
+  inputs: Record<string, any>, 
   traceId: string
 ): Promise<{
   success: boolean
   prompt?: string
   sanitizedInputs?: SanitizedInputs
-  metadata?: any
   error?: string
+  metadata?: { temperature: number }
 }> {
   try {
-    console.log(`[${traceId}] Building prompt for service: ${slug}`)
+    console.log(`[${traceId}] Building plain text prompt for service: ${slug}`)
     
-    // Load service configuration
     const config = loadServiceConfig(slug)
     if (!config) {
-      return { success: false, error: `Service '${slug}' not found` }
+      return { success: false, error: `Service configuration not found for ${slug}` }
     }
 
+    // Load the plain text prompt template
+    const promptPath = path.join(process.cwd(), 'prompts', config.prompt_file)
+    if (!fs.existsSync(promptPath)) {
+      return { success: false, error: `Prompt file not found: ${config.prompt_file}` }
+    }
+
+    let promptTemplate = fs.readFileSync(promptPath, 'utf8')
+    
     // Sanitize inputs
-    let sanitizedInputs = sanitizeInputs(userInputs)
-    
-    // Check blacklists
-    const blacklistCheck = checkBlacklists(sanitizedInputs)
-    if (blacklistCheck.sanitized) {
-      sanitizedInputs = blacklistCheck.sanitizedInputs
-      console.log(`[${traceId}] Input sanitized: ${blacklistCheck.reason}`)
+    const sanitizedInputs: SanitizedInputs = { ...inputs }
+    let anySanitized = false
+    let sanitizationReason = ''
+
+    // Sanitize organization names
+    if (inputs.companyName) {
+      const orgResult = sanitizeOrganizationName(inputs.companyName)
+      if (orgResult.wasSanitized) {
+        sanitizedInputs.companyName = orgResult.sanitized
+        sanitizedInputs.org_sanitized = true
+        sanitizedInputs.sanitized_reason = orgResult.reason
+        anySanitized = true
+        sanitizationReason = orgResult.reason || ''
+      }
     }
 
-    // Map fields to prompt placeholders
-    const mappedInputs = mapFieldsToPlaceholders(config, sanitizedInputs)
-    
-    // Load prompt template
-    const promptTemplate = loadPromptTemplate(config.prompt_file)
-    if (!promptTemplate) {
-      return { success: false, error: `Prompt template for '${slug}' not found` }
+    // Sanitize public figures
+    if (inputs.fullName) {
+      const nameResult = sanitizePublicFigureName(inputs.fullName)
+      if (nameResult.wasSanitized) {
+        sanitizedInputs.fullName = nameResult.sanitized
+        sanitizedInputs.org_sanitized = true
+        sanitizedInputs.sanitized_reason = nameResult.reason
+        anySanitized = true
+        sanitizationReason = nameResult.reason || ''
+      }
     }
 
-    // Build final prompt
-    const finalPrompt = buildPromptWithInputs(promptTemplate, mappedInputs)
-    
-    // Extract temperature from prompt
-    let temperature = 0.5 // Default
-    const tempMatch = finalPrompt.match(/Temperature\s+([\d.]+)/i)
-    if (tempMatch) {
-      temperature = parseFloat(tempMatch[1])
+    // Replace placeholders in the prompt template
+    let finalPrompt = promptTemplate
+    for (const [key, value] of Object.entries(sanitizedInputs)) {
+      if (value !== undefined && value !== null) {
+        const placeholder = `{{${key}}}`
+        finalPrompt = finalPrompt.replace(new RegExp(placeholder, 'g'), String(value))
+      }
     }
 
-    const metadata = {
-      slug,
-      serviceName: config.name,
-      temperature,
-      maxTokens: 450,
-      sanitized: blacklistCheck.sanitized,
-      sanitizationReason: blacklistCheck.reason,
-      inputFields: Object.keys(mappedInputs)
+    console.log(`[${traceId}] Plain text prompt built successfully for ${config.name}`)
+    if (anySanitized) {
+      console.log(`[${traceId}] Inputs sanitized: ${sanitizationReason}`)
     }
 
-    console.log(`[${traceId}] Prompt built successfully for ${config.name}`)
-    
     return {
       success: true,
       prompt: finalPrompt,
       sanitizedInputs,
-      metadata
+      metadata: { temperature: 0.7 } // Good for natural text generation
     }
 
   } catch (error) {
     console.error(`[${traceId}] Error building prompt:`, error)
     return { 
       success: false, 
-      error: `Failed to build prompt: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      error: error instanceof Error ? error.message : 'Unknown error' 
     }
   }
 }
 
 /**
- * Validate that critical fields are present
+ * Validate required fields for a service
  */
 export function validateRequiredFields(
   slug: string, 
@@ -264,4 +204,74 @@ export function validateRequiredFields(
   })
 
   return { valid: missing.length === 0, missing }
+}
+
+/**
+ * Extract basic metadata from plain text document
+ */
+export function extractBasicFields(text: string): {
+  name?: string
+  dob?: string
+  city?: string
+  companyName?: string
+  [key: string]: string | undefined
+} {
+  const metadata: Record<string, string> = {}
+
+  // Extract name patterns
+  const namePatterns = [
+    /(?:Name|Full Name|Subject Name|Employee Name|Student Name|Applicant Name)[:\s]+([A-Za-z\s]+)/i,
+    /(?:Name|Full Name|Subject Name|Employee Name|Student Name|Applicant Name)[:\s]+([A-Za-z\s]+)/i
+  ]
+  
+  for (const pattern of namePatterns) {
+    const match = text.match(pattern)
+    if (match) {
+      metadata.name = match[1].trim()
+      break
+    }
+  }
+
+  // Extract DOB patterns
+  const dobPatterns = [
+    /(?:DOB|Date of Birth|Birth Date)[:\s]+(\d{4}-\d{2}-\d{2})/i,
+    /(?:DOB|Date of Birth|Birth Date)[:\s]+(\d{2}\/\d{2}\/\d{4})/i,
+    /(?:DOB|Date of Birth|Birth Date)[:\s]+(\d{1,2}\/\d{1,2}\/\d{4})/i
+  ]
+  
+  for (const pattern of dobPatterns) {
+    const match = text.match(pattern)
+    if (match) {
+      metadata.dob = match[1].trim()
+      break
+    }
+  }
+
+  // Extract city patterns
+  const cityPatterns = [
+    /(?:City|Location|Address)[:\s]+([A-Za-z\s,]+)/i
+  ]
+  
+  for (const pattern of cityPatterns) {
+    const match = text.match(pattern)
+    if (match) {
+      metadata.city = match[1].trim().split(',')[0].trim()
+      break
+    }
+  }
+
+  // Extract company name patterns
+  const companyPatterns = [
+    /(?:Company|Employer|Organization)[:\s]+([A-Za-z\s&.,]+)/i
+  ]
+  
+  for (const pattern of companyPatterns) {
+    const match = text.match(pattern)
+    if (match) {
+      metadata.companyName = match[1].trim()
+      break
+    }
+  }
+
+  return metadata
 }

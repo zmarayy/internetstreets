@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
-import { validateAndGenerateJson } from '@/lib/validateJson'
+import { validateAndGenerateText } from '@/lib/validateText'
 import { buildPrompt, validateRequiredFields } from '@/lib/promptBuilder'
 import { generateServiceBrand } from '@/lib/brand'
 import { storeDocument, generateSignedUrl } from '@/lib/tempStore'
@@ -71,26 +71,14 @@ async function processDocumentGeneration(
     }
 
     // Call OpenAI with retry logic
-    console.log(`[${traceId}] Starting JSON validation for ${slug}`)
-    const generationResult = await validateAndGenerateJson(
+    console.log(`[${traceId}] Starting plain text generation for ${slug}`)
+    const generationResult = await validateAndGenerateText(
       promptResult.prompt!,
       promptResult.metadata!.temperature,
       slug,
       traceId,
       3 // Max retries
     )
-    
-    // Update status to repairing if JSON repair was attempted
-    if (generationResult.repairAttempted && !generationResult.success) {
-      generationStatus.set(sessionId, {
-        status: 'repairing',
-        sessionId,
-        traceId,
-        serviceName: slug,
-        repairAttempted: true
-      })
-      logger.generationStep('Attempting JSON repair', traceId, GenerationStep.RETRY_ATTEMPT, sessionId, slug)
-    }
 
     if (!generationResult.success) {
       // Log the raw response for debugging
@@ -103,20 +91,24 @@ async function processDocumentGeneration(
         traceId,
         sessionId,
         slug,
-        { retries: generationResult.retries, repairAttempted: generationResult.repairAttempted }
+        { retries: generationResult.retries }
       )
       throw new Error(`Generation failed: ${generationResult.error}`)
     }
 
-    logger.generationStep('JSON validated and generated', traceId, GenerationStep.JSON_VALIDATED, sessionId, slug)
+    logger.generationStep('Plain text generated and validated', traceId, GenerationStep.JSON_VALIDATED, sessionId, slug)
 
     // Generate brand/seal
     const brand = generateServiceBrand(slug, inputs.companyName || inputs.fullName)
     
-    // Render PDF
+    // Extract basic metadata from the text
+    const { extractBasicFields } = await import('@/lib/promptBuilder')
+    const metadata = extractBasicFields(generationResult.data!)
+
+    // Render PDF from plain text
     const pdfBuffer = await renderServiceToPdf(
       slug,
-      generationResult.data!,
+      { text: generationResult.data!, metadata },
       brand,
       promptResult.sanitizedInputs
     )
@@ -149,7 +141,7 @@ async function processDocumentGeneration(
       documentId,
       previewUrl,
       downloadUrl,
-      serviceName: generationResult.data?.document_title || slug
+      serviceName: metadata.name || slug
     })
 
   } catch (error) {

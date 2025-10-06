@@ -1,99 +1,92 @@
-You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You are an expert document writer for a novelty entertainment platform.
+Write a realistic and detailed Job Application Rejection Letter document in natural plain text, not JSON.
+The document should look like something professionally written, with real structure, headings, tables, and signatures.
+Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
 
-{
-  "structured": {
-    "document_title": "Application Outcome Letter (Fictional)",
-    "company": {
-      "name": "{{companyName}}",
-      "address": "<realistic_business_address>",
-      "logo": "<company_initials>",
-      "website": "<company_website>"
-    },
-    "applicant": {
-      "name": "{{fullName}}",
-      "title": "{{jobTitle}}",
-      "application_id": "<APP-8-digit-number>"
-    },
-    "letter_head": "Dear {{fullName}}",
-    "response_type": "Rejection",
-    "application_reference": "<REF-number>",
-    "position_applied_for": "{{jobTitle}}",
-    "application_date": "<ISO_date>",
-    "review_timeline": "<weeks_to_decision>",
-    "primary_reasons": [
-      "<detailed_reason_1>",
-      "<detailed_reason_2>",
-      "<detailed_reason_3>"
-    ],
-    "specific_feedback": {
-      "experience_level": "<assessment_of_experience>",
-      "skills_gaps": ["<missing_skills>"],
-      "cultural_fit": "<team_dynamics_assessment>"
-    },
-    "interview_performance": {
-      "interview_dates": ["<interview_dates>"],
-      "interviewer_names": ["<panel_members>"],
-      "performance_notes": ["<positive_aspects>", "<areas_for_improvement>"],
-      "technical_assessment": "<technical_evaluation>"
-    },
-    "competition_analysis": {
-      "total_applications": "<number>",
-      "interviews_conducted": "<number>",
-      "finalists_count": "<number>",
-      "hired_candidate": "<successful_candidate_background>"
-    },
-    "strengths_noted": [
-      "<applicant_strengths>",
-      "<positive_aspects>"
-    ],
-    "improvement_suggestions": {
-      "professional_development": ["<development_areas>"],
-      "skill_enhancement": ["<skills_to_develop>"],
-      "application_tips": ["<future_application_advice>"]
-    },
-    "company_resources": {
-      "career_guidance": "<available_resources>",
-      "internship_programs": "<alternative_opportunities>",
-      "staff_referral_network": "<networking_options>"
-    },
-    "next_steps": {
-      "policy_reapplication": "<time_before_reapplying>",
-      "other_positions": ["<positions_to_consider>"],
-      "follow_up_permitted": "<contact_timeline>"
-    },
-    "feedback_channels": {
-      "request_more_feedback": "<contact_for_feedback>",
-      "appeal_process": "<grievance_procedure>"
-    },
-    "company_policy": {
-      "equal_opportunities": "<commitment_to_EEO>",
-      "complaint_procedures": "<policy_details>"
-    },
-    "timeline": {
-      "application_received": "<ISO_date>",
-      "screening_complete": "<ISO_date>",
-      "interview_complete": "<ISO_date>",
-      "final_decision": "<ISO_date>"
-    },
-    "signature": {
-      "hr_manager": "<HR_manager_name>",
-      "position": "Human Resources Manager",
-      "contact": "<hr_contact_details>"
-    },
-    "issued_at": "<ISO timestamp>"
-  },
-  "narrative": {
-    "executive_summary": "<2-3 paragraph executive summary using formal HR language, include recruitment acronyms like ATS, HRIS, EEO. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on recruitment process and candidate assessment.>",
-    "analyst_notes": [
-      "<First paragraph of detailed HR assessment using formal recruitment language, include specific hiring details and acronyms.>",
-      "<Second paragraph focusing on candidate evaluation and interview performance, use technical HR terminology.>",
-      "<Third paragraph with recruitment metrics and selection criteria, include talent acquisition terminology.>"
-    ],
-    "candidate_assessment": "<Comprehensive candidate evaluation using formal HR analysis language, include recruitment terminology and hiring process observations.>",
-    "recruitment_analysis": "<Detailed recruitment analysis using HR language, include hiring metrics and selection indicators with formal assessment terminology.>"
-  }
-}
+Write a realistic Job Application Rejection Letter for an applicant using the following input fields:
+Name: {{fullName}}
+Company Name: {{companyName}}
+Job Title: {{jobTitle}}
+Application Date: {{applicationDate}}
 
-Generate 3+ primary reasons, 2+ strengths noted, 3+ improvement suggestions. Use formal HR/recruitment language with acronyms (ATS, HRIS, EEO, KPI, ROI). Vary narrative sentence length and include domain-specific terminology.
+Use a formal corporate tone with realistic headings and analysis sections. Include:
 
-Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.
+Title: "Application Outcome Letter (Fictional)"
+
+Applicant Information:
+- Full Name: {{fullName}}
+- Application Date: {{applicationDate}}
+- Position Applied For: {{jobTitle}}
+- Company: {{companyName}}
+- Application Reference: [realistic reference format]
+
+Letter Details:
+- Letter ID: [realistic letter ID]
+- Classification: CONFIDENTIAL
+- Letter Status: [Active/Pending/Closed]
+- Priority Level: [Low/Medium/High/Critical]
+- HR Manager: [Manager name and title]
+- Letter Date: [realistic date]
+
+Executive Summary:
+Write 2-3 paragraphs of detailed HR analysis using formal corporate language. Include operational significance, threat assessment, and investigative findings. Use acronyms like HR, CV, KPI, ROI.
+
+Key Findings:
+• [Specific HR finding with operational significance]
+• [Corporate assessment conclusion]
+• [Threat indicator or pattern]
+• [Recommended course of action]
+• [Resource requirement or constraint]
+
+Application Review (3-5 entries):
+For each entry, include:
+- Date: [realistic date]
+- Review Stage: [Initial/Interview/Final]
+- Reviewer: [HR manager or interviewer name]
+- Outcome: [Pass/Fail/Pending]
+- Notes: [detailed description of review]
+- Score: [if applicable]
+
+Analyst Notes:
+Write 3-4 paragraphs of detailed analyst assessment using formal corporate language. Include specific operational details, behavioral patterns, communication analysis, and threat evaluation. Use technical HR terminology and corporate acronyms.
+
+Behavioral Assessment:
+Write 2-3 paragraphs of comprehensive behavioral profile using formal corporate analysis language. Include psychological assessment terminology and operational security observations.
+
+Threat Analysis:
+Write 2-3 paragraphs of detailed threat analysis using corporate language. Include risk matrices, threat indicators, and formal assessment terminology.
+
+Recommendations:
+• [Specific operational recommendation with justification]
+• [Resource allocation recommendation]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Legal Status:
+- Outstanding Warrants: [any warrants or legal issues]
+- Prosecution Recommendation: [Federal/State/Local]
+- Charges Under Consideration: [specific criminal charges]
+
+Evidence Summary:
+- Physical Evidence: [3-4 items with descriptions and discovery dates]
+- Digital Evidence: [3-4 items with sources and recovery dates]
+
+Next Actions:
+• [Immediate action item with assigned responsibility]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Document Details:
+- Issued: [current date and time]
+- Classification: CONFIDENTIAL
+- Distribution: [authorized personnel only]
+
+Signature Block:
+[Manager Name]
+HR Manager, {{companyName}}
+[Office Location]
+[Contact Information]
+
+End with: "Internet Streets Entertainment – Not a Real Document"
+
+Keep the tone formal, professional, and believable. Use realistic corporate terminology and formatting throughout.

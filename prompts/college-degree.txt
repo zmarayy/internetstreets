@@ -1,96 +1,97 @@
-You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You are an expert document writer for a novelty entertainment platform.
+Write a realistic and detailed University Degree Certificate document in natural plain text, not JSON.
+The document should look like something professionally written, with real structure, headings, tables, and signatures.
+Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
 
-{
-  "structured": {
-    "document_title": "University Degree Certificate (Fictional)",
-    "student_information": {
-      "name": "{{fullName}}",
-      "date_of_birth": "{{dateOfBirth}}",
-      "student_id": "<university_student_number>",
-      "nationality": "<country>"
-    },
-    "university_details": {
-      "name": "{{universityName}}",
-      "address": "<university_address>",
-      "founded": "<year_founded>",
-      "accreditation": "<accrediting_body>"
-    },
-    "degree_information": {
-      "degree_type": "{{degreeType}}",
-      "subject": "{{subject}}",
-      "classification": "<First Class|Upper Second|Lower Second|Third Class|Pass>",
-      "graduation_date": "{{graduationYear}}-07-15",
-      "degree_title": "{{degreeType}} in {{subject}}"
-    },
-    "academic_performance": {
-      "overall_grade": "<percentage_or_GPA>",
-      "dissertation_title": "<thesis_title>",
-      "dissertation_grade": "<grade>",
-      "final_year_average": "<percentage>"
-    },
-    "course_modules": [
-      {"module_name": "<core_module>", "credits": "<credit_value>", "grade": "<module_grade>", "year": "<academic_year>"},
-      {"module_name": "<core_module>", "credits": "<credit_value>", "grade": "<module_grade>", "year": "<academic_year>"},
-      {"module_name": "<core_module>", "credits": "<credit_value>", "grade": "<module_grade>", "year": "<academic_year>"},
-      {"module_name": "<core_module>", "credits": "<credit_value>", "grade": "<module_grade>", "year": "<academic_year>"},
-      {"module_name": "<core_module>", "credits": "<credit_value>", "grade": "<module_grade>", "year": "<academic_year>"}
-    ],
-    "academic_achievements": [
-      {"achievement": "<academic_honor>", "date": "<ISO_date>", "description": "<achievement_details>", "awarded_by": "<department_or_faculty>"},
-      {"achievement": "<academic_honor>", "date": "<ISO_date>", "description": "<achievement_details>", "awarded_by": "<department_or_faculty>"},
-      {"achievement": "<academic_honor>", "date": "<ISO_date>", "description": "<achievement_details>", "awarded_by": "<department_or_faculty>"}
-    ],
-    "extracurricular_activities": [
-      {"activity": "<society_or_club>", "role": "<position_held>", "duration": "<time_period>", "description": "<activity_description>"},
-      {"activity": "<society_or_club>", "role": "<position_held>", "duration": "<time_period>", "description": "<activity_description>"},
-      {"activity": "<society_or_club>", "role": "<position_held>", "duration": "<time_period>", "description": "<activity_description>"}
-    ],
-    "work_experience": [
-      {"position": "<job_title>", "company": "<company_name>", "duration": "<time_period>", "description": "<role_description>"},
-      {"position": "<job_title>", "company": "<company_name>", "duration": "<time_period>", "description": "<role_description>"}
-    ],
-    "research_projects": [
-      {"project_title": "<research_project>", "supervisor": "<academic_supervisor>", "duration": "<project_duration>", "outcome": "<project_results>"},
-      {"project_title": "<research_project>", "supervisor": "<academic_supervisor>", "duration": "<project_duration>", "outcome": "<project_results>"}
-    ],
-    "certification_details": {
-      "certificate_number": "<certificate_reference>",
-      "issue_date": "<ISO_date>",
-      "validity": "<permanent|time_limited>",
-      "verification_code": "<verification_reference>"
-    },
-    "academic_officials": {
-      "vice_chancellor": "<university_head_name>",
-      "dean": "<faculty_dean_name>",
-      "registrar": "<registrar_name>",
-      "head_of_department": "<department_head_name>"
-    },
-    "degree_requirements": {
-      "total_credits": "<total_credit_hours>",
-      "core_modules": "<number>",
-      "optional_modules": "<number>",
-      "dissertation_credits": "<credit_value>"
-    },
-    "graduation_ceremony": {
-      "ceremony_date": "<graduation_date>",
-      "venue": "<graduation_venue>",
-      "guest_tickets": "<number_allowed>",
-      "academic_dress": "<required|optional>"
-    },
-    "issued_at": "<ISO timestamp>"
-  },
-  "narrative": {
-    "executive_summary": "<2-3 paragraph executive summary using formal university language, include academic acronyms like UCAS, QAA, HESA. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on academic achievement and educational excellence.>",
-    "analyst_notes": [
-      "<First paragraph of detailed academic assessment using formal university language, include specific degree details and acronyms.>",
-      "<Second paragraph focusing on academic performance and research contributions, use technical education terminology.>",
-      "<Third paragraph with degree evaluation and graduate readiness, include higher education terminology.>"
-    ],
-    "academic_assessment": "<Comprehensive academic evaluation using formal university analysis language, include higher education terminology and academic achievement observations.>",
-    "educational_analysis": "<Detailed educational analysis using university language, include academic metrics and achievement indicators with formal assessment terminology.>"
-  }
-}
+Write a realistic University Degree Certificate for a graduate using the following input fields:
+Name: {{fullName}}
+DOB: {{dateOfBirth}}
+University: {{universityName}}
+Degree: {{degreeTitle}}
+Graduation Year: {{graduationYear}}
 
-Generate 5+ course modules, 3+ academic achievements, 3+ extracurricular activities, 2+ work experience entries, 2+ research projects. Use formal university/higher education language with acronyms (UCAS, QAA, HESA, PhD, MA). Vary narrative sentence length and include domain-specific terminology.
+Use a formal academic tone with realistic headings and analysis sections. Include:
 
-Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.
+Title: "University Degree Certificate (Fictional)"
+
+Graduate Information:
+- Full Name: {{fullName}}
+- Date of Birth: {{dateOfBirth}}
+- University: {{universityName}}
+- Degree: {{degreeTitle}}
+- Graduation Year: {{graduationYear}}
+- Student ID: [realistic student ID]
+- Course Code: [realistic course code]
+- Academic Advisor: [realistic professor name]
+
+Certificate Details:
+- Certificate ID: [realistic certificate ID]
+- Classification: CONFIDENTIAL
+- Certificate Status: [Active/Pending/Closed]
+- Priority Level: [Low/Medium/High/Critical]
+- Vice Chancellor: [VC name and title]
+- Certificate Date: [realistic date]
+
+Executive Summary:
+Write 2-3 paragraphs of detailed academic analysis using formal university language. Include operational significance, threat assessment, and investigative findings. Use acronyms like UCAS, QAA, HESA, REF.
+
+Key Findings:
+• [Specific academic finding with operational significance]
+• [University assessment conclusion]
+• [Threat indicator or pattern]
+• [Recommended course of action]
+• [Resource requirement or constraint]
+
+Academic Record (5-7 entries):
+For each entry, include:
+- Date: [realistic date]
+- Module: [realistic module name]
+- Grade: [realistic grade]
+- Credits: [realistic credit value]
+- Lecturer: [lecturer name]
+- Notes: [additional details]
+- Status: [Pass/Fail/Pending]
+
+Analyst Notes:
+Write 3-4 paragraphs of detailed analyst assessment using formal academic language. Include specific operational details, behavioral patterns, communication analysis, and threat evaluation. Use technical educational terminology and university acronyms.
+
+Behavioral Assessment:
+Write 2-3 paragraphs of comprehensive behavioral profile using formal academic analysis language. Include psychological assessment terminology and operational security observations.
+
+Threat Analysis:
+Write 2-3 paragraphs of detailed threat analysis using academic language. Include risk matrices, threat indicators, and formal assessment terminology.
+
+Recommendations:
+• [Specific operational recommendation with justification]
+• [Resource allocation recommendation]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Legal Status:
+- Outstanding Warrants: [any warrants or legal issues]
+- Prosecution Recommendation: [Federal/State/Local]
+- Charges Under Consideration: [specific criminal charges]
+
+Evidence Summary:
+- Physical Evidence: [3-4 items with descriptions and discovery dates]
+- Digital Evidence: [3-4 items with sources and recovery dates]
+
+Next Actions:
+• [Immediate action item with assigned responsibility]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Document Details:
+- Issued: [current date and time]
+- Classification: CONFIDENTIAL
+- Distribution: [authorized personnel only]
+
+Signature Block:
+[Vice Chancellor Name]
+Vice Chancellor, {{universityName}}
+[University Address]
+[Contact Information]
+
+End with: "Internet Streets Entertainment – Not a Real Document"
+
+Keep the tone formal, professional, and believable. Use realistic academic terminology and formatting throughout.

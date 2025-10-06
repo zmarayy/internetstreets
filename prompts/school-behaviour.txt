@@ -1,94 +1,95 @@
-You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You are an expert document writer for a novelty entertainment platform.
+Write a realistic and detailed School Behaviour Record Reprint document in natural plain text, not JSON.
+The document should look like something professionally written, with real structure, headings, tables, and signatures.
+Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
 
-{
-  "structured": {
-    "document_title": "School Behaviour Record Reprint (Fictional)",
-    "student": {
-      "name": "{{fullName}}",
-      "date_of_birth": "{{dateOfBirth}}",
-      "student_id": "{{studentId}}",
-      "year_group": "{{yearGroup}}"
-    },
-    "school": {
-      "name": "{{schoolName}}",
-      "address": "<school_address>",
-      "head_teacher": "<head_teacher_name>",
-      "school_type": "<primary|secondary|college>"
-    },
-    "academic_year": {
-      "year": "<academic_year>",
-      "term": "<autumn|spring|summer>",
-      "reporting_period": "<date_range>"
-    },
-    "attendance_record": {
-      "total_days": "<total_school_days>",
-      "days_present": "<days_attended>",
-      "days_absent": "<days_missed>",
-      "attendance_percentage": "<percentage>",
-      "late_arrivals": "<number>"
-    },
-    "behavior_incidents": [
-      {"date": "<ISO_date>", "incident_type": "<behavior_issue>", "description": "<detailed_description>", "location": "<where_occurred>", "staff_involved": "<staff_member>", "action_taken": "<consequence>", "severity": "<low|medium|high>"},
-      {"date": "<ISO_date>", "incident_type": "<behavior_issue>", "description": "<detailed_description>", "location": "<where_occurred>", "staff_involved": "<staff_member>", "action_taken": "<consequence>", "severity": "<low|medium|high>"},
-      {"date": "<ISO_date>", "incident_type": "<behavior_issue>", "description": "<detailed_description>", "location": "<where_occurred>", "staff_involved": "<staff_member>", "action_taken": "<consequence>", "severity": "<low|medium|high>"},
-      {"date": "<ISO_date>", "incident_type": "<behavior_issue>", "description": "<detailed_description>", "location": "<where_occurred>", "staff_involved": "<staff_member>", "action_taken": "<consequence>", "severity": "<low|medium|high>"}
-    ],
-    "positive_achievements": [
-      {"date": "<ISO_date>", "achievement": "<positive_behavior>", "description": "<detailed_description>", "recognized_by": "<staff_member>", "reward": "<recognition_given>"},
-      {"date": "<ISO_date>", "achievement": "<positive_behavior>", "description": "<detailed_description>", "recognized_by": "<staff_member>", "reward": "<recognition_given>"},
-      {"date": "<ISO_date>", "achievement": "<positive_behavior>", "description": "<detailed_description>", "recognized_by": "<staff_member>", "reward": "<recognition_given>"}
-    ],
-    "disciplinary_actions": [
-      {"date": "<ISO_date>", "action_type": "<detention|warning|suspension>", "reason": "<disciplinary_reason>", "duration": "<if_applicable>", "staff_member": "<issuing_staff>", "parent_notified": "<yes|no>"},
-      {"date": "<ISO_date>", "action_type": "<detention|warning|suspension>", "reason": "<disciplinary_reason>", "duration": "<if_applicable>", "staff_member": "<issuing_staff>", "parent_notified": "<yes|no>"}
-    ],
-    "support_interventions": [
-      {"date": "<ISO_date>", "intervention_type": "<counseling|mentoring|behavior_plan>", "provider": "<staff_member>", "frequency": "<how_often>", "effectiveness": "<effective|partially_effective|ineffective>"},
-      {"date": "<ISO_date>", "intervention_type": "<counseling|mentoring|behavior_plan>", "provider": "<staff_member>", "frequency": "<how_often>", "effectiveness": "<effective|partially_effective|ineffective>"}
-    ],
-    "peer_relationships": {
-      "social_interaction": "<excellent|good|fair|poor>",
-      "friendship_groups": ["<friend_names>"],
-      "conflict_resolution": "<excellent|good|fair|poor>",
-      "leadership_qualities": "<strong|moderate|weak>"
-    },
-    "academic_engagement": {
-      "classroom_behavior": "<excellent|good|fair|poor>",
-      "homework_completion": "<excellent|good|fair|poor>",
-      "participation_level": "<high|moderate|low>",
-      "teacher_feedback": ["<teacher_comments>"]
-    },
-    "parental_involvement": {
-      "parent_meetings": "<number_attended>",
-      "communication_frequency": "<regular|occasional|rare>",
-      "support_level": "<high|moderate|low>",
-      "home_support": "<excellent|good|fair|poor>"
-    },
-    "overall_assessment": {
-      "behavior_rating": "<excellent|good|satisfactory|needs_improvement>",
-      "improvement_trend": "<improving|stable|declining>",
-      "recommendations": ["<specific_recommendations>"],
-      "next_review_date": "<ISO_date>"
-    },
-    "staff_signatures": {
-      "form_tutor": "<tutor_name>",
-      "head_of_year": "<head_of_year_name>",
-      "head_teacher": "<head_teacher_name>"
-    },
-    "issued_at": "<ISO timestamp>"
-  },
-  "narrative": {
-    "executive_summary": "<2-3 paragraph executive summary using formal education language, include school acronyms like SEN, EHC, PSHE. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on student development and behavior management.>",
-    "analyst_notes": [
-      "<First paragraph of detailed teacher assessment using formal education language, include specific student details and acronyms.>",
-      "<Second paragraph focusing on behavior patterns and academic engagement, use technical education terminology.>",
-      "<Third paragraph with student development evaluation and intervention effectiveness, include pastoral terminology.>"
-    ],
-    "student_assessment": "<Comprehensive student evaluation using formal education analysis language, include pastoral care terminology and behavioral development observations.>",
-    "educational_analysis": "<Detailed educational analysis using school language, include behavior metrics and development indicators with formal assessment terminology.>"
-  }
-}
+Write a realistic School Behaviour Record Reprint for a student using the following input fields:
+Name: {{fullName}}
+DOB: {{dateOfBirth}}
+School: {{schoolName}}
+Year Group: {{yearGroup}}
 
-Generate 4+ behavior incidents, 3+ positive achievements, 2+ disciplinary actions, 2+ support interventions. Use formal education/school language with acronyms (SEN, EHC, PSHE, GCSE, A-Level). Vary narrative sentence length and include domain-specific terminology.
+Use a formal educational tone with realistic headings and analysis sections. Include:
 
-Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.
+Title: "School Behaviour Record Reprint (Fictional)"
+
+Student Information:
+- Full Name: {{fullName}}
+- Date of Birth: {{dateOfBirth}}
+- School: {{schoolName}}
+- Year Group: {{yearGroup}}
+- Student ID: [realistic student ID]
+- Class: [realistic class name]
+- Form Tutor: [realistic teacher name]
+
+Record Details:
+- Record ID: [realistic record ID]
+- Classification: CONFIDENTIAL
+- Record Status: [Active/Pending/Closed]
+- Priority Level: [Low/Medium/High/Critical]
+- Head Teacher: [Head teacher name and title]
+- Record Date: [realistic date]
+
+Executive Summary:
+Write 2-3 paragraphs of detailed educational analysis using formal school language. Include operational significance, threat assessment, and investigative findings. Use acronyms like SEN, EHC, LAC, DSL.
+
+Key Findings:
+• [Specific educational finding with operational significance]
+• [School assessment conclusion]
+• [Threat indicator or pattern]
+• [Recommended course of action]
+• [Resource requirement or constraint]
+
+Behaviour Incidents (4-6 entries):
+For each entry, include:
+- Date: [realistic date]
+- Incident Type: [Behaviour/Discipline/Achievement]
+- Location: [classroom/playground/assembly]
+- Description: [detailed description of incident]
+- Outcome: [Positive/Negative/Neutral]
+- Teacher: [teacher name]
+- Notes: [additional details]
+
+Analyst Notes:
+Write 3-4 paragraphs of detailed analyst assessment using formal educational language. Include specific operational details, behavioral patterns, communication analysis, and threat evaluation. Use technical educational terminology and school acronyms.
+
+Behavioral Assessment:
+Write 2-3 paragraphs of comprehensive behavioral profile using formal educational analysis language. Include psychological assessment terminology and operational security observations.
+
+Threat Analysis:
+Write 2-3 paragraphs of detailed threat analysis using educational language. Include risk matrices, threat indicators, and formal assessment terminology.
+
+Recommendations:
+• [Specific operational recommendation with justification]
+• [Resource allocation recommendation]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Legal Status:
+- Outstanding Warrants: [any warrants or legal issues]
+- Prosecution Recommendation: [Federal/State/Local]
+- Charges Under Consideration: [specific criminal charges]
+
+Evidence Summary:
+- Physical Evidence: [3-4 items with descriptions and discovery dates]
+- Digital Evidence: [3-4 items with sources and recovery dates]
+
+Next Actions:
+• [Immediate action item with assigned responsibility]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Document Details:
+- Issued: [current date and time]
+- Classification: CONFIDENTIAL
+- Distribution: [authorized personnel only]
+
+Signature Block:
+[Head Teacher Name]
+Head Teacher, {{schoolName}}
+[School Address]
+[Contact Information]
+
+End with: "Internet Streets Entertainment – Not a Real Document"
+
+Keep the tone formal, professional, and believable. Use realistic educational terminology and formatting throughout.

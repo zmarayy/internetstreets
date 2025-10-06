@@ -1,129 +1,96 @@
-You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You are an expert document writer for a novelty entertainment platform.
+Write a realistic and detailed Universal Credit Assessment Report document in natural plain text, not JSON.
+The document should look like something professionally written, with real structure, headings, tables, and signatures.
+Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
 
-{
-  "structured": {
-    "document_title": "Universal Credit Assessment Report (Fictional)",
-    "case_reference": "<UC-case-num-12-chars>",
-    "applicant": {
-      "name": "{{fullName}}",
-      "dob": "{{dateOfBirth}}",
-      "address": "<UK address>",
-      "city": "{{city}}",
-      "postcode": "<realistic UK postcode>",
-      "phone": "<UK phone number>",
-      "email": "<email>",
-      "occupation": "{{occupation}}",
-      "employer": "<company name>",
-      "weekly_hours": "<hours per week>"
-    },
-    "assessment_period": {
-      "start_date": "<first_day_of_month>",
-      "end_date": "<last_day_of_month>",
-      "total_months": 1
-    },
-    "income_assessment": {
-      "monthly_income": "{{income}}",
-      "salary_type": "<employed|self-employed|unemployed>",
-      "employment_status": "<full-time|part-time|casual>",
-      "employer_details": {
-        "name": "<company_name>",
-        "address": "<business_address>",
-        "contact_person": "<HR_name>"
-      },
-      "additional_income": ["<benefits|overtime|cash_in_hand>"],
-      "income_sources": [
-        {"source": "<primary_job>", "amount": "<monthly_amount>", "frequency": "<weekly|monthly>"},
-        {"source": "<side_jobs>", "amount": "<amount>", "frequency": "<weekly|monthly>"}
-      ]
-    },
-    "housing_costs": {
-      "rent_amount": "<monthly_rent>",
-      "council_tax": "<monthly_amount>",
-      "utilities": "<gas+electric+water>",
-      "service_charges": "<any_service_fees>"
-    },
-    "childcare_costs": {
-      "registered_provider": "<yes|no>",
-      "monthly_costs": "<amount>",
-      "provider_name": "<childcare_name>"
-    },
-    "health_conditions": {
-      "disability_status": "<has_disability|fit_for_work>",
-      "limited_capability": "<limited_by_health>",
-      "support_needs": ["<medical_accommodations>"]
-    },
-    "assets_and_savings": {
-      "bank_accounts": "<total_balance>",
-      "property_value": "<if_owns_property>",
-      "vehicle_value": "<vehicle_worth>",
-      "investment_value": "<investment_assets>"
-    },
-    "calculated_entitlements": {
-      "standard_allowance": "<basic_UC_amount>",
-      "housing_element": "<housing_costs_coverage>",
-      "child_element": "<child_benefits>",
-      "work_capability": "<health_allowances>",
-      "total_monthly_entitlement": "<total_amount>"
-    },
-    "deductions": {
-      "earned_income_reduction": "<taper_reduction>",
-      "unearned_income_reduction": "<other_income_impact>",
-      "sanctions": ["<benefit_sanctions>"],
-      "recoveries": ["<debt_recoveries>"]
-    },
-    "work_coach_interactions": [
-      {"coach_name": "<advisor_name>", "meeting_date": "<ISO_date>", "focus_area": "<job_search|skills|cv_help>", "actions_agreed": ["<specific_activities>"], "next_steps": ["<follow_up_tasks>"]},
-      {"coach_name": "<advisor_name>", "meeting_date": "<ISO_date>", "focus_area": "<job_search|skills|cv_help>", "actions_agreed": ["<specific_activities>"], "next_steps": ["<follow_up_tasks>"]},
-      {"coach_name": "<advisor_name>", "meeting_date": "<ISO_date>", "focus_area": "<job_search|skills|cv_help>", "actions_agreed": ["<specific_activities>"], "next_steps": ["<follow_up_tasks>"]}
-    ],
-    "job_search_requirements": {
-      "minimum_applications": "<number_per_week>",
-      "travel_distance": "<miles_radius>",
-      "job_types_suitable": ["<approved_job_types>"],
-      "work_preparation_courses": ["<mandatory_training>"]
-    },
-    "sanctions_history": [
-      {"sanction_date": "<ISO_date>", "reason": "<sanction_reason>", "duration": "<weeks>", "status": "<current|ended>"},
-      {"sanction_date": "<ISO_date>", "reason": "<sanction_reason>", "duration": "<weeks>", "status": "<current|ended>"}
-    ],
-    "appeals_and_decisions": [
-      {"appeal_reference": "<reference_number>", "issue": "<benefit_decision>", "outcome": "<appeal_result>", "date": "<ISO_date>"},
-      {"appeal_reference": "<reference_number>", "issue": "<benefit_decision>", "outcome": "<appeal_result>", "date": "<ISO_date>"}
-    ],
-    "assessment_officer": {
-      "name": "<caseworker_name>",
-      "department": "<work_and_pensions_department>",
-      "phone": "<contact_number>",
-      "escalation_level": "<line_manager>"
-    },
-    "next_payment": {
-      "payment_date": "<next_UC_payment>",
-      "amount": "<clean_payment_amount>",
-      "bank_account": "<sort_code_account_number>"
-    },
-    "work_search_evidence": [
-      "<job_applications_logged>",
-      "<interview_attendance>",
-      "<cv_updates>"
-    ],
-    "health_assessments": [
-      {"assessment_date": "<ISO_date>", "healthcare_professional": "<GP_name>", "capability_findings": "<health_limitations>", "duration_recommended": "<assessment_validity>"},
-      {"assessment_date": "<ISO_date>", "healthcare_professional": "<GP_name>", "capability_findings": "<health_limitations>", "duration_recommended": "<assessment_validity>"}
-    ],
-    "issued_at": "<ISO timestamp>"
-  },
-  "narrative": {
-    "executive_summary": "<2-3 paragraph executive summary using formal DWP language, include benefit acronyms like UC, JSA, ESA. Vary sentence length from short terse statements to longer analytical paragraphs. Focus on entitlement calculation and work requirements.>",
-    "analyst_notes": [
-      "<First paragraph of detailed caseworker assessment using formal DWP language, include specific benefit details and acronyms.>",
-      "<Second paragraph focusing on work search activities and compliance, use technical benefit terminology.>",
-      "<Third paragraph with financial assessment and entitlement calculation, include welfare terminology.>"
-    ],
-    "work_assessment": "<Comprehensive work capability assessment using formal DWP analysis language, include employment support terminology and work preparation observations.>",
-    "financial_analysis": "<Detailed financial analysis using welfare language, include income calculations and benefit entitlement matrices with formal assessment terminology.>"
-  }
-}
+Write a realistic Universal Credit Assessment Report for a claimant using the following input fields:
+Name: {{fullName}}
+DOB: {{dateOfBirth}}
+City: {{city}}
+Occupation: {{occupation}}
 
-Generate 3+ work coach interactions, 2+ sanctions history entries, 2+ appeals/decisions, 2+ health assessments. Use formal DWP/welfare language with acronyms (UC, JSA, ESA, DWP, HMRC). Vary narrative sentence length and include domain-specific terminology.
+Use a formal government tone with realistic headings and analysis sections. Include:
 
-Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.
+Title: "Universal Credit Assessment Report (Fictional)"
+
+Claimant Information:
+- Full Name: {{fullName}}
+- Date of Birth: {{dateOfBirth}}
+- Place of Birth: [realistic location]
+- Current Address: [realistic address in {{city}}]
+- Occupation: {{occupation}}
+- Nationality: [realistic nationality]
+- National Insurance: [realistic NI format: AB123456C]
+- Claim Reference: [realistic UC reference format]
+
+Assessment Details:
+- Assessment ID: [realistic assessment ID]
+- Classification: CONFIDENTIAL
+- Assessment Status: [Active/Pending/Closed]
+- Priority Level: [Low/Medium/High/Critical]
+- Work Coach: [Coach name and rank]
+- Assessment Date: [realistic date]
+
+Executive Summary:
+Write 2-3 paragraphs of detailed assessment analysis using formal government language. Include operational significance, threat assessment, and investigative findings. Use acronyms like UC, DWP, JSA, ESA, PIP.
+
+Key Findings:
+• [Specific assessment finding with operational significance]
+• [Government assessment conclusion]
+• [Threat indicator or pattern]
+• [Recommended course of action]
+• [Resource requirement or constraint]
+
+Work Coach Interactions (3-5 entries):
+For each entry, include:
+- Date: [realistic date]
+- Interaction Type: [Meeting/Phone/Email]
+- Location: [Job Centre or venue]
+- Duration: [time span]
+- Coach: [work coach name]
+- Outcome: [Positive/Negative/Neutral]
+- Notes: [detailed description of interaction]
+
+Analyst Notes:
+Write 3-4 paragraphs of detailed analyst assessment using formal government language. Include specific operational details, behavioral patterns, communication analysis, and threat evaluation. Use technical government terminology and DWP acronyms.
+
+Behavioral Assessment:
+Write 2-3 paragraphs of comprehensive behavioral profile using formal government analysis language. Include psychological assessment terminology and operational security observations.
+
+Threat Analysis:
+Write 2-3 paragraphs of detailed threat analysis using government language. Include risk matrices, threat indicators, and formal assessment terminology.
+
+Recommendations:
+• [Specific operational recommendation with justification]
+• [Resource allocation recommendation]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Legal Status:
+- Outstanding Warrants: [any warrants or legal issues]
+- Prosecution Recommendation: [Federal/State/Local]
+- Charges Under Consideration: [specific criminal charges]
+
+Evidence Summary:
+- Physical Evidence: [3-4 items with descriptions and discovery dates]
+- Digital Evidence: [3-4 items with sources and recovery dates]
+
+Next Actions:
+• [Immediate action item with assigned responsibility]
+• [Surveillance enhancement with operational parameters]
+• [Coordination requirement with partner agencies]
+
+Document Details:
+- Issued: [current date and time]
+- Classification: CONFIDENTIAL
+- Distribution: [authorized personnel only]
+
+Signature Block:
+[Officer Name]
+Work Coach, Department for Work and Pensions
+[Job Centre Location]
+[Contact Information]
+
+End with: "Internet Streets Entertainment – Not a Real Document"
+
+Keep the tone formal, professional, and believable. Use realistic government terminology and formatting throughout.

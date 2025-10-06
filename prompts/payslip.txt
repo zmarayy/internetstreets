@@ -1,74 +1,86 @@
-You MUST ONLY respond with one valid JSON object containing "structured" and "narrative" keys. No commentary, no Markdown, no explanations. JSON must strictly follow this schema:
+You are an expert document writer for a novelty entertainment platform.
+Write a realistic and detailed payslip document in natural plain text, not JSON.
+The document should look like something professionally written, with real structure, headings, tables, and signatures.
+Do not use code blocks or JSON. Write natural English only, formatted with headings, bullet points, and short paragraphs.
 
-{
-  "structured": {
-    "document_title": "Statement of Earnings (Fictional)",
-    "employee": {
-      "name": "{{fullName}}",
-      "job_title": "{{jobTitle}}",
-      "department": "<realistic department based on job title>",
-      "employee_id": "<5-char alnum like EMP01>",
-      "ni_number": "<realistic NI format: AB123456C>",
-      "tax_code": "<realistic UK tax code, e.g., 1257L>"
-    },
-    "employer": {
-      "company": "{{companyName}}",
-      "address": "<realistic UK business address matching company location>",
-      "registration": "<company reg number matching company name>"
-    },
-    "pay_period": {
-      "pay_date": "<current_date or recent_month_end_date>",
-      "period_start": "<date 1 month before pay_date>",
-      "period_end": "<date day before pay_date>",
-      "pay_period_type": "{{payPeriod}}"
-    },
-    "earnings": [
-      {"description": "Basic Pay", "current_gbp": "<calculate salary/12>", "ytd_gbp": "<year to date amount>"},
-      {"description": "Overtime", "current_gbp": "<optional small amount 0-200>", "ytd_gbp": "<year to date amount>"},
-      {"description": "Bonus", "current_gbp": "<optional small amount 0-500>", "ytd_gbp": "<year to date amount>"},
-      {"description": "Commission", "current_gbp": "<optional small amount 0-300>", "ytd_gbp": "<year to date amount>"}
-    ],
-    "deductions": [
-      {"description": "Income Tax", "current_gbp": "<calc from monthly gross * 0.20>", "ytd_gbp": "<year to date amount>"},
-      {"description": "National Insurance", "current_gbp": "<calc from monthly gross * 0.12>", "ytd_gbp": "<year to date amount>"},
-      {"description": "Pension Contribution", "current_gbp": "<small amount usually 50-200>", "ytd_gbp": "<year to date amount>"},
-      {"description": "Student Loan", "current_gbp": "<optional small amount 0-150>", "ytd_gbp": "<year to date amount>"}
-    ],
-    "amounts": {
-      "annual_salary_gbp": "{{salary}}",
-      "monthly_gross_gbp": "<calculate salary/12>",
-      "total_gross_gbp": "<sum of all earnings>",
-      "total_deductions_gbp": "<sum of all deductions>",
-      "net_pay_gbp": "<total gross - total deductions>"
-    },
-    "references": {
-      "employee_no": "<6-digit number>",
-      "slip_no": "<8-digit alnum>",
-      "payroll_ref": "<alnum>"
-    },
-    "payment_method": "<Bank Transfer|Cheque>",
-    "bank_details": {
-      "account_name": "{{fullName}}",
-      "sort_code": "<6-digit sort code>",
-      "account_number": "<8-digit account number>"
-    },
-    "issued_at": "<ISO timestamp>"
-  },
-  "narrative": {
-    "message_from_employer": "<1-2 paragraph message from employer, e.g., 'Thank you for your hard work this month. Your dedication to {{companyName}} is greatly appreciated.'>",
-    "tax_year_summary": "<1 paragraph summary of tax year information or changes, e.g., 'This payslip reflects the current tax year rates. Please keep this document for your records.'>",
-    "payroll_notes": "<Brief note about any special circumstances or upcoming changes, e.g., 'Next month includes the annual bonus payment.'>"
-  }
-}
+Write a professional payslip in plain text layout with a clean corporate tone using the following input fields:
+Full Name: {{fullName}}
+Company Name: {{companyName}}
+Job Title: {{jobTitle}}
+Annual Salary: {{salary}}
+Pay Period: {{payPeriod}}
 
-Rules:
-- Use standard UK rates: tax_rate=0.20 and ni_rate=0.12
-- Calculate monthly salary from annual: monthly_gross = round({{salary}} / 12, 2)
-- Calculate exact amounts: tax_amount = round(monthly_gross * 0.20, 2)
-- Calculate exactly: ni_amount = round(monthly_gross * 0.12, 2)
-- Calculate exactly: net_pay = round(monthly_gross - tax_amount - ni_amount, 2)
-- Generate 3-5 earnings items and 3-5 deduction items
-- Ensure all amounts are realistic for the given salary
-- Use British English
+Include:
 
-Temperature 0.3 for structured, 0.5 for narrative. Generate ONE VALID JSON OBJECT only.
+Company Header:
+{{companyName}}
+[Realistic business address]
+Company Registration: [realistic number]
+Website: [company website]
+
+Employee Information:
+Name: {{fullName}}
+Employee ID: [EMP-XXXX format]
+Department: [realistic department based on {{jobTitle}}]
+Job Title: {{jobTitle}}
+National Insurance: [realistic NI format: AB123456C]
+Tax Code: [realistic UK tax code, e.g., 1257L]
+
+Pay Period Details:
+Pay Period: {{payPeriod}}
+Pay Date: [current or recent date]
+Period Start: [date 1 month before pay date]
+Period End: [date day before pay date]
+
+Earnings Breakdown:
+Basic Pay: £[calculated from {{salary}}/12]
+Overtime: £[optional small amount 0-200]
+Bonus: £[optional small amount 0-500]
+Commission: £[optional small amount 0-300]
+Total Gross: £[sum of all earnings]
+
+Deductions:
+Income Tax (20%): £[calculated from basic pay * 0.20]
+National Insurance (12%): £[calculated from basic pay * 0.12]
+Pension Contribution: £[small amount usually 50-200]
+Student Loan: £[optional small amount 0-150]
+Total Deductions: £[sum of all deductions]
+
+Payment Summary:
+Gross Pay: £[total gross]
+Total Deductions: £[total deductions]
+Net Pay: £[gross - deductions]
+
+Payment Information:
+Payment Method: Bank Transfer
+Bank Account: [sort code] [account number]
+Account Name: {{fullName}}
+
+References:
+Employee Number: [6-digit number]
+Payslip Number: [8-digit alphanumeric]
+Payroll Reference: [alphanumeric code]
+
+Year to Date Totals:
+Gross Pay YTD: £[year to date amount]
+Tax Paid YTD: £[year to date amount]
+NI Paid YTD: £[year to date amount]
+
+Message from Employer:
+[1-2 paragraph message from employer, e.g., "Thank you for your hard work this month. Your dedication to {{companyName}} is greatly appreciated."]
+
+Tax Year Information:
+[1 paragraph summary of tax year information or changes, e.g., "This payslip reflects the current tax year rates. Please keep this document for your records."]
+
+Payroll Notes:
+[Brief note about any special circumstances or upcoming changes, e.g., "Next month includes the annual bonus payment."]
+
+Signature and Authorization:
+[HR Manager Name]
+Human Resources Manager
+{{companyName}}
+[Contact Information]
+
+End with: "Internet Streets Entertainment – Not a Real Document"
+
+Keep the tone professional, corporate, and believable. Use realistic UK payroll terminology and formatting throughout.
