@@ -1,18 +1,15 @@
-You are a records officer at a national criminal database. Write a complete extract of a subject's criminal record, formatted like an official law enforcement report.
+You are a records officer generating an official criminal record extract.
 
-Include:
-- Header: 'GOVERNMENT CRIMINAL RECORD EXTRACT'  
-- Subject Details: Name, DOB, National ID (fictional), City  
-- Record ID and Issue Date  
-- Table-like listing of 4–6 offenses with: Offense Type, Date, Case Status, Sentence Outcome  
-- Additional Notes: parole history, probation, appeals  
-- Analyst Comment: 2–3 paragraphs of administrative or legal tone commentary.  
-Use believable legal terminology and neutral tone.
+Name: {{fullName}}  
+DOB: {{dateOfBirth}}  
+City: {{city}}  
+Occupation: {{occupation}}
 
-Subject Details:
-- Name: {{fullName}}
-- Date of Birth: {{dateOfBirth}}
-- Current Location: {{city}}
-- Occupation: {{occupation}}
+Document Sections:
+- Header: 'GOVERNMENT CRIMINAL RECORD EXTRACT'
+- Table-style list of 4–6 offenses (Type, Date, Status, Notes)
+- Record ID, Issue Date
+- Legal Commentary (2–3 paragraphs)
+- Officer Signature Block.
 
-End with disclaimer footer: 'Internet Streets Entertainment – Not a Real Document.'
+End with: 'Internet Streets Entertainment – Not a Real Document.'

@@ -31,7 +31,7 @@
         "name": "occupation",
         "label": "Occupation",
         "type": "text",
-        "required": false,
+        "required": true,
         "placeholder": "Software Developer"
       }
     ]
@@ -40,45 +40,7 @@
     "name": "NSA Surveillance Log",
     "description": "Track your digital footprint",
     "slug": "nsa-surveillance",
-    "prompt_file": "nsa-log.txt",
-    "type": "pdf",
-    "price": 250,
-    "fields": [
-      {
-        "name": "fullName",
-        "label": "Full Name",
-        "type": "text",
-        "required": true,
-        "placeholder": "John Doe"
-      },
-      {
-        "name": "email",
-        "label": "Email Address",
-        "type": "email",
-        "required": true,
-        "placeholder": "john@example.com"
-      },
-      {
-        "name": "phoneNumber",
-        "label": "Phone Number",
-        "type": "text",
-        "required": true,
-        "placeholder": "+44 7700 900000"
-      },
-      {
-        "name": "city",
-        "label": "City",
-        "type": "text",
-        "required": true,
-        "placeholder": "London"
-      }
-    ]
-  },
-  "criminal-record": {
-    "name": "Government Criminal Record Leak",
-    "description": "Generate fake criminal history",
-    "slug": "criminal-record",
-    "prompt_file": "gov-criminal.txt",
+    "prompt_file": "nsa-surveillance.txt",
     "type": "pdf",
     "price": 250,
     "fields": [
@@ -96,11 +58,41 @@
         "required": true
       },
       {
-        "name": "nationality",
-        "label": "Nationality",
+        "name": "city",
+        "label": "City",
         "type": "text",
         "required": true,
-        "placeholder": "British"
+        "placeholder": "London"
+      },
+      {
+        "name": "occupation",
+        "label": "Occupation",
+        "type": "text",
+        "required": true,
+        "placeholder": "Software Developer"
+      }
+    ]
+  },
+  "criminal-record": {
+    "name": "Government Criminal Record Leak",
+    "description": "Generate fake criminal history",
+    "slug": "criminal-record",
+    "prompt_file": "criminal-record.txt",
+    "type": "pdf",
+    "price": 250,
+    "fields": [
+      {
+        "name": "fullName",
+        "label": "Full Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "John Doe"
+      },
+      {
+        "name": "dateOfBirth",
+        "label": "Date of Birth",
+        "type": "date",
+        "required": true
       },
       {
         "name": "city",
@@ -108,6 +100,13 @@
         "type": "text",
         "required": true,
         "placeholder": "London"
+      },
+      {
+        "name": "occupation",
+        "label": "Occupation",
+        "type": "text",
+        "required": true,
+        "placeholder": "Software Developer"
       }
     ]
   },
@@ -133,55 +132,18 @@
         "required": true
       },
       {
-        "name": "nationalInsurance",
-        "label": "National Insurance Number",
+        "name": "city",
+        "label": "City",
         "type": "text",
         "required": true,
-        "placeholder": "AB123456C"
+        "placeholder": "London"
       },
       {
-        "name": "address",
-        "label": "Address",
+        "name": "occupation",
+        "label": "Occupation",
         "type": "text",
         "required": true,
-        "placeholder": "123 Main Street, London"
-      }
-    ]
-  },
-  "credit-score": {
-    "name": "Trap Credit Score Report",
-    "description": "Generate fake credit reports",
-    "slug": "credit-score",
-    "prompt_file": "trap-credit.txt",
-    "type": "pdf",
-    "price": 250,
-    "fields": [
-      {
-        "name": "fullName",
-        "label": "Full Name",
-        "type": "text",
-        "required": true,
-        "placeholder": "John Doe"
-      },
-      {
-        "name": "dateOfBirth",
-        "label": "Date of Birth",
-        "type": "date",
-        "required": true
-      },
-      {
-        "name": "address",
-        "label": "Address",
-        "type": "text",
-        "required": true,
-        "placeholder": "123 Main Street, London"
-      },
-      {
-        "name": "employmentStatus",
-        "label": "Employment Status",
-        "type": "text",
-        "required": true,
-        "placeholder": "Employed"
+        "placeholder": "Software Developer"
       }
     ]
   },
@@ -226,7 +188,44 @@
         "label": "Pay Period",
         "type": "text",
         "required": true,
-        "placeholder": "Monthly"
+        "placeholder": "January 2025"
+      }
+    ]
+  },
+  "credit-score": {
+    "name": "Trap Credit Score Report",
+    "description": "Generate fake credit reports",
+    "slug": "credit-score",
+    "prompt_file": "credit-score.txt",
+    "type": "pdf",
+    "price": 250,
+    "fields": [
+      {
+        "name": "fullName",
+        "label": "Full Name",
+        "type": "text",
+        "required": true,
+        "placeholder": "John Doe"
+      },
+      {
+        "name": "dateOfBirth",
+        "label": "Date of Birth",
+        "type": "date",
+        "required": true
+      },
+      {
+        "name": "city",
+        "label": "City",
+        "type": "text",
+        "required": true,
+        "placeholder": "London"
+      },
+      {
+        "name": "occupation",
+        "label": "Occupation",
+        "type": "text",
+        "required": true,
+        "placeholder": "Software Developer"
       }
     ]
   },
@@ -234,7 +233,7 @@
     "name": "Job Application Rejection Letter",
     "description": "Generate rejection letters",
     "slug": "job-rejection",
-    "prompt_file": "rejection-letter.txt",
+    "prompt_file": "job-rejection.txt",
     "type": "pdf",
     "price": 250,
     "fields": [
@@ -283,13 +282,6 @@
         "placeholder": "John Doe"
       },
       {
-        "name": "landlordName",
-        "label": "Landlord Name",
-        "type": "text",
-        "required": true,
-        "placeholder": "Jane Smith"
-      },
-      {
         "name": "propertyAddress",
         "label": "Property Address",
         "type": "text",
@@ -297,18 +289,16 @@
         "placeholder": "123 Main Street, London"
       },
       {
-        "name": "rentAmount",
-        "label": "Monthly Rent (£)",
-        "type": "number",
-        "required": true,
-        "placeholder": "1200"
+        "name": "tenancyStart",
+        "label": "Tenancy Start Date",
+        "type": "date",
+        "required": true
       },
       {
-        "name": "tenancyPeriod",
-        "label": "Tenancy Period",
-        "type": "text",
-        "required": true,
-        "placeholder": "12 months"
+        "name": "tenancyEnd",
+        "label": "Tenancy End Date",
+        "type": "date",
+        "required": true
       }
     ]
   },
@@ -316,7 +306,7 @@
     "name": "School Behaviour Record Reprint",
     "description": "Generate school records",
     "slug": "school-behaviour",
-    "prompt_file": "school-report.txt",
+    "prompt_file": "school-behaviour.txt",
     "type": "pdf",
     "price": 250,
     "fields": [
@@ -346,13 +336,6 @@
         "type": "text",
         "required": true,
         "placeholder": "Year 11"
-      },
-      {
-        "name": "studentId",
-        "label": "Student ID",
-        "type": "text",
-        "required": true,
-        "placeholder": "SM2024001"
       }
     ]
   },
@@ -385,18 +368,11 @@
         "placeholder": "University of London"
       },
       {
-        "name": "degreeType",
-        "label": "Degree Type",
+        "name": "degreeTitle",
+        "label": "Degree Title",
         "type": "text",
         "required": true,
-        "placeholder": "Bachelor of Science"
-      },
-      {
-        "name": "subject",
-        "label": "Subject",
-        "type": "text",
-        "required": true,
-        "placeholder": "Computer Science"
+        "placeholder": "Bachelor of Science in Computer Science"
       },
       {
         "name": "graduationYear",

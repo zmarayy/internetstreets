@@ -112,7 +112,7 @@ export async function renderServiceToPdf(
   doc.line(20, yPos, pageWidth - 20, yPos)
   yPos += 15
   
-  // Render the main document text
+  // Render the main document text with enhanced formatting
   doc.setFontSize(11)
   doc.setTextColor(0, 0, 0)
   doc.setFont('helvetica', 'normal')
@@ -124,6 +124,12 @@ export async function renderServiceToPdf(
   const maxWidth = pageWidth - (margin * 2)
   
   for (const line of lines) {
+    // Skip empty lines
+    if (line.trim() === '') {
+      yPos += lineHeight / 2
+      continue
+    }
+    
     // Check if we need a new page
     if (yPos > pageHeight - 30) {
       doc.addPage()
@@ -143,16 +149,25 @@ export async function renderServiceToPdf(
       if (isHeading(wrappedLine)) {
         doc.setFont('helvetica', 'bold')
         doc.setFontSize(12)
+        doc.setTextColor(0, 0, 0)
         doc.text(wrappedLine, margin, yPos)
-        yPos += lineHeight + 2
+        yPos += lineHeight + 3
       } else if (isListItem(wrappedLine)) {
         doc.setFont('helvetica', 'normal')
         doc.setFontSize(10)
+        doc.setTextColor(50, 50, 50)
         doc.text(wrappedLine, margin + 10, yPos)
+        yPos += lineHeight
+      } else if (isBoldText(wrappedLine)) {
+        doc.setFont('helvetica', 'bold')
+        doc.setFontSize(11)
+        doc.setTextColor(0, 0, 0)
+        doc.text(wrappedLine, margin, yPos)
         yPos += lineHeight
       } else {
         doc.setFont('helvetica', 'normal')
         doc.setFontSize(11)
+        doc.setTextColor(0, 0, 0)
         doc.text(wrappedLine, margin, yPos)
         yPos += lineHeight
       }
@@ -237,6 +252,33 @@ function isListItem(line: string): boolean {
          trimmed.startsWith('-') || 
          trimmed.startsWith('*') ||
          /^\d+\./.test(trimmed)
+}
+
+/**
+ * Check if line contains bold text patterns
+ */
+function isBoldText(line: string): boolean {
+  const trimmed = line.trim()
+  return trimmed.includes('Subject:') ||
+         trimmed.includes('Name:') ||
+         trimmed.includes('DOB:') ||
+         trimmed.includes('City:') ||
+         trimmed.includes('Occupation:') ||
+         trimmed.includes('Company:') ||
+         trimmed.includes('Job Title:') ||
+         trimmed.includes('Salary:') ||
+         trimmed.includes('Pay Period:') ||
+         trimmed.includes('Property:') ||
+         trimmed.includes('Tenancy:') ||
+         trimmed.includes('School:') ||
+         trimmed.includes('University:') ||
+         trimmed.includes('Degree:') ||
+         trimmed.includes('Graduation:') ||
+         trimmed.includes('Application Date:') ||
+         trimmed.includes('Record ID:') ||
+         trimmed.includes('Case Reference:') ||
+         trimmed.includes('Credit Score:') ||
+         trimmed.includes('Assessment:')
 }
 
 /**

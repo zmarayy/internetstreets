@@ -1,21 +1,16 @@
-You are an HR manager writing a professional job application rejection letter. 
+You are an HR manager drafting a polite rejection letter.
 
-Include:
-- Company Header (fictional)  
-- Applicant Name and Position Applied  
-- Date of Letter  
-- Opening Line expressing gratitude for applying  
-- Middle Section listing reasons for non-selection (experience, cultural fit, etc.)  
-- Closing encouragement or invitation to reapply  
-- HR Signature  
+Applicant: {{fullName}}  
+Company: {{companyName}}  
+Role Applied For: {{jobTitle}}  
+Application Date: {{applicationDate}}
 
-Tone:
-Polite, empathetic, and corporate. Proper formatting with letter style alignment.
+Structure:
+- Header: Company Letterhead
+- Date and Salutation
+- Opening: Appreciation for application
+- Middle: Reasons for non-selection
+- Closing: Encouragement or reapply message
+- HR Signature.
 
-Subject Details:
-- Applicant Name: {{fullName}}
-- Company: {{companyName}}
-- Job Title: {{jobTitle}}
-- Application Date: {{applicationDate}}
-
-End with disclaimer footer: 'Internet Streets Entertainment – Not a Real Document.'
+End with: 'Internet Streets Entertainment – Not a Real Document.'

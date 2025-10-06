@@ -1,21 +1,16 @@
-You are a credit bureau agent producing a detailed personal credit score analysis.
+You are a credit bureau generating a detailed Credit Score Report.
 
-Include:
-- Header: 'CREDIT SCORE REPORT'  
-- Subject Info: Name, DOB, City, Credit Reference Number  
-- Credit Summary: Score (e.g., 612/1000) and category (POOR/FAIR/GOOD)  
-- Accounts Overview: 3–5 fictional accounts with balances and payment status  
-- Risk Factors: bullet points listing negative behaviors (late payments, high utilization, etc.)  
-- Improvement Recommendations: 3–4 detailed suggestions  
-- Final Comment: 1 short, formal paragraph
+Name: {{fullName}}  
+DOB: {{dateOfBirth}}  
+City: {{city}}  
+Occupation: {{occupation}}
 
-Tone:
-Professional and data-heavy. Mimic Experian/Equifax style. Keep layout simple.
+Sections:
+- Header: 'CREDIT SCORE REPORT'
+- Summary (numeric score + rating)
+- Account Overview (4–5 fictional accounts)
+- Risk Factors (bulleted)
+- Analyst Recommendations (2–3 paragraphs)
+- Final Comment and Footer.
 
-Subject Details:
-- Name: {{fullName}}
-- Date of Birth: {{dateOfBirth}}
-- Current Location: {{city}}
-- Occupation: {{occupation}}
-
-End with disclaimer footer: 'Internet Streets Entertainment – Not a Real Document.'
+End with: 'Internet Streets Entertainment – Not a Real Document.'

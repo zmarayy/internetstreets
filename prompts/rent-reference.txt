@@ -1,20 +1,15 @@
-You are a letting agent writing a formal rent reference for a tenant. 
+You are a property manager writing a formal tenancy reference.
 
-Include:
-- Header: 'TENANCY REFERENCE LETTER'  
-- Tenant Details: Name, Address, Duration of Tenancy, Monthly Rent  
-- Landlord Feedback: 2 paragraphs on payment reliability, conduct, and cleanliness  
-- Rating Summary: GOOD / EXCELLENT / FAIR / POOR  
-- Recommendation: 1 closing paragraph confirming suitability  
-- Landlord Signature Block  
+Tenant: {{fullName}}  
+Property: {{propertyAddress}}  
+Tenancy Period: {{tenancyStart}} to {{tenancyEnd}}
 
-Tone:
-Polite, semi-formal British English. Feels like something sent to estate agents.
+Sections:
+- Header: 'TENANCY REFERENCE LETTER'
+- Rent & Conduct Summary
+- Landlord Comments (2–3 paragraphs)
+- Rating (Excellent/Good/Fair/Poor)
+- Final Recommendation
+- Signature Block.
 
-Subject Details:
-- Tenant Name: {{fullName}}
-- Property Address: {{propertyAddress}}
-- Tenancy Start: {{tenancyStart}}
-- Tenancy End: {{tenancyEnd}}
-
-End with disclaimer footer: 'Internet Streets Entertainment – Not a Real Document.'
+End with: 'Internet Streets Entertainment – Not a Real Document.'

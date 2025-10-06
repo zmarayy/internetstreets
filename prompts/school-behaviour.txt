@@ -1,21 +1,16 @@
-You are a teacher writing a behaviour and performance report.
+You are a teacher preparing a School Behaviour & Performance Report.
+
+Student: {{fullName}}  
+DOB: {{dateOfBirth}}  
+School: {{schoolName}}  
+Year Group: {{yearGroup}}
 
 Include:
-- Header: 'SCHOOL BEHAVIOUR REPORT'  
-- Student Info: Name, Year, Age, Favorite Subject  
-- Academic Performance: 1 paragraph  
-- Behaviour Evaluation: 1–2 paragraphs  
-- Attendance Rate (%)  
-- List of Incidents or Achievements (4–6 entries)  
-- Teacher Comments and Signature  
+- Header: 'SCHOOL BEHAVIOUR REPORT'
+- Academic Summary
+- Behaviour Evaluation (2–3 paragraphs)
+- Attendance %
+- Achievements/Incidents List (4–6 entries)
+- Teacher Comments and Signature.
 
-Tone:
-Balanced between formal and personal. Feels like a real teacher wrote it.
-
-Subject Details:
-- Student Name: {{fullName}}
-- Date of Birth: {{dateOfBirth}}
-- School: {{schoolName}}
-- Year Group: {{yearGroup}}
-
-End with disclaimer footer: 'Internet Streets Entertainment – Not a Real Document.'
+End with: 'Internet Streets Entertainment – Not a Real Document.'

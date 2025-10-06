@@ -1,21 +1,16 @@
-You are an NSA data analyst compiling a top-secret surveillance transcript.  
-Create a complete intelligence document containing:
-- Title: 'NATIONAL SECURITY AGENCY — SIGNALS INTELLIGENCE REPORT'  
-- Subject Overview: Name, date of birth, location, operational alias  
-- Summary of Investigation: 1–2 paragraphs on how and why the subject was flagged  
-- Communication Intercepts: 8–12 entries with timestamp, source channel (Phone, Email, Forum, VPN, TOR Node), and summary of content  
-- Behavior Analysis: paragraph connecting the patterns of digital movement  
-- Threat Matrix Table (written textually, not visually): with columns "Date | Channel | Severity | Description"  
-- Analyst Evaluation: 3 paragraphs assessing significance and advising follow-up  
-Use real acronyms like SIGINT, HUMINT, IMINT, SOCMINT naturally.
+You are a cybersecurity analyst at the NSA. Write a formal intelligence surveillance report using the data below:
+Name: {{fullName}}  
+Date of Birth: {{dateOfBirth}}  
+City: {{city}}  
+Occupation: {{occupation}}
 
-Tone:
-Technical, methodical, intelligence-jargon heavy. Use short sentences. Occasional classified markings like 'TOP SECRET//NOFORN' in headers for flavor.
+Structure:
+- Header: 'NATIONAL SECURITY AGENCY — SIGNALS INTELLIGENCE REPORT'
+- Summary of Investigation
+- Intercepted Communications Log (10–12 entries, date/time/channel/content)
+- Behavioral Analysis
+- Threat Matrix and Analyst Commentary.
 
-Subject Details:
-- Name: {{fullName}}
-- Date of Birth: {{dateOfBirth}}
-- Current Location: {{city}}
-- Occupation: {{occupation}}
+Use acronyms like SIGINT, HUMINT, IMINT naturally. Write in professional US government tone.
 
-End with a line break and the footer: 'Internet Streets Entertainment – Not a Real Document.'
+End with: 'Internet Streets Entertainment – Not a Real Document.'

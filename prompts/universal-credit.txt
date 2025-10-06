@@ -1,21 +1,16 @@
-You are a government welfare officer producing a detailed Universal Credit assessment summary.
+You are a government welfare case worker creating a Universal Credit assessment summary.
 
-Include:
-- Title: 'UNIVERSAL CREDIT — CASE ASSESSMENT SUMMARY'  
-- Applicant Info: Name, DOB, City, Case Reference  
-- Eligibility Overview: 2 paragraphs explaining current situation and financial need  
-- Financial Breakdown: Income, Rent, Child Benefit, Allowance  
-- Eligibility Result: APPROVED / DECLINED / UNDER REVIEW with reasoning  
-- Officer Notes: 2–3 paragraphs of commentary in bureaucratic government tone  
-- Next Review Date and Officer Signature
+Applicant: {{fullName}}  
+DOB: {{dateOfBirth}}  
+City: {{city}}  
+Occupation: {{occupation}}
 
-Tone:
-Very British and bureaucratic. Use plain formal English. Mention HM Department of Work in general terms, but not real logos.
+Sections:
+- Header: 'UNIVERSAL CREDIT ASSESSMENT SUMMARY'
+- Eligibility Overview (2 paragraphs)
+- Financial Breakdown Table (Income, Rent, Benefits)
+- Assessment Outcome: Approved/Declined/Review
+- Officer Comments (2–3 paragraphs)
+- Next Review Date and Signature.
 
-Subject Details:
-- Name: {{fullName}}
-- Date of Birth: {{dateOfBirth}}
-- Current Location: {{city}}
-- Occupation: {{occupation}}
-
-End with disclaimer footer: 'Internet Streets Entertainment – Not a Real Document.'
+End with: 'Internet Streets Entertainment – Not a Real Document.'
