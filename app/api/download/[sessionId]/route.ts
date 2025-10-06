@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generatedResults } from '@/lib/storage'
+import { getDocument } from '@/lib/tempStore'
 
 export async function GET(
   request: NextRequest,
@@ -15,10 +15,10 @@ export async function GET(
   }
 
   try {
-    // Look up the cached result
-    const result = generatedResults.get(sessionId)
+    // Look up the stored document by sessionId
+    const document = await getDocument(sessionId)
     
-    if (!result) {
+    if (!document) {
       return NextResponse.json(
         { error: 'Document not found or expired' },
         { status: 404 }
@@ -26,10 +26,9 @@ export async function GET(
     }
 
     // Return the PDF as a downloadable file
-    const buffer = result.buffer as Buffer
-    const uint8Array = new Uint8Array(buffer)
+    const buffer = document.pdfBuffer
     
-    return new NextResponse(uint8Array, {
+    return new NextResponse(buffer, {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="internet-streets-${sessionId}.pdf"`,
