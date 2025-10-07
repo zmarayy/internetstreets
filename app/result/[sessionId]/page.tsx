@@ -6,13 +6,11 @@ import { useParams } from 'next/navigation'
 import { Loader2, Download, Share2, FileText } from 'lucide-react'
 
 interface ResultStatus {
-  status: 'processing' | 'repairing' | 'ready' | 'error'
-  previewUrl?: string
-  downloadUrl?: string
+  status: 'processing' | 'ready' | 'error'
+  pdfBase64?: string
   error?: string
   serviceName?: string
   sessionId?: string
-  repairAttempted?: boolean
 }
 
 export default function ResultPage() {
@@ -21,6 +19,7 @@ export default function ResultPage() {
   const sessionId = params.sessionId as string
   const [resultStatus, setResultStatus] = useState<ResultStatus>({ status: 'processing' })
   const [isLoading, setIsLoading] = useState(true)
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null)
   const [pollInterval, setPollInterval] = useState(2000) // Start with 2 seconds
 
   useEffect(() => {
@@ -28,15 +27,22 @@ export default function ResultPage() {
 
     const pollResult = async () => {
       try {
-        const response = await fetch(`/api/result/${sessionId}`)
+        const response = await fetch(`/api/stripe-webhook?sessionId=${sessionId}`)
         const data = await response.json()
 
-        if (data.status === 'ready' && data.previewUrl && data.downloadUrl) {
+        if (data.status === 'ready' && data.pdfBase64) {
+          // Convert base64 to blob URL
+          const pdfBlob = new Blob(
+            [Uint8Array.from(atob(data.pdfBase64), c => c.charCodeAt(0))], 
+            { type: 'application/pdf' }
+          )
+          const url = URL.createObjectURL(pdfBlob)
+          setPdfUrl(url)
+          
           setResultStatus({ 
             status: 'ready', 
-            previewUrl: data.previewUrl, 
-            downloadUrl: data.downloadUrl,
-            serviceName: data.documentTitle || data.serviceName,
+            pdfBase64: data.pdfBase64,
+            serviceName: data.serviceName,
             sessionId: data.sessionId 
           })
           setIsLoading(false)
@@ -61,9 +67,9 @@ export default function ResultPage() {
   }, [sessionId, pollInterval])
 
   const handleDownload = () => {
-    if (resultStatus.downloadUrl) {
+    if (pdfUrl) {
       const link = document.createElement('a')
-      link.href = resultStatus.downloadUrl
+      link.href = pdfUrl
       link.download = `internet-streets-${sessionId}.pdf`
       link.target = '_blank'
       document.body.appendChild(link)
@@ -83,10 +89,19 @@ export default function ResultPage() {
   }
 
   const handlePreviewInNewTab = () => {
-    if (resultStatus.previewUrl) {
-      window.open(resultStatus.previewUrl, '_blank')
+    if (pdfUrl) {
+      window.open(pdfUrl, '_blank')
     }
   }
+
+  // Cleanup blob URL on unmount
+  useEffect(() => {
+    return () => {
+      if (pdfUrl) {
+        URL.revokeObjectURL(pdfUrl)
+      }
+    }
+  }, [pdfUrl])
 
   if (resultStatus.status === 'error') {
     return (
@@ -118,27 +133,21 @@ export default function ResultPage() {
   }
 
   if (isLoading) {
-    const isRepairing = resultStatus.status === 'repairing'
-    
     return (
       <div className="min-h-screen flex items-center justify-center bg-dark-bg text-white">
         <div className="text-center">
-          <Loader2 className={`animate-spin mx-auto mb-6 ${isRepairing ? 'text-neon-blue' : 'text-neon-green'}`} size={64} />
-          <h1 className={`text-3xl font-bold mb-4 ${isRepairing ? 'text-neon-blue' : 'text-neon-green'}`}>
-            {isRepairing ? 'We\'re Repairing Your File...' : 'Your Document is Being Generated...'}
+          <Loader2 className="animate-spin mx-auto mb-6 text-neon-green" size={64} />
+          <h1 className="text-3xl font-bold mb-4 text-neon-green">
+            Your Document is Being Generated...
           </h1>
           <p className="text-xl text-gray-300 mb-2">
             {resultStatus.serviceName || 'Processing your request'}
           </p>
           <p className="text-gray-400">
-            {isRepairing 
-              ? 'Auto-repairing malformed content. This may take up to 15 seconds...'
-              : 'This usually takes 10-30 seconds. Please don\'t close this page.'
-            }
+            This usually takes 10-30 seconds. Please don't close this page.
           </p>
           <div className="mt-8 text-sm text-gray-500">
-            <p>⏱️ Document will auto-delete after 1 hour</p>
-            {isRepairing && <p className="mt-2 text-blue-400">🔧 Repairing content structure...</p>}
+            <p>📄 Document will be ready for immediate download</p>
           </div>
         </div>
       </div>
@@ -167,14 +176,14 @@ export default function ResultPage() {
               Document Preview
             </h2>
             <div className="text-sm text-gray-400">
-              ⏱️ Auto-deletes in 1 hour
+              📄 Ready for download
             </div>
           </div>
           
-          {resultStatus.previewUrl ? (
+          {pdfUrl ? (
             <div className="bg-white rounded-lg overflow-hidden relative">
               <iframe
-                src={`${resultStatus.previewUrl}?preview=true`}
+                src={pdfUrl}
                 className="w-full h-[600px] border-none"
                 title="Generated Document Preview"
                 onError={() => {
@@ -184,7 +193,7 @@ export default function ResultPage() {
                     <div class="text-center p-8">
                       <h3 class="text-red-600 mb-4">Preview not available</h3>
                       <p class="mb-4">You can still download the document using the button below</p>
-                      <button onclick="window.open('${resultStatus.previewUrl}', '_blank')" 
+                      <button onclick="window.open('${pdfUrl}', '_blank')" 
                               class="bg-blue-500 text-white px-4 py-2 rounded">Open in New Tab</button>
                     </div>
                   `
@@ -200,7 +209,7 @@ export default function ResultPage() {
                 </button>
               </div>
               <div className="result-note">
-                This PDF/image is novelty content for entertainment purposes. Document available for 1 hour.
+                This PDF is novelty content for entertainment purposes.
               </div>
             </div>
           ) : (

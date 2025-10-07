@@ -3,8 +3,6 @@ import Stripe from 'stripe'
 import { validateAndGenerateText } from '@/lib/validateText'
 import { buildPrompt, validateRequiredFields } from '@/lib/promptBuilder'
 import { generateServiceBrand } from '@/lib/brand'
-import { storeDocumentBySessionId } from '@/lib/tempStore'
-import { generationStatus } from '@/lib/generationStatus'
 import { logger, generateTraceId, GenerationStep } from '@/lib/logger'
 import { renderServiceToPdf } from '@/lib/pdfGenerator'
 
@@ -12,22 +10,32 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-10-16',
 })
 
+// Simple in-memory store for generation status (no document storage)
+const generationStatus = new Map<string, {
+  status: 'processing' | 'ready' | 'error'
+  sessionId: string
+  traceId: string
+  error?: string
+  pdfBase64?: string
+  serviceName?: string
+}>()
+
 /**
- * Generate document after successful payment (async processing)
+ * Generate document after successful payment (synchronous processing)
  */
 async function processDocumentGeneration(
   sessionId: string,
   slug: string,
   inputs: Record<string, any>,
   customerEmail?: string
-): Promise<void> {
+): Promise<{ success: boolean; pdfBase64?: string; error?: string }> {
   const traceId = generateTraceId()
   
   try {
     console.log(`[${traceId}] Starting document generation for session ${sessionId}, service: ${slug}`)
     logger.generationStart(traceId, sessionId, slug)
     
-    // Store initial status
+    // Update status to processing
     generationStatus.set(sessionId, {
       status: 'processing',
       sessionId,
@@ -103,30 +111,21 @@ async function processDocumentGeneration(
 
     logger.generationStep(`PDF rendered (${pdfBuffer.length} bytes)`, traceId, GenerationStep.PDF_RENDERED, sessionId, slug)
 
-    // Store PDF temporarily by sessionId
-    await storeDocumentBySessionId(
-      sessionId,
-      pdfBuffer,
-      {
-        serviceSlug: slug,
-        traceId,
-        userId: customerEmail
-      },
-      1 // 1 hour expiry
-    )
+    // Convert PDF to base64 for direct return
+    const pdfBase64 = pdfBuffer.toString('base64')
 
     logger.generationSuccess(traceId, sessionId, slug, sessionId)
 
-    // Update status to ready
+    // Update status to ready with PDF data
     generationStatus.set(sessionId, {
       status: 'ready',
       sessionId,
       traceId,
-      documentId: sessionId, // Use sessionId as documentId
-      previewUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://internetstreets.uk'}/api/document/${sessionId}`,
-      downloadUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://internetstreets.uk'}/api/document/${sessionId}`,
+      pdfBase64,
       serviceName: metadata.name || slug
     })
+
+    return { success: true, pdfBase64 }
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
@@ -147,6 +146,8 @@ async function processDocumentGeneration(
       traceId,
       error: errorMessage
     })
+
+    return { success: false, error: errorMessage }
   }
 }
 
@@ -190,37 +191,36 @@ export async function POST(request: NextRequest) {
 
       console.log(`Payment completed for session ${session.id}, service: ${slug}`)
       
-      // Start document generation asynchronously (don't wait)
-      processDocumentGeneration(session.id, slug, inputs, customerEmail || undefined)
-        .catch(error => {
-          console.error(`Background generation failed for session ${session.id}:`, error)
-          // Update status to error so frontend knows
-          generationStatus.set(session.id, {
-            status: 'error',
-            sessionId: session.id,
-            traceId: 'error-trace',
-            error: error instanceof Error ? error.message : 'Unknown error'
-          })
-        })
+      // Generate document synchronously and return PDF directly
+      const result = await processDocumentGeneration(session.id, slug, inputs, customerEmail || undefined)
       
-      // Return success immediately (Stripe expects quick response)
-      return NextResponse.json({ 
-        success: true, 
-        sessionId: session.id,
-        message: 'Payment confirmed, document generation started'
-      })
+      if (result.success) {
+        return NextResponse.json({ 
+          success: true, 
+          sessionId: session.id,
+          pdfBase64: result.pdfBase64,
+          serviceName: slug,
+          message: 'Document generated successfully'
+        })
+      } else {
+        return NextResponse.json({ 
+          success: false, 
+          sessionId: session.id,
+          error: result.error,
+          message: 'Document generation failed'
+        })
+      }
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       console.error('Webhook processing error:', errorMessage)
       
-      // Still return success to Stripe to avoid retry storms
-      // The generationStatus will show error state
       return NextResponse.json(
         { 
           success: false, 
+          sessionId: session.id,
           error: errorMessage,
-          message: 'Payment confirmed, but validation failed. Please contact support.'
+          message: 'Payment confirmed, but generation failed. Please contact support.'
         },
         { status: 200 } // Return 200 to prevent Stripe retries
       )
