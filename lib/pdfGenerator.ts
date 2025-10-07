@@ -20,19 +20,19 @@ export interface PlainTextDocument {
 }
 
 /**
- * Logo mapping for all services - supports multiple formats
+ * Logo mapping for all services - PNG format only
  */
-const logoMap: Record<string, string[]> = {
-  'fbi-file': ['/assets/logos/fbi-file.png', '/assets/logos/fbi-file.jpg', '/assets/logos/fbi-file.webp', '/assets/logos/fbi-file.svg'],
-  'nsa-surveillance': ['/assets/logos/nsa-surveillance.png', '/assets/logos/nsa-surveillance.jpg', '/assets/logos/nsa-surveillance.webp', '/assets/logos/nsa-surveillance.svg'],
-  'criminal-record': ['/assets/logos/criminal-record.png', '/assets/logos/criminal-record.jpg', '/assets/logos/criminal-record.webp', '/assets/logos/criminal-record.svg'],
-  'universal-credit': ['/assets/logos/universal-credit.png', '/assets/logos/universal-credit.jpg', '/assets/logos/universal-credit.webp', '/assets/logos/universal-credit.svg'],
-  'payslip': ['/assets/logos/payslip.png', '/assets/logos/payslip.jpg', '/assets/logos/payslip.webp', '/assets/logos/payslip.svg'],
-  'credit-score': ['/assets/logos/credit-score.png', '/assets/logos/credit-score.jpg', '/assets/logos/credit-score.webp', '/assets/logos/credit-score.svg'],
-  'job-rejection': ['/assets/logos/job-rejection.png', '/assets/logos/job-rejection.jpg', '/assets/logos/job-rejection.webp', '/assets/logos/job-rejection.svg'],
-  'rent-reference': ['/assets/logos/rent-reference.png', '/assets/logos/rent-reference.jpg', '/assets/logos/rent-reference.webp', '/assets/logos/rent-reference.svg'],
-  'school-behaviour': ['/assets/logos/school-behaviour.png', '/assets/logos/school-behaviour.jpg', '/assets/logos/school-behaviour.webp', '/assets/logos/school-behaviour.svg'],
-  'college-degree': ['/assets/logos/college-degree.png', '/assets/logos/college-degree.jpg', '/assets/logos/college-degree.webp', '/assets/logos/college-degree.svg']
+const logoMap: Record<string, string> = {
+  'fbi-file': '/assets/logos/fbi-file.png',
+  'nsa-surveillance': '/assets/logos/nsa-surveillance.png',
+  'criminal-record': '/assets/logos/criminal-record.png',
+  'universal-credit': '/assets/logos/universal-credit.png',
+  'payslip': '/assets/logos/payslip.png',
+  'credit-score': '/assets/logos/credit-score.png',
+  'job-rejection': '/assets/logos/job-rejection.png',
+  'rent-reference': '/assets/logos/rent-reference.png',
+  'school-behaviour': '/assets/logos/school-behaviour.png',
+  'college-degree': '/assets/logos/college-degree.png'
 }
 
 /**
@@ -50,7 +50,7 @@ const colors = {
 }
 
 /**
- * Typography settings
+ * Typography settings - Helvetica font family
  */
 const typography = {
   title: { size: 14, weight: 'bold' as const },
@@ -58,7 +58,8 @@ const typography = {
   body: { size: 11, weight: 'normal' as const },
   small: { size: 9, weight: 'normal' as const },
   lineHeight: 1.4,
-  sectionSpacing: 20
+  sectionSpacing: 20,
+  headerMargin: 15
 }
 
 /**
@@ -72,8 +73,9 @@ export async function renderServiceToPdf(
 ): Promise<Buffer> {
   const doc = new jsPDF()
   
-  // Professional styling
-  doc.setFont('helvetica')
+  // Professional styling - Helvetica font family
+  doc.setFont('Helvetica', 'normal')
+  doc.setFontSize(11)
   
   const pageHeight = doc.internal.pageSize.height
   const pageWidth = doc.internal.pageSize.width
@@ -86,7 +88,7 @@ export async function renderServiceToPdf(
   const cleanedText = cleanGeneratedText(document.text)
   const { title, content, metadata } = formatTextForPdf(cleanedText)
   
-  let yPos = 50
+  let yPos = 70  // Increased top margin for logo space
   
   // Add service logo in top-right corner
   addServiceLogo(doc, slug, pageWidth, pageHeight)
@@ -114,25 +116,27 @@ export async function renderServiceToPdf(
 }
 
 /**
- * Add professional document header
+ * Add professional document header with improved layout
  */
 function addDocumentHeader(doc: jsPDF, title: string, slug: string, pageWidth: number, yPos: number): number {
-  // Document title
+  // Document title - Helvetica font
   doc.setFontSize(typography.title.size)
   doc.setTextColor(colors.text[0], colors.text[1], colors.text[2])
-  doc.setFont('helvetica', typography.title.weight)
+  doc.setFont('Helvetica', typography.title.weight)
   doc.text(title, 20, yPos)
   yPos += 25
   
-  // Add divider line
-  addDividerLine(doc, pageWidth, yPos)
+  // Add faint grey divider under title
+  doc.setDrawColor(180, 180, 180)
+  doc.setLineWidth(0.5)
+  doc.line(20, yPos, pageWidth - 20, yPos)
   yPos += 10
   
-  // Case reference number
+  // Case reference number for realism
   const caseRef = generateCaseReference(slug)
   doc.setFontSize(typography.small.size)
   doc.setTextColor(colors.textSecondary[0], colors.textSecondary[1], colors.textSecondary[2])
-  doc.setFont('helvetica', 'normal')
+  doc.setFont('Helvetica', 'normal')
   doc.text(`CASE REF: ${caseRef}`, 20, yPos)
   yPos += 15
   
@@ -140,56 +144,40 @@ function addDocumentHeader(doc: jsPDF, title: string, slug: string, pageWidth: n
 }
 
 /**
- * Add service logo in top-right corner - tries multiple formats
+ * Add service logo in top-right corner - PNG format only
  */
 function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageHeight: number): void {
-  const logoUrls = logoMap[slug]
+  const logoUrl = logoMap[slug]
   
-  if (!logoUrls || logoUrls.length === 0) {
+  if (!logoUrl) {
     console.log(`No logo found for service: ${slug}`)
     return
   }
   
-  let logoAdded = false
-  
-  // Try each format until one works
-  for (const logoUrl of logoUrls) {
-    try {
-      // Logo positioning: top-right corner
-      const logoX = pageWidth - 130  // 30px from right edge + 100px width
-      const logoY = 40                // 40px from top
-      const logoWidth = 100
-      const logoHeight = 100
-      
-      // Determine format from URL
-      const format = logoUrl.split('.').pop()?.toUpperCase() || 'PNG'
-      
-      // Add logo image
-      doc.addImage(logoUrl, format as any, logoX, logoY, logoWidth, logoHeight)
-      
-      console.log(`Logo added for service: ${slug} at ${logoUrl} (${format})`)
-      logoAdded = true
-      break // Success, stop trying other formats
-      
-    } catch (error) {
-      console.log(`Failed to load logo ${logoUrl} for service ${slug}: ${error}`)
-      // Continue to next format
-    }
-  }
-  
-  if (!logoAdded) {
-    console.log(`No working logo found for service: ${slug}`)
+  try {
+    // Logo positioning: top-right corner
+    const logoX = pageWidth - 130  // 30px from right edge + 100px width
+    const logoY = 40                // 40px from top
+    const logoWidth = 100
+    const logoHeight = 100
+    
+    // Add logo image (PNG format only)
+    doc.addImage(logoUrl, 'PNG', logoX, logoY, logoWidth, logoHeight)
+    
+    console.log(`Logo added for service: ${slug} at ${logoUrl}`)
+  } catch (error) {
+    console.warn(`Failed to load logo for service ${slug}: ${error}`)
     // Continue rendering without logo - graceful fallback
   }
 }
 
 /**
- * Add metadata section with clean formatting
+ * Add metadata section with clean formatting - Helvetica font
  */
 function addMetadataSection(doc: jsPDF, metadata: any, x: number, yPos: number): number {
   doc.setFontSize(typography.small.size)
   doc.setTextColor(colors.textSecondary[0], colors.textSecondary[1], colors.textSecondary[2])
-  doc.setFont('helvetica', 'normal')
+  doc.setFont('Helvetica', 'normal')
   
   let currentY = yPos
   
@@ -289,10 +277,10 @@ function renderProfessionalContent(
         yPos = 30
       }
       
-      // Apply appropriate styling
+      // Apply appropriate styling - Helvetica font family
       const style = getTextStyle(wrappedLine)
       
-      doc.setFont('helvetica', style.weight)
+      doc.setFont('Helvetica', style.weight)
       doc.setFontSize(style.size)
       doc.setTextColor(style.color[0], style.color[1], style.color[2])
       
@@ -306,7 +294,7 @@ function renderProfessionalContent(
 }
 
 /**
- * Determine text styling based on content
+ * Determine text styling based on content - Helvetica font family
  */
 function getTextStyle(line: string): {
   weight: 'normal' | 'bold'
@@ -328,14 +316,14 @@ function getTextStyle(line: string): {
     }
   }
   
-  // Section headers
+  // Section headers - bold with top margin
   if (isSectionHeader(trimmed)) {
     return {
       weight: 'bold',
       size: typography.sectionHeader.size,
       color: colors.text,
       indent: 0,
-      spacing: 6
+      spacing: typography.headerMargin  // 15px top margin
     }
   }
   
@@ -490,10 +478,10 @@ function renderTable(
     doc.setFillColor(colors.tableHeader[0], colors.tableHeader[1], colors.tableHeader[2])
     doc.rect(x, currentY - 8, tableWidth, 16, 'F')
     
-    // Header text
+    // Header text - Helvetica font
     doc.setFontSize(typography.small.size)
     doc.setTextColor(colors.text[0], colors.text[1], colors.text[2])
-    doc.setFont('helvetica', 'bold')
+    doc.setFont('Helvetica', 'bold')
     
     headerRow.forEach((cell, index) => {
       const cellX = x + (index * colWidth)
@@ -513,10 +501,10 @@ function renderTable(
       doc.rect(x, currentY - 8, tableWidth, 16, 'F')
     }
     
-    // Row text
+    // Row text - Helvetica font
     doc.setFontSize(typography.small.size)
     doc.setTextColor(colors.textSecondary[0], colors.textSecondary[1], colors.textSecondary[2])
-    doc.setFont('helvetica', 'normal')
+    doc.setFont('Helvetica', 'normal')
     
     row.forEach((cell, index) => {
       const cellX = x + (index * colWidth)
@@ -568,7 +556,7 @@ function parseTableData(lines: string[]): string[][] {
 }
 
 /**
- * Add professional footer to all pages
+ * Add professional footer to all pages - Helvetica font
  */
 function addProfessionalFooter(doc: jsPDF, pageWidth: number, pageHeight: number): void {
   const pageCount = doc.getNumberOfPages()
@@ -578,16 +566,16 @@ function addProfessionalFooter(doc: jsPDF, pageWidth: number, pageHeight: number
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i)
     
-    // Legal disclaimer (centered)
-    doc.setFontSize(typography.small.size)
-    doc.setTextColor(colors.footer[0], colors.footer[1], colors.footer[2])
-    doc.setFont('helvetica', 'normal')
+    // Legal disclaimer (centered) - Helvetica 9pt, #555, opacity 0.7
+    doc.setFontSize(9)
+    doc.setTextColor(85, 85, 85) // #555
+    doc.setFont('Helvetica', 'normal')
     doc.text('Internet Streets Entertainment – Not a Real Document.', pageWidth / 2, pageHeight - 15, { align: 'center' })
     
-    // Timestamp (left)
+    // Timestamp (bottom left)
     doc.text(`Generated ${timestamp}`, 20, pageHeight - 15)
     
-    // Page number (right)
+    // Page number (bottom right)
     doc.text(`Page ${i} of ${pageCount}`, pageWidth - 30, pageHeight - 15)
   }
 }
