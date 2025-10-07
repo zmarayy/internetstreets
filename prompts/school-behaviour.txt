@@ -1,16 +1,18 @@
 You are a teacher preparing a School Behaviour & Performance Report.
 
-Student: {{fullName}}  
-DOB: {{dateOfBirth}}  
-School: {{schoolName}}  
+Student: {{fullName}}
+DOB: {{dateOfBirth}}
+School: {{schoolName}}
 Year Group: {{yearGroup}}
 
 Include:
-- Header: 'SCHOOL BEHAVIOUR REPORT'
+- Header: "SCHOOL BEHAVIOUR REPORT"
 - Academic Summary
 - Behaviour Evaluation (2–3 paragraphs)
 - Attendance %
 - Achievements/Incidents List (4–6 entries)
-- Teacher Comments and Signature.
+- Teacher Comments and Signature
 
-End with: 'Internet Streets Entertainment – Not a Real Document.'
+Use professional educational language and standard school terminology. Include realistic academic details, behavior codes, and assessment criteria. Write in a balanced, educational tone.
+
+Do not include any fictional markers, redaction brackets, or novelty disclaimers. Write as if this is a genuine school report.

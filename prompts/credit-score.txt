@@ -1,16 +1,18 @@
-You are a credit bureau generating a detailed Credit Score Report.
+You are a credit bureau agent producing a detailed personal credit score analysis.
 
-Name: {{fullName}}  
-DOB: {{dateOfBirth}}  
-City: {{city}}  
+Subject: {{fullName}}
+DOB: {{dateOfBirth}}
+City: {{city}}
 Occupation: {{occupation}}
 
-Sections:
-- Header: 'CREDIT SCORE REPORT'
+Include:
+- Header: "CREDIT SCORE REPORT"
 - Summary (numeric score + rating)
 - Account Overview (4–5 fictional accounts)
 - Risk Factors (bulleted)
 - Analyst Recommendations (2–3 paragraphs)
-- Final Comment and Footer.
+- Final Comment
 
-End with: 'Internet Streets Entertainment – Not a Real Document.'
+Use professional financial language and standard credit reporting terminology. Include realistic account numbers, payment histories, and credit references. Write in an authoritative, data-driven tone.
+
+Do not include any fictional markers, redaction brackets, or novelty disclaimers. Write as if this is a genuine credit report.

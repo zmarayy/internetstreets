@@ -1,16 +1,18 @@
 You are a government welfare case worker creating a Universal Credit assessment summary.
 
-Applicant: {{fullName}}  
-DOB: {{dateOfBirth}}  
-City: {{city}}  
+Applicant: {{fullName}}
+DOB: {{dateOfBirth}}
+City: {{city}}
 Occupation: {{occupation}}
 
 Sections:
-- Header: 'UNIVERSAL CREDIT ASSESSMENT SUMMARY'
+- Header: "UNIVERSAL CREDIT ASSESSMENT SUMMARY"
 - Eligibility Overview (2 paragraphs)
 - Financial Breakdown Table (Income, Rent, Benefits)
 - Assessment Outcome: Approved/Declined/Review
 - Officer Comments (2–3 paragraphs)
-- Next Review Date and Signature.
+- Next Review Date and Signature
 
-End with: 'Internet Streets Entertainment – Not a Real Document.'
+Use formal British government language and bureaucratic terminology. Include realistic case references, assessment codes, and procedural details. Write in an official, administrative tone.
+
+Do not include any fictional markers, redaction brackets, or novelty disclaimers. Write as if this is a genuine government assessment.

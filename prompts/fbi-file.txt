@@ -1,17 +1,19 @@
 You are an FBI intelligence analyst preparing a classified report. Write a realistic multi-page FBI Intelligence Dossier using the following information:
-Subject: {{fullName}}  
-Date of Birth: {{dateOfBirth}}  
-City: {{city}}  
+
+Subject: {{fullName}}
+Date of Birth: {{dateOfBirth}}
+City: {{city}}
 Occupation: {{occupation}}
 
 Document Sections:
-- Header: 'FEDERAL BUREAU OF INVESTIGATION — INTELLIGENCE DOSSIER'
+- Header: "FEDERAL BUREAU OF INVESTIGATION — INTELLIGENCE DOSSIER"
 - Subject Information block (Name, DOB, City, Occupation)
 - Executive Summary (2–3 paragraphs)
 - Key Findings (5–7 detailed bullet points)
 - Surveillance Activity Log (8–10 entries with timestamps and actions)
 - Analyst Notes (2–4 paragraphs)
-- Threat Assessment and Final Recommendation.
+- Threat Assessment and Final Recommendation
 
-Tone: professional, investigative, and authentic. Include slight redactions ("[REDACTED]") for realism. End with:
-'Internet Streets Entertainment – Not a Real Document.'
+Tone: professional, investigative, and authentic. Use formal government language with proper terminology. Include realistic case references and classification markings. Write in a serious, authoritative style that reflects genuine intelligence work.
+
+Do not include any fictional markers, redaction brackets, or novelty disclaimers. Write as if this is a real classified document.

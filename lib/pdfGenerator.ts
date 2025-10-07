@@ -1,11 +1,12 @@
 /**
- * PDF Generator for Plain Text Documents
- * Creates realistic PDFs from natural text documents
+ * Professional PDF Generator for Internet Streets
+ * Creates authentic-looking documents with clean styling
  */
 
 import jsPDF from 'jspdf'
 import { GeneratedBrand } from '@/lib/brand'
 import { SanitizedInputs } from '@/lib/promptBuilder'
+import { formatTextForPdf } from '@/lib/textPreprocessor'
 
 export interface PlainTextDocument {
   text: string
@@ -18,9 +19,8 @@ export interface PlainTextDocument {
   }
 }
 
-
 /**
- * Render a plain text document to PDF using React templates
+ * Render a professional document to PDF
  */
 export async function renderServiceToPdf(
   slug: string, 
@@ -28,214 +28,266 @@ export async function renderServiceToPdf(
   brand?: GeneratedBrand,
   sanitizedInputs?: SanitizedInputs
 ): Promise<Buffer> {
-  // For now, use the simple jsPDF approach
-  // In production, you'd use Puppeteer to render React components
   const doc = new jsPDF()
   
-  // Set up fonts
+  // Professional styling
   doc.setFont('helvetica')
   
-  // Add subtle watermark only in footer (no giant text)
   const pageHeight = doc.internal.pageSize.height
   const pageWidth = doc.internal.pageSize.width
   
-  // Add paper texture background
-  doc.setFillColor(250, 250, 250)
+  // Clean white background
+  doc.setFillColor(255, 255, 255)
   doc.rect(0, 0, pageWidth, pageHeight, 'F')
   
-  let yPos = 30
+  // Format the text professionally
+  const { title, content, metadata } = formatTextForPdf(document.text)
   
-  // Add document header with seal
-  if (brand) {
-    // Add faux seal/logo
-    const sealSize = 40
-    const sealX = pageWidth - 60
-    const sealY = 20
-    
-    // Create circular seal
-    doc.setFillColor(200, 200, 200)
-    doc.circle(sealX, sealY, sealSize / 2, 'F')
-    
-    // Add seal text
-    doc.setFontSize(8)
-    doc.setTextColor(100, 100, 100)
-    doc.text(brand.text, sealX, sealY - 5, { align: 'center' })
-    doc.text('OFFICIAL', sealX, sealY + 5, { align: 'center' })
+  let yPos = 40
+  
+  // Add minimal header with optional seal
+  if (brand && shouldShowSeal(slug)) {
+    addMinimalSeal(doc, brand, pageWidth, 25)
   }
   
-  // Add document title
+  // Add document title (clean, no fictional markers)
   doc.setFontSize(16)
   doc.setTextColor(0, 0, 0)
   doc.setFont('helvetica', 'bold')
-  
-  const title = getDocumentTitle(slug)
   doc.text(title, 20, yPos)
-  yPos += 20
+  yPos += 25
   
-  // Add classification stamp for government docs
-  if (isGovernmentDocument(slug)) {
-    doc.setFontSize(10)
-    doc.setTextColor(200, 0, 0)
-    doc.setFont('helvetica', 'bold')
-    doc.text('CONFIDENTIAL', pageWidth - 50, 15, { angle: -30 })
-  }
-  
-  // Add metadata if available
+  // Add metadata section if available
   if (document.metadata) {
-    doc.setFontSize(10)
-    doc.setTextColor(100, 100, 100)
-    doc.setFont('helvetica', 'normal')
-    
-    const metadata = document.metadata
-    if (metadata.name) {
-      doc.text(`Subject: ${metadata.name}`, 20, yPos)
-      yPos += 8
-    }
-    if (metadata.dob) {
-      doc.text(`DOB: ${metadata.dob}`, 20, yPos)
-      yPos += 8
-    }
-    if (metadata.city) {
-      doc.text(`Location: ${metadata.city}`, 20, yPos)
-      yPos += 8
-    }
-    yPos += 10
+    addMetadataSection(doc, document.metadata, 20, yPos)
+    yPos += 40
   }
   
-  // Add horizontal line
+  // Add subtle divider line
   doc.setDrawColor(200, 200, 200)
   doc.line(20, yPos, pageWidth - 20, yPos)
-  yPos += 15
+  yPos += 20
   
-  // Render the main document text with enhanced formatting
-  doc.setFontSize(11)
-  doc.setTextColor(0, 0, 0)
-  doc.setFont('helvetica', 'normal')
+  // Render main content with professional formatting
+  yPos = renderProfessionalContent(doc, content, yPos, pageWidth, pageHeight)
   
-  // Split text into lines and render
-  const lines = document.text.split('\n')
-  const lineHeight = 6
-  const margin = 20
-  const maxWidth = pageWidth - (margin * 2)
-  
-  for (const line of lines) {
-    // Skip empty lines
-    if (line.trim() === '') {
-      yPos += lineHeight / 2
-      continue
-    }
-    
-    // Check if we need a new page
-    if (yPos > pageHeight - 30) {
-      doc.addPage()
-      yPos = 30
-    }
-    
-    // Handle long lines by wrapping
-    const wrappedLines = doc.splitTextToSize(line, maxWidth)
-    
-    for (const wrappedLine of wrappedLines) {
-      if (yPos > pageHeight - 30) {
-        doc.addPage()
-        yPos = 30
-      }
-      
-      // Style different types of content
-      if (isHeading(wrappedLine)) {
-        doc.setFont('helvetica', 'bold')
-        doc.setFontSize(12)
-        doc.setTextColor(0, 0, 0)
-        doc.text(wrappedLine, margin, yPos)
-        yPos += lineHeight + 3
-      } else if (isListItem(wrappedLine)) {
-        doc.setFont('helvetica', 'normal')
-        doc.setFontSize(10)
-        doc.setTextColor(50, 50, 50)
-        doc.text(wrappedLine, margin + 10, yPos)
-        yPos += lineHeight
-      } else if (isBoldText(wrappedLine)) {
-        doc.setFont('helvetica', 'bold')
-        doc.setFontSize(11)
-        doc.setTextColor(0, 0, 0)
-        doc.text(wrappedLine, margin, yPos)
-        yPos += lineHeight
-      } else {
-        doc.setFont('helvetica', 'normal')
-        doc.setFontSize(11)
-        doc.setTextColor(0, 0, 0)
-        doc.text(wrappedLine, margin, yPos)
-        yPos += lineHeight
-      }
-    }
-  }
-  
-  // Add footer on every page
-  const pageCount = doc.getNumberOfPages()
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i)
-    
-    // Add page number
-    doc.setFontSize(8)
-    doc.setTextColor(150, 150, 150)
-    doc.text(`Page ${i} of ${pageCount}`, pageWidth - 30, pageHeight - 10)
-    
-    // Add disclaimer
-    doc.text('Internet Streets Entertainment – Not a Real Document', pageWidth / 2, pageHeight - 10, { align: 'center' })
-    
-    // Add watermark
-    doc.setGState((doc as any).GState({ opacity: 0.1 }))
-    doc.setFontSize(48)
-    doc.setTextColor(200, 200, 200)
-    doc.text('INTERNET STREETS ENTERTAINMENT', pageWidth / 2, pageHeight / 2, { 
-      align: 'center', 
-      angle: -30 
-    })
-  }
+  // Add professional footer to all pages
+  addProfessionalFooter(doc, pageWidth, pageHeight)
   
   return Buffer.from(doc.output('arraybuffer'))
 }
 
 /**
- * Get document title based on service slug
+ * Add minimal seal/logo for appropriate documents
  */
-function getDocumentTitle(slug: string): string {
-  const titles: Record<string, string> = {
-    'fbi-file': 'FBI Intelligence Dossier (Fictional)',
-    'nsa-surveillance': 'NSA Surveillance Activity Log (Fictional)',
-    'criminal-record': 'Police National Computer Record (Fictional)',
-    'universal-credit': 'Universal Credit Assessment Report (Fictional)',
-    'payslip': 'Statement of Earnings (Fictional)',
-    'credit-score': 'Credit Score Report (Fictional)',
-    'job-rejection': 'Application Outcome Letter (Fictional)',
-    'rent-reference': 'Landlord Reference Letter (Fictional)',
-    'school-behaviour': 'School Behaviour Record Reprint (Fictional)',
-    'college-degree': 'University Degree Certificate (Fictional)'
+function addMinimalSeal(doc: jsPDF, brand: GeneratedBrand, pageWidth: number, yPos: number): void {
+  const sealX = pageWidth - 50
+  const sealY = yPos
+  
+  // Simple circular seal
+  doc.setFillColor(240, 240, 240)
+  doc.circle(sealX, sealY, 15, 'F')
+  
+  // Seal border
+  doc.setDrawColor(200, 200, 200)
+  doc.circle(sealX, sealY, 15, 'S')
+  
+  // Minimal text
+  doc.setFontSize(6)
+  doc.setTextColor(100, 100, 100)
+  doc.text(brand.text, sealX, sealY - 3, { align: 'center' })
+  doc.text('OFFICIAL', sealX, sealY + 3, { align: 'center' })
+}
+
+/**
+ * Add metadata section with clean formatting
+ */
+function addMetadataSection(doc: jsPDF, metadata: any, x: number, yPos: number): number {
+  doc.setFontSize(10)
+  doc.setTextColor(60, 60, 60)
+  doc.setFont('helvetica', 'normal')
+  
+  let currentY = yPos
+  
+  const fields = [
+    { key: 'name', label: 'Subject' },
+    { key: 'dob', label: 'Date of Birth' },
+    { key: 'city', label: 'Location' },
+    { key: 'companyName', label: 'Organization' },
+    { key: 'jobTitle', label: 'Position' },
+    { key: 'salary', label: 'Salary' },
+    { key: 'propertyAddress', label: 'Property' },
+    { key: 'universityName', label: 'Institution' },
+    { key: 'degreeTitle', label: 'Degree' }
+  ]
+  
+  for (const field of fields) {
+    if (metadata[field.key]) {
+      doc.text(`${field.label}: ${metadata[field.key]}`, x, currentY)
+      currentY += 6
+    }
   }
   
-  return titles[slug] || 'Document (Fictional)'
+  return currentY
 }
 
 /**
- * Check if this is a government document
+ * Render content with professional formatting
  */
-function isGovernmentDocument(slug: string): boolean {
-  return ['fbi-file', 'nsa-surveillance', 'criminal-record', 'universal-credit'].includes(slug)
+function renderProfessionalContent(
+  doc: jsPDF, 
+  content: string, 
+  startY: number, 
+  pageWidth: number, 
+  pageHeight: number
+): number {
+  const lines = content.split('\n')
+  const lineHeight = 6
+  const margin = 20
+  const maxWidth = pageWidth - (margin * 2)
+  let yPos = startY
+  
+  for (const line of lines) {
+    // Skip empty lines but add small spacing
+    if (line.trim() === '') {
+      yPos += lineHeight / 2
+      continue
+    }
+    
+    // Check for new page
+    if (yPos > pageHeight - 40) {
+      doc.addPage()
+      yPos = 30
+    }
+    
+    // Handle line wrapping
+    const wrappedLines = doc.splitTextToSize(line, maxWidth)
+    
+    for (const wrappedLine of wrappedLines) {
+      if (yPos > pageHeight - 40) {
+        doc.addPage()
+        yPos = 30
+      }
+      
+      // Apply appropriate styling
+      const style = getTextStyle(wrappedLine)
+      
+      doc.setFont('helvetica', style.weight)
+      doc.setFontSize(style.size)
+      doc.setTextColor(style.color[0], style.color[1], style.color[2])
+      
+      const indent = style.indent
+      doc.text(wrappedLine, margin + indent, yPos)
+      yPos += lineHeight + style.spacing
+    }
+  }
+  
+  return yPos
 }
 
 /**
- * Check if line is a heading
+ * Determine text styling based on content
  */
-function isHeading(line: string): boolean {
+function getTextStyle(line: string): {
+  weight: 'normal' | 'bold'
+  size: number
+  color: [number, number, number]
+  indent: number
+  spacing: number
+} {
   const trimmed = line.trim()
-  return trimmed.length > 0 && 
-         (trimmed.endsWith(':') || 
-          trimmed === trimmed.toUpperCase() ||
-          trimmed.startsWith('Title:') ||
-          trimmed.startsWith('Subject:') ||
-          trimmed.startsWith('Summary:') ||
-          trimmed.startsWith('Key Findings:') ||
-          trimmed.startsWith('Analysis:') ||
-          trimmed.startsWith('Recommendations:'))
+  
+  // Document headers
+  if (isDocumentHeader(trimmed)) {
+    return {
+      weight: 'bold',
+      size: 14,
+      color: [0, 0, 0],
+      indent: 0,
+      spacing: 2
+    }
+  }
+  
+  // Section headers
+  if (isSectionHeader(trimmed)) {
+    return {
+      weight: 'bold',
+      size: 12,
+      color: [0, 0, 0],
+      indent: 0,
+      spacing: 1
+    }
+  }
+  
+  // List items
+  if (isListItem(trimmed)) {
+    return {
+      weight: 'normal',
+      size: 10,
+      color: [40, 40, 40],
+      indent: 10,
+      spacing: 0
+    }
+  }
+  
+  // Field labels
+  if (isFieldLabel(trimmed)) {
+    return {
+      weight: 'bold',
+      size: 10,
+      color: [0, 0, 0],
+      indent: 0,
+      spacing: 0
+    }
+  }
+  
+  // Regular text
+  return {
+    weight: 'normal',
+    size: 11,
+    color: [0, 0, 0],
+    indent: 0,
+    spacing: 0
+  }
+}
+
+/**
+ * Check if line is a document header
+ */
+function isDocumentHeader(line: string): boolean {
+  const headers = [
+    'FEDERAL BUREAU OF INVESTIGATION',
+    'NATIONAL SECURITY AGENCY',
+    'GOVERNMENT CRIMINAL RECORD',
+    'UNIVERSAL CREDIT',
+    'CREDIT SCORE REPORT',
+    'STATEMENT OF EARNINGS',
+    'APPLICATION OUTCOME',
+    'TENANCY REFERENCE',
+    'SCHOOL BEHAVIOUR REPORT',
+    'UNIVERSITY DEGREE'
+  ]
+  
+  return headers.some(header => line.toUpperCase().includes(header))
+}
+
+/**
+ * Check if line is a section header
+ */
+function isSectionHeader(line: string): boolean {
+  const patterns = [
+    /^[A-Z\s]+:$/,  // ALL CAPS with colon
+    /^[A-Z][a-z\s]+:$/,  // Title Case with colon
+    /^Summary:$/i,
+    /^Analysis:$/i,
+    /^Findings:$/i,
+    /^Recommendations:$/i,
+    /^Assessment:$/i,
+    /^Details:$/i,
+    /^Information:$/i
+  ]
+  
+  return patterns.some(pattern => pattern.test(line))
 }
 
 /**
@@ -250,37 +302,76 @@ function isListItem(line: string): boolean {
 }
 
 /**
- * Check if line contains bold text patterns
+ * Check if line is a field label
  */
-function isBoldText(line: string): boolean {
-  const trimmed = line.trim()
-  return trimmed.includes('Subject:') ||
-         trimmed.includes('Name:') ||
-         trimmed.includes('DOB:') ||
-         trimmed.includes('City:') ||
-         trimmed.includes('Occupation:') ||
-         trimmed.includes('Company:') ||
-         trimmed.includes('Job Title:') ||
-         trimmed.includes('Salary:') ||
-         trimmed.includes('Pay Period:') ||
-         trimmed.includes('Property:') ||
-         trimmed.includes('Tenancy:') ||
-         trimmed.includes('School:') ||
-         trimmed.includes('University:') ||
-         trimmed.includes('Degree:') ||
-         trimmed.includes('Graduation:') ||
-         trimmed.includes('Application Date:') ||
-         trimmed.includes('Record ID:') ||
-         trimmed.includes('Case Reference:') ||
-         trimmed.includes('Credit Score:') ||
-         trimmed.includes('Assessment:')
+function isFieldLabel(line: string): boolean {
+  const patterns = [
+    /^[A-Z][a-z\s]+:\s/,  // Field: value
+    /^[A-Z]{2,}:\s/,  // ABBREV: value
+    /^[A-Z][a-z]+ [A-Z][a-z]+:\s/  // Two Word Field: value
+  ]
+  
+  return patterns.some(pattern => pattern.test(line))
+}
+
+/**
+ * Add professional footer to all pages
+ */
+function addProfessionalFooter(doc: jsPDF, pageWidth: number, pageHeight: number): void {
+  const pageCount = doc.getNumberOfPages()
+  
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i)
+    
+    // Page number
+    doc.setFontSize(8)
+    doc.setTextColor(120, 120, 120)
+    doc.text(`Page ${i} of ${pageCount}`, pageWidth - 30, pageHeight - 15)
+    
+    // Legal disclaimer (small, unobtrusive)
+    doc.setFontSize(7)
+    doc.setTextColor(100, 100, 100)
+    doc.text('Internet Streets Entertainment – Not a Real Document', pageWidth / 2, pageHeight - 15, { align: 'center' })
+    
+    // Date stamp
+    const now = new Date()
+    const dateStr = now.toLocaleDateString('en-GB')
+    doc.text(dateStr, 20, pageHeight - 15)
+  }
+}
+
+/**
+ * Determine if document should show a seal
+ */
+function shouldShowSeal(slug: string): boolean {
+  const sealServices = ['fbi-file', 'nsa-surveillance', 'criminal-record', 'universal-credit']
+  return sealServices.includes(slug)
+}
+
+/**
+ * Get clean document title (no fictional markers)
+ */
+function getDocumentTitle(slug: string): string {
+  const titles: Record<string, string> = {
+    'fbi-file': 'FEDERAL BUREAU OF INVESTIGATION — INTELLIGENCE DOSSIER',
+    'nsa-surveillance': 'NATIONAL SECURITY AGENCY — SIGNALS INTELLIGENCE REPORT',
+    'criminal-record': 'GOVERNMENT CRIMINAL RECORD EXTRACT',
+    'universal-credit': 'UNIVERSAL CREDIT ASSESSMENT SUMMARY',
+    'payslip': 'STATEMENT OF EARNINGS',
+    'credit-score': 'CREDIT SCORE REPORT',
+    'job-rejection': 'APPLICATION OUTCOME LETTER',
+    'rent-reference': 'TENANCY REFERENCE LETTER',
+    'school-behaviour': 'SCHOOL BEHAVIOUR REPORT',
+    'college-degree': 'UNIVERSITY DEGREE CERTIFICATE'
+  }
+  
+  return titles[slug] || 'OFFICIAL DOCUMENT'
 }
 
 /**
  * Legacy function for backward compatibility
  */
 export function generatePDFfromJSON(json: any, serviceSlug: string): Buffer {
-  // Convert old JSON format to plain text for backward compatibility
   const text = convertJSONToText(json, serviceSlug)
   return renderServiceToPdf(serviceSlug, { text }, undefined, undefined) as any
 }
@@ -314,9 +405,6 @@ function convertJSONToText(json: any, serviceSlug: string): string {
     })
     text += '\n'
   }
-  
-  // Add disclaimer
-  text += '\nInternet Streets Entertainment – Not a Real Document'
   
   return text
 }

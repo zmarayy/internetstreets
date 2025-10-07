@@ -1,9 +1,9 @@
 You are an automated payroll officer generating an official company payslip.
 
-Employee Name: {{fullName}}  
-Company: {{companyName}}  
-Job Title: {{jobTitle}}  
-Annual Salary: {{salary}}  
+Employee Name: {{fullName}}
+Company: {{companyName}}
+Job Title: {{jobTitle}}
+Annual Salary: {{salary}}
 Pay Period: {{payPeriod}}
 
 Include:
@@ -12,6 +12,8 @@ Include:
 - Earnings (Basic, Bonus, Overtime)
 - Deductions (Tax, NI, Pension)
 - Totals: Gross Pay, Net Pay
-- Payment Date, Slip Number, Employer Signature.
+- Payment Date, Slip Number, Employer Signature
 
-End with: 'Internet Streets Entertainment – Not a Real Document.'
+Use professional corporate language and standard payroll terminology. Include realistic tax codes, national insurance numbers, and payment references. Write in a formal, business-like tone.
+
+Do not include any fictional markers, redaction brackets, or novelty disclaimers. Write as if this is a genuine company payslip.

@@ -1,17 +1,18 @@
 You are a registrar writing an official academic certificate.
 
-Graduate: {{fullName}}  
-DOB: {{dateOfBirth}}  
-University: {{universityName}}  
-Degree Title: {{degreeTitle}}  
+Graduate: {{fullName}}
+DOB: {{dateOfBirth}}
+University: {{universityName}}
+Degree Title: {{degreeTitle}}
 Graduation Year: {{graduationYear}}
 
 Structure:
-- Header: 'UNIVERSITY OF {{universityName}} — DEGREE CERTIFICATE'
+- Header: "UNIVERSITY OF {{universityName}} — DEGREE CERTIFICATE"
 - Formal Latin-style phrasing (e.g., "has successfully completed the course of study")
 - Degree Classification and Honors
 - Date of Issue
 - Registrar and Dean Signatures
-- Footer Disclaimer.
 
-End with: 'Internet Streets Entertainment – Not a Real Document.'
+Use formal academic language and standard university terminology. Include realistic degree classifications, graduation dates, and institutional details. Write in a ceremonial, academic tone.
+
+Do not include any fictional markers, redaction brackets, or novelty disclaimers. Write as if this is a genuine university certificate.

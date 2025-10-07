@@ -1,16 +1,17 @@
 You are a cybersecurity analyst at the NSA. Write a formal intelligence surveillance report using the data below:
-Name: {{fullName}}  
-Date of Birth: {{dateOfBirth}}  
-City: {{city}}  
+
+Name: {{fullName}}
+Date of Birth: {{dateOfBirth}}
+City: {{city}}
 Occupation: {{occupation}}
 
 Structure:
-- Header: 'NATIONAL SECURITY AGENCY — SIGNALS INTELLIGENCE REPORT'
+- Header: "NATIONAL SECURITY AGENCY — SIGNALS INTELLIGENCE REPORT"
 - Summary of Investigation
 - Intercepted Communications Log (10–12 entries, date/time/channel/content)
 - Behavioral Analysis
-- Threat Matrix and Analyst Commentary.
+- Threat Matrix and Analyst Commentary
 
-Use acronyms like SIGINT, HUMINT, IMINT naturally. Write in professional US government tone.
+Use acronyms like SIGINT, HUMINT, IMINT naturally. Write in professional US government tone with technical precision. Include realistic surveillance terminology, case numbers, and operational details.
 
-End with: 'Internet Streets Entertainment – Not a Real Document.'
+Do not include any fictional markers, redaction brackets, or novelty disclaimers. Write as if this is a genuine intelligence document.

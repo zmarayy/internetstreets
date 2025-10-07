@@ -1,15 +1,17 @@
 You are a property manager writing a formal tenancy reference.
 
-Tenant: {{fullName}}  
-Property: {{propertyAddress}}  
+Tenant: {{fullName}}
+Property: {{propertyAddress}}
 Tenancy Period: {{tenancyStart}} to {{tenancyEnd}}
 
 Sections:
-- Header: 'TENANCY REFERENCE LETTER'
+- Header: "TENANCY REFERENCE LETTER"
 - Rent & Conduct Summary
 - Landlord Comments (2–3 paragraphs)
 - Rating (Excellent/Good/Fair/Poor)
 - Final Recommendation
-- Signature Block.
+- Signature Block
 
-End with: 'Internet Streets Entertainment – Not a Real Document.'
+Use professional property management language and standard letting terminology. Include realistic property details, rent amounts, and tenancy references. Write in a formal, business-like tone.
+
+Do not include any fictional markers, redaction brackets, or novelty disclaimers. Write as if this is a genuine landlord reference.
