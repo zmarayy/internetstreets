@@ -20,19 +20,19 @@ export interface PlainTextDocument {
 }
 
 /**
- * Logo mapping for all services - PNG format only
+ * Logo mapping for all services - Absolute URLs for Netlify compatibility
  */
 const logoMap: Record<string, string> = {
-  'fbi-file': '/assets/logos/fbi-file.png',
-  'nsa-surveillance': '/assets/logos/nsa-surveillance.png',
-  'criminal-record': '/assets/logos/criminal-record.png',
-  'universal-credit': '/assets/logos/universal-credit.png',
-  'payslip': '/assets/logos/payslip.png',
-  'credit-score': '/assets/logos/credit-score.png',
-  'job-rejection': '/assets/logos/job-rejection.png',
-  'rent-reference': '/assets/logos/rent-reference.png',
-  'school-behaviour': '/assets/logos/school-behaviour.png',
-  'college-degree': '/assets/logos/college-degree.png'
+  'fbi-file': 'https://internetstreets.uk/assets/logos/fbi-file.png',
+  'nsa-surveillance': 'https://internetstreets.uk/assets/logos/nsa-surveillance.png',
+  'criminal-record': 'https://internetstreets.uk/assets/logos/criminal-record.png',
+  'universal-credit': 'https://internetstreets.uk/assets/logos/universal-credit.png',
+  'payslip': 'https://internetstreets.uk/assets/logos/payslip.png',
+  'credit-score': 'https://internetstreets.uk/assets/logos/credit-score.png',
+  'job-rejection': 'https://internetstreets.uk/assets/logos/job-rejection.png',
+  'rent-reference': 'https://internetstreets.uk/assets/logos/rent-reference.png',
+  'school-behaviour': 'https://internetstreets.uk/assets/logos/school-behaviour.png',
+  'college-degree': 'https://internetstreets.uk/assets/logos/college-degree.png'
 }
 
 /**
@@ -50,16 +50,35 @@ const colors = {
 }
 
 /**
- * Typography settings - Helvetica font family
+ * Typography settings - Helvetica font family (optimized for length)
  */
 const typography = {
-  title: { size: 14, weight: 'bold' as const },
-  sectionHeader: { size: 12, weight: 'bold' as const },
-  body: { size: 11, weight: 'normal' as const },
+  title: { size: 12, weight: 'bold' as const },
+  sectionHeader: { size: 10, weight: 'bold' as const },
+  body: { size: 10, weight: 'normal' as const },
   small: { size: 9, weight: 'normal' as const },
-  lineHeight: 1.4,
-  sectionSpacing: 20,
-  headerMargin: 15
+  lineHeight: 1.2,
+  sectionSpacing: 15,
+  headerMargin: 10
+}
+
+/**
+ * Load logo from absolute URL and convert to data URL
+ */
+async function loadLogo(url: string): Promise<string> {
+  try {
+    const res = await fetch(url)
+    const blob = await res.blob()
+    const dataUrl = await new Promise<string>((resolve) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(reader.result as string)
+      reader.readAsDataURL(blob)
+    })
+    return dataUrl
+  } catch (error) {
+    console.warn(`Failed to load logo from ${url}:`, error)
+    throw error
+  }
 }
 
 /**
@@ -73,25 +92,30 @@ export async function renderServiceToPdf(
 ): Promise<Buffer> {
   const doc = new jsPDF()
   
-  // Professional styling - Helvetica font family
+  // Professional styling - Helvetica font family (optimized)
   doc.setFont('Helvetica', 'normal')
-  doc.setFontSize(11)
+  doc.setFontSize(10)
+  doc.setLineHeightFactor(1.2)
   
   const pageHeight = doc.internal.pageSize.height
   const pageWidth = doc.internal.pageSize.width
+  const marginY = 25
+  const marginX = 20
   
   // Professional background
   doc.setFillColor(colors.background[0], colors.background[1], colors.background[2])
   doc.rect(0, 0, pageWidth, pageHeight, 'F')
   
-  // Clean and format the text professionally
+  // Clean and format the text professionally with date injection
   const cleanedText = cleanGeneratedText(document.text)
-  const { title, content, metadata } = formatTextForPdf(cleanedText)
+  const today = new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' })
+  const textWithDate = cleanedText.replace(/\[Insert Current Date\]/gi, today)
+  const { title, content, metadata } = formatTextForPdf(textWithDate)
   
-  let yPos = 70  // Increased top margin for logo space
+  let yPos = marginY + 20  // Optimized top margin
   
-  // Add service logo in top-right corner
-  addServiceLogo(doc, slug, pageWidth, pageHeight)
+  // Add service logo in top-right corner (async loading)
+  await addServiceLogo(doc, slug, pageWidth, pageHeight)
   
   // Add professional document header
   yPos = addDocumentHeader(doc, title, slug, pageWidth, yPos)
@@ -106,12 +130,13 @@ export async function renderServiceToPdf(
   addDividerLine(doc, pageWidth, yPos)
   yPos += 15
   
-  // Render main content with professional formatting
-  yPos = renderProfessionalContent(doc, content, yPos, pageWidth, pageHeight)
+  // Render main content with optimized formatting
+  yPos = renderProfessionalContent(doc, content, yPos, pageWidth, pageHeight, marginX)
   
   // Add professional footer to all pages
   addProfessionalFooter(doc, pageWidth, pageHeight)
   
+  // Return optimized PDF buffer
   return Buffer.from(doc.output('arraybuffer'))
 }
 
@@ -144,9 +169,9 @@ function addDocumentHeader(doc: jsPDF, title: string, slug: string, pageWidth: n
 }
 
 /**
- * Add service logo in top-right corner - PNG format only
+ * Add service logo in top-right corner - Async loading with absolute URLs
  */
-function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageHeight: number): void {
+async function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageHeight: number): Promise<void> {
   const logoUrl = logoMap[slug]
   
   if (!logoUrl) {
@@ -155,16 +180,19 @@ function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageHeight:
   }
   
   try {
+    // Load logo from absolute URL
+    const logoDataUrl = await loadLogo(logoUrl)
+    
     // Logo positioning: top-right corner
     const logoX = pageWidth - 130  // 30px from right edge + 100px width
     const logoY = 40                // 40px from top
     const logoWidth = 100
     const logoHeight = 100
     
-    // Add logo image (PNG format only)
-    doc.addImage(logoUrl, 'PNG', logoX, logoY, logoWidth, logoHeight)
+    // Add logo image (PNG format)
+    doc.addImage(logoDataUrl, 'PNG', logoX, logoY, logoWidth, logoHeight)
     
-    console.log(`Logo added for service: ${slug} at ${logoUrl}`)
+    console.log(`Logo added for service: ${slug} from ${logoUrl}`)
   } catch (error) {
     console.warn(`Failed to load logo for service ${slug}: ${error}`)
     // Continue rendering without logo - graceful fallback
@@ -220,11 +248,11 @@ function renderProfessionalContent(
   content: string, 
   startY: number, 
   pageWidth: number, 
-  pageHeight: number
+  pageHeight: number,
+  marginX: number
 ): number {
   const lines = content.split('\n')
-  const margin = 20
-  const maxWidth = pageWidth - (margin * 2)
+  const maxWidth = pageWidth - (marginX * 2)
   let yPos = startY
   
   // Check for table data
@@ -234,11 +262,11 @@ function renderProfessionalContent(
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
     
-    // Skip empty lines but add small spacing
-    if (line.trim() === '') {
-      yPos += 6
-      continue
-    }
+      // Skip empty lines but add minimal spacing
+      if (line.trim() === '') {
+        yPos += 4
+        continue
+      }
     
     // Check for new page
     if (yPos > pageHeight - 60) {
@@ -263,7 +291,7 @@ function renderProfessionalContent(
           .filter(cell => cell.length > 0)
       )
       
-      yPos = renderTable(doc, tableRows, margin, yPos, pageWidth)
+      yPos = renderTable(doc, tableRows, marginX, yPos, pageWidth)
       i = j - 1 // Skip processed table lines
       continue
     }
@@ -285,7 +313,7 @@ function renderProfessionalContent(
       doc.setTextColor(style.color[0], style.color[1], style.color[2])
       
       const indent = style.indent
-      doc.text(wrappedLine, margin + indent, yPos)
+      doc.text(wrappedLine, marginX + indent, yPos)
       yPos += (style.size * typography.lineHeight) + style.spacing
     }
   }
