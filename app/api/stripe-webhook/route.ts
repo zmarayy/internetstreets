@@ -3,7 +3,7 @@ import Stripe from 'stripe'
 import { validateAndGenerateText } from '@/lib/validateText'
 import { buildPrompt, validateRequiredFields } from '@/lib/promptBuilder'
 import { generateServiceBrand } from '@/lib/brand'
-import { storeDocument, generateSignedUrl } from '@/lib/tempStore'
+import { storeDocumentBySessionId } from '@/lib/tempStore'
 import { logger, generateTraceId, GenerationStep } from '@/lib/logger'
 import { renderServiceToPdf } from '@/lib/pdfGenerator'
 
@@ -115,32 +115,28 @@ async function processDocumentGeneration(
 
     logger.generationStep(`PDF rendered (${pdfBuffer.length} bytes)`, traceId, GenerationStep.PDF_RENDERED, sessionId, slug)
 
-    // Store PDF temporarily
-    const { documentId, expiryTime } = await storeDocument(
+    // Store PDF temporarily by sessionId
+    await storeDocumentBySessionId(
+      sessionId,
       pdfBuffer,
       {
         serviceSlug: slug,
-        sessionId,
         traceId,
         userId: customerEmail
       },
       1 // 1 hour expiry
     )
 
-  // Generate signed URLs
-  const { url: previewUrl } = await generateSignedUrl(documentId, 60)
-  const downloadUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://internetstreets.uk'}/api/document/${documentId}?expires=${expiryTime}`
-
-    logger.generationSuccess(traceId, sessionId, slug, documentId)
+    logger.generationSuccess(traceId, sessionId, slug, sessionId)
 
     // Update status to ready
     generationStatus.set(sessionId, {
       status: 'ready',
       sessionId,
       traceId,
-      documentId,
-      previewUrl,
-      downloadUrl,
+      documentId: sessionId, // Use sessionId as documentId
+      previewUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://internetstreets.uk'}/api/document/${sessionId}`,
+      downloadUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://internetstreets.uk'}/api/document/${sessionId}`,
       serviceName: metadata.name || slug
     })
 

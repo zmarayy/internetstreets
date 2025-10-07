@@ -84,7 +84,85 @@ function retrieveFromMemory(id: string): StoredDocument | null {
 }
 
 /**
- * Store PDF document temporarily
+ * Store PDF document temporarily by sessionId
+ */
+export async function storeDocumentBySessionId(
+  sessionId: string,
+  pdfBuffer: Buffer,
+  metadata: {
+    serviceSlug: string
+    traceId?: string
+    userId?: string
+  },
+  expiryHours: number = 1
+): Promise<void> {
+  try {
+    console.log(`[TempStore] Storing document for sessionId ${sessionId} (${pdfBuffer.length} bytes)`)
+    
+    const now = Date.now()
+    const expiresAt = now + (expiryHours * 60 * 60 * 1000)
+    
+    const document: StoredDocument = {
+      id: sessionId, // Use sessionId as the key
+      pdfBuffer,
+      mimeType: 'application/pdf',
+      createdAt: now,
+      expiresAt,
+      metadata: {
+        ...metadata,
+        sessionId
+      }
+    }
+    
+    memoryStore.set(sessionId, document)
+    console.log(`[TempStore] Stored document ${sessionId} at ${new Date().toISOString()}, expires at ${new Date(expiresAt).toISOString()}`)
+    
+  } catch (error) {
+    console.error('Failed to store document by sessionId:', error)
+    throw new Error('Failed to store document temporarily')
+  }
+}
+
+/**
+ * Retrieve PDF document by sessionId
+ */
+export async function retrieveDocumentBySessionId(sessionId: string): Promise<{
+  pdfBuffer: Buffer
+  mimeType: string
+  metadata: any
+} | null> {
+  try {
+    console.log(`[TempStore] Retrieving document for sessionId: ${sessionId}`)
+    
+    const doc = memoryStore.get(sessionId)
+    
+    if (!doc) {
+      console.log(`[TempStore] Document ${sessionId} not found`)
+      return null
+    }
+    
+    // Check if expired
+    if (doc.expiresAt < Date.now()) {
+      memoryStore.delete(sessionId)
+      console.log(`[TempStore] Document ${sessionId} expired and was automatically removed`)
+      return null
+    }
+    
+    console.log(`[TempStore] Retrieved document ${sessionId} successfully`)
+    return {
+      pdfBuffer: doc.pdfBuffer,
+      mimeType: doc.mimeType,
+      metadata: doc.metadata
+    }
+    
+  } catch (error) {
+    console.error('Failed to retrieve document by sessionId:', error)
+    return null
+  }
+}
+
+/**
+ * Store PDF document temporarily (legacy function - kept for compatibility)
  */
 export async function storeDocument(
   pdfBuffer: Buffer,

@@ -30,9 +30,9 @@ export interface GenerationAttempt {
 function validateTextQuality(text: string): { valid: boolean; issues: string[] } {
   const issues: string[] = []
   
-  // Check minimum length
-  if (text.length < 200) {
-    issues.push('Response too short (less than 200 characters)')
+  // Check minimum length (increased to 300 as requested)
+  if (text.length < 300) {
+    issues.push('Response too short (less than 300 characters)')
   }
   
   // Check for empty or whitespace-only response
@@ -40,27 +40,18 @@ function validateTextQuality(text: string): { valid: boolean; issues: string[] }
     issues.push('Empty response')
   }
   
-  // Check for obvious AI artifacts
+  // Check for obvious AI artifacts (code blocks)
   if (text.includes('```') || text.includes('```json') || text.includes('```markdown')) {
     issues.push('Response contains code blocks instead of plain text')
   }
   
-  // Check for JSON-like structure
+  // Check for JSON-like structure (basic check)
   if (text.trim().startsWith('{') && text.trim().endsWith('}')) {
     issues.push('Response appears to be JSON instead of plain text')
   }
   
-  // Check for proper document structure (should have some headings or sections)
-  const hasHeadings = /^[A-Z][A-Za-z\s]+:?\s*$/m.test(text) || 
-                     /^[A-Z][A-Za-z\s]+:?\s*$/m.test(text) ||
-                     text.includes('Title:') ||
-                     text.includes('Subject:') ||
-                     text.includes('Date:') ||
-                     text.includes('Reference:')
-  
-  if (!hasHeadings && text.length > 500) {
-    issues.push('Response lacks proper document structure')
-  }
+  // REMOVED: All structural checks - accept any natural language text
+  // No more checks for headings, document structure, etc.
   
   return { valid: issues.length === 0, issues }
 }

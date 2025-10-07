@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { retrieveDocument } from '@/lib/tempStore'
+import { retrieveDocumentBySessionId } from '@/lib/tempStore'
 
 /**
- * Download or preview a stored PDF document
+ * Download or preview a stored PDF document by sessionId
  */
 export async function GET(
   request: NextRequest,
@@ -17,8 +17,8 @@ export async function GET(
       return NextResponse.json({ error: 'Document ID required' }, { status: 400 })
     }
 
-    // Retrieve document
-    const doc = await retrieveDocument(documentId)
+    // Retrieve document by sessionId (documentId is now the sessionId)
+    const doc = await retrieveDocumentBySessionId(documentId)
     
     if (!doc) {
       return NextResponse.json(
@@ -27,7 +27,7 @@ export async function GET(
       )
     }
 
-    // Check expiry from URL parameter
+    // Check expiry from URL parameter (optional)
     const expiresAt = searchParams.get('expires')
     if (expiresAt && parseInt(expiresAt) < Date.now()) {
       return NextResponse.json(
