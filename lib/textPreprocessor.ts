@@ -1,8 +1,6 @@
 /**
- * Text Preprocessor for Professional Document Generation
- * Cleans AI output to remove novelty markers and formatting
+ * Advanced text cleaning for professional document generation
  */
-
 export function cleanGeneratedText(text: string): string {
   if (!text) return text
 

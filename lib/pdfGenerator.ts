@@ -1,12 +1,12 @@
 /**
  * Professional PDF Generator for Internet Streets
- * Creates authentic-looking documents with clean styling
+ * Creates cinematic, realistic documents with professional styling
  */
 
 import jsPDF from 'jspdf'
 import { GeneratedBrand } from '@/lib/brand'
 import { SanitizedInputs } from '@/lib/promptBuilder'
-import { formatTextForPdf } from '@/lib/textPreprocessor'
+import { formatTextForPdf, cleanGeneratedText } from '@/lib/textPreprocessor'
 
 export interface PlainTextDocument {
   text: string
@@ -36,6 +36,32 @@ const logoMap: Record<string, string[]> = {
 }
 
 /**
+ * Professional color scheme
+ */
+const colors = {
+  background: [248, 248, 248] as [number, number, number], // #f8f8f8
+  text: [0, 0, 0] as [number, number, number], // #000
+  textSecondary: [60, 60, 60] as [number, number, number], // #3c3c3c
+  textMuted: [120, 120, 120] as [number, number, number], // #787878
+  border: [170, 170, 170] as [number, number, number], // #aaaaaa
+  divider: [204, 204, 204] as [number, number, number], // #ccc
+  tableHeader: [239, 239, 239] as [number, number, number], // #efefef
+  footer: [102, 102, 102] as [number, number, number] // #666
+}
+
+/**
+ * Typography settings
+ */
+const typography = {
+  title: { size: 14, weight: 'bold' as const },
+  sectionHeader: { size: 12, weight: 'bold' as const },
+  body: { size: 11, weight: 'normal' as const },
+  small: { size: 9, weight: 'normal' as const },
+  lineHeight: 1.4,
+  sectionSpacing: 20
+}
+
+/**
  * Render a professional document to PDF
  */
 export async function renderServiceToPdf(
@@ -52,35 +78,31 @@ export async function renderServiceToPdf(
   const pageHeight = doc.internal.pageSize.height
   const pageWidth = doc.internal.pageSize.width
   
-  // Clean white background
-  doc.setFillColor(255, 255, 255)
+  // Professional background
+  doc.setFillColor(colors.background[0], colors.background[1], colors.background[2])
   doc.rect(0, 0, pageWidth, pageHeight, 'F')
   
-  // Format the text professionally
-  const { title, content, metadata } = formatTextForPdf(document.text)
+  // Clean and format the text professionally
+  const cleanedText = cleanGeneratedText(document.text)
+  const { title, content, metadata } = formatTextForPdf(cleanedText)
   
-  let yPos = 40
+  let yPos = 50
   
   // Add service logo in top-right corner
   addServiceLogo(doc, slug, pageWidth, pageHeight)
   
-  // Add document title (clean, no fictional markers)
-  doc.setFontSize(16)
-  doc.setTextColor(0, 0, 0)
-  doc.setFont('helvetica', 'bold')
-  doc.text(title, 20, yPos)
-  yPos += 25
+  // Add professional document header
+  yPos = addDocumentHeader(doc, title, slug, pageWidth, yPos)
   
   // Add metadata section if available
   if (document.metadata) {
-    addMetadataSection(doc, document.metadata, 20, yPos)
-    yPos += 40
+    yPos = addMetadataSection(doc, document.metadata, 20, yPos)
+    yPos += typography.sectionSpacing
   }
   
-  // Add subtle divider line
-  doc.setDrawColor(200, 200, 200)
-  doc.line(20, yPos, pageWidth - 20, yPos)
-  yPos += 20
+  // Add divider line
+  addDividerLine(doc, pageWidth, yPos)
+  yPos += 15
   
   // Render main content with professional formatting
   yPos = renderProfessionalContent(doc, content, yPos, pageWidth, pageHeight)
@@ -89,6 +111,32 @@ export async function renderServiceToPdf(
   addProfessionalFooter(doc, pageWidth, pageHeight)
   
   return Buffer.from(doc.output('arraybuffer'))
+}
+
+/**
+ * Add professional document header
+ */
+function addDocumentHeader(doc: jsPDF, title: string, slug: string, pageWidth: number, yPos: number): number {
+  // Document title
+  doc.setFontSize(typography.title.size)
+  doc.setTextColor(colors.text[0], colors.text[1], colors.text[2])
+  doc.setFont('helvetica', typography.title.weight)
+  doc.text(title, 20, yPos)
+  yPos += 25
+  
+  // Add divider line
+  addDividerLine(doc, pageWidth, yPos)
+  yPos += 10
+  
+  // Case reference number
+  const caseRef = generateCaseReference(slug)
+  doc.setFontSize(typography.small.size)
+  doc.setTextColor(colors.textSecondary[0], colors.textSecondary[1], colors.textSecondary[2])
+  doc.setFont('helvetica', 'normal')
+  doc.text(`CASE REF: ${caseRef}`, 20, yPos)
+  yPos += 15
+  
+  return yPos
 }
 
 /**
@@ -139,8 +187,8 @@ function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageHeight:
  * Add metadata section with clean formatting
  */
 function addMetadataSection(doc: jsPDF, metadata: any, x: number, yPos: number): number {
-  doc.setFontSize(10)
-  doc.setTextColor(60, 60, 60)
+  doc.setFontSize(typography.small.size)
+  doc.setTextColor(colors.textSecondary[0], colors.textSecondary[1], colors.textSecondary[2])
   doc.setFont('helvetica', 'normal')
   
   let currentY = yPos
@@ -168,6 +216,15 @@ function addMetadataSection(doc: jsPDF, metadata: any, x: number, yPos: number):
 }
 
 /**
+ * Add divider line
+ */
+function addDividerLine(doc: jsPDF, pageWidth: number, yPos: number): void {
+  doc.setDrawColor(colors.divider[0], colors.divider[1], colors.divider[2])
+  doc.setLineWidth(0.5)
+  doc.line(20, yPos, pageWidth - 20, yPos)
+}
+
+/**
  * Render content with professional formatting
  */
 function renderProfessionalContent(
@@ -178,29 +235,56 @@ function renderProfessionalContent(
   pageHeight: number
 ): number {
   const lines = content.split('\n')
-  const lineHeight = 6
   const margin = 20
   const maxWidth = pageWidth - (margin * 2)
   let yPos = startY
   
-  for (const line of lines) {
+  // Check for table data
+  const tableData = parseTableData(lines)
+  const hasTable = tableData.length > 0
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    
     // Skip empty lines but add small spacing
     if (line.trim() === '') {
-      yPos += lineHeight / 2
+      yPos += 6
       continue
     }
     
     // Check for new page
-    if (yPos > pageHeight - 40) {
+    if (yPos > pageHeight - 60) {
       doc.addPage()
       yPos = 30
     }
     
-    // Handle line wrapping
+    // Handle table data
+    if (hasTable && isTableData(line)) {
+      // Find all consecutive table lines
+      const tableLines = []
+      let j = i
+      while (j < lines.length && isTableData(lines[j])) {
+        tableLines.push(lines[j])
+        j++
+      }
+      
+      // Parse and render table
+      const tableRows = tableLines.map(tableLine => 
+        tableLine.split('|')
+          .map(cell => cell.trim())
+          .filter(cell => cell.length > 0)
+      )
+      
+      yPos = renderTable(doc, tableRows, margin, yPos, pageWidth)
+      i = j - 1 // Skip processed table lines
+      continue
+    }
+    
+    // Handle regular text
     const wrappedLines = doc.splitTextToSize(line, maxWidth)
     
     for (const wrappedLine of wrappedLines) {
-      if (yPos > pageHeight - 40) {
+      if (yPos > pageHeight - 60) {
         doc.addPage()
         yPos = 30
       }
@@ -214,7 +298,7 @@ function renderProfessionalContent(
       
       const indent = style.indent
       doc.text(wrappedLine, margin + indent, yPos)
-      yPos += lineHeight + style.spacing
+      yPos += (style.size * typography.lineHeight) + style.spacing
     }
   }
   
@@ -237,10 +321,10 @@ function getTextStyle(line: string): {
   if (isDocumentHeader(trimmed)) {
     return {
       weight: 'bold',
-      size: 14,
-      color: [0, 0, 0],
+      size: typography.title.size,
+      color: colors.text,
       indent: 0,
-      spacing: 2
+      spacing: 8
     }
   }
   
@@ -248,10 +332,10 @@ function getTextStyle(line: string): {
   if (isSectionHeader(trimmed)) {
     return {
       weight: 'bold',
-      size: 12,
-      color: [0, 0, 0],
+      size: typography.sectionHeader.size,
+      color: colors.text,
       indent: 0,
-      spacing: 1
+      spacing: 6
     }
   }
   
@@ -259,10 +343,10 @@ function getTextStyle(line: string): {
   if (isListItem(trimmed)) {
     return {
       weight: 'normal',
-      size: 10,
-      color: [40, 40, 40],
-      indent: 10,
-      spacing: 0
+      size: typography.body.size,
+      color: colors.textSecondary,
+      indent: 15,
+      spacing: 2
     }
   }
   
@@ -270,20 +354,20 @@ function getTextStyle(line: string): {
   if (isFieldLabel(trimmed)) {
     return {
       weight: 'bold',
-      size: 10,
-      color: [0, 0, 0],
+      size: typography.body.size,
+      color: colors.text,
       indent: 0,
-      spacing: 0
+      spacing: 2
     }
   }
   
   // Regular text
   return {
     weight: 'normal',
-    size: 11,
-    color: [0, 0, 0],
+    size: typography.body.size,
+    color: colors.text,
     indent: 0,
-    spacing: 0
+    spacing: 2
   }
 }
 
@@ -314,13 +398,18 @@ function isSectionHeader(line: string): boolean {
   const patterns = [
     /^[A-Z\s]+:$/,  // ALL CAPS with colon
     /^[A-Z][a-z\s]+:$/,  // Title Case with colon
-    /^Summary:$/i,
-    /^Analysis:$/i,
-    /^Findings:$/i,
-    /^Recommendations:$/i,
-    /^Assessment:$/i,
-    /^Details:$/i,
-    /^Information:$/i
+    /^EXECUTIVE SUMMARY$/i,
+    /^KEY FINDINGS$/i,
+    /^SURVEILLANCE LOG$/i,
+    /^ANALYST NOTES$/i,
+    /^FINAL RECOMMENDATION$/i,
+    /^SUMMARY$/i,
+    /^ANALYSIS$/i,
+    /^FINDINGS$/i,
+    /^RECOMMENDATIONS$/i,
+    /^ASSESSMENT$/i,
+    /^DETAILS$/i,
+    /^INFORMATION$/i
   ]
   
   return patterns.some(pattern => pattern.test(line))
@@ -351,49 +440,156 @@ function isFieldLabel(line: string): boolean {
 }
 
 /**
+ * Generate case reference number
+ */
+function generateCaseReference(slug: string): string {
+  const prefixes: Record<string, string> = {
+    'fbi-file': 'FBI',
+    'nsa-surveillance': 'NSA',
+    'criminal-record': 'PNC',
+    'universal-credit': 'UC',
+    'payslip': 'PAY',
+    'credit-score': 'CRD',
+    'job-rejection': 'HR',
+    'rent-reference': 'REF',
+    'school-behaviour': 'SCH',
+    'college-degree': 'DEG'
+  }
+  
+  const prefix = prefixes[slug] || 'DOC'
+  const year = new Date().getFullYear().toString().slice(-2)
+  const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+  
+  return `${year}-${random}-${prefix}`
+}
+
+/**
+ * Render table data with professional formatting
+ */
+function renderTable(
+  doc: jsPDF, 
+  tableData: string[][], 
+  x: number, 
+  yPos: number, 
+  pageWidth: number
+): number {
+  if (!tableData || tableData.length === 0) return yPos
+  
+  const margin = 20
+  const tableWidth = pageWidth - (margin * 2)
+  const colCount = tableData[0]?.length || 0
+  const colWidth = tableWidth / colCount
+  
+  let currentY = yPos
+  
+  // Draw table header
+  if (tableData.length > 0) {
+    const headerRow = tableData[0]
+    
+    // Header background
+    doc.setFillColor(colors.tableHeader[0], colors.tableHeader[1], colors.tableHeader[2])
+    doc.rect(x, currentY - 8, tableWidth, 16, 'F')
+    
+    // Header text
+    doc.setFontSize(typography.small.size)
+    doc.setTextColor(colors.text[0], colors.text[1], colors.text[2])
+    doc.setFont('helvetica', 'bold')
+    
+    headerRow.forEach((cell, index) => {
+      const cellX = x + (index * colWidth)
+      doc.text(cell, cellX + 5, currentY)
+    })
+    
+    currentY += 16
+  }
+  
+  // Draw table rows
+  for (let rowIndex = 1; rowIndex < tableData.length; rowIndex++) {
+    const row = tableData[rowIndex]
+    
+    // Row background (alternating)
+    if (rowIndex % 2 === 0) {
+      doc.setFillColor(248, 248, 248)
+      doc.rect(x, currentY - 8, tableWidth, 16, 'F')
+    }
+    
+    // Row text
+    doc.setFontSize(typography.small.size)
+    doc.setTextColor(colors.textSecondary[0], colors.textSecondary[1], colors.textSecondary[2])
+    doc.setFont('helvetica', 'normal')
+    
+    row.forEach((cell, index) => {
+      const cellX = x + (index * colWidth)
+      doc.text(cell, cellX + 5, currentY)
+    })
+    
+    currentY += 16
+  }
+  
+  // Draw table borders
+  doc.setDrawColor(colors.border[0], colors.border[1], colors.border[2])
+  doc.setLineWidth(0.5)
+  
+  // Vertical lines
+  for (let i = 0; i <= colCount; i++) {
+    const lineX = x + (i * colWidth)
+    doc.line(lineX, yPos - 8, lineX, currentY - 8)
+  }
+  
+  // Horizontal lines
+  for (let i = 0; i <= tableData.length; i++) {
+    const lineY = yPos - 8 + (i * 16)
+    doc.line(x, lineY, x + tableWidth, lineY)
+  }
+  
+  return currentY + 10
+}
+
+/**
+ * Check if content contains table data
+ */
+function isTableData(line: string): boolean {
+  const trimmed = line.trim()
+  return trimmed.includes('|') && trimmed.split('|').length > 2
+}
+
+/**
+ * Parse table data from text
+ */
+function parseTableData(lines: string[]): string[][] {
+  const tableLines = lines.filter(line => isTableData(line))
+  if (tableLines.length === 0) return []
+  
+  return tableLines.map(line => 
+    line.split('|')
+      .map(cell => cell.trim())
+      .filter(cell => cell.length > 0)
+  )
+}
+
+/**
  * Add professional footer to all pages
  */
 function addProfessionalFooter(doc: jsPDF, pageWidth: number, pageHeight: number): void {
   const pageCount = doc.getNumberOfPages()
+  const now = new Date()
+  const timestamp = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-GB', { hour12: false })
   
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i)
     
-    // Page number
-    doc.setFontSize(8)
-    doc.setTextColor(120, 120, 120)
+    // Legal disclaimer (centered)
+    doc.setFontSize(typography.small.size)
+    doc.setTextColor(colors.footer[0], colors.footer[1], colors.footer[2])
+    doc.setFont('helvetica', 'normal')
+    doc.text('Internet Streets Entertainment – Not a Real Document.', pageWidth / 2, pageHeight - 15, { align: 'center' })
+    
+    // Timestamp (left)
+    doc.text(`Generated ${timestamp}`, 20, pageHeight - 15)
+    
+    // Page number (right)
     doc.text(`Page ${i} of ${pageCount}`, pageWidth - 30, pageHeight - 15)
-    
-    // Legal disclaimer (small, unobtrusive)
-    doc.setFontSize(7)
-    doc.setTextColor(100, 100, 100)
-    doc.text('Internet Streets Entertainment – Not a Real Document', pageWidth / 2, pageHeight - 15, { align: 'center' })
-    
-    // Date stamp
-    const now = new Date()
-    const dateStr = now.toLocaleDateString('en-GB')
-    doc.text(dateStr, 20, pageHeight - 15)
   }
-}
-
-/**
- * Get clean document title (no fictional markers)
- */
-function getDocumentTitle(slug: string): string {
-  const titles: Record<string, string> = {
-    'fbi-file': 'FEDERAL BUREAU OF INVESTIGATION — INTELLIGENCE DOSSIER',
-    'nsa-surveillance': 'NATIONAL SECURITY AGENCY — SIGNALS INTELLIGENCE REPORT',
-    'criminal-record': 'GOVERNMENT CRIMINAL RECORD EXTRACT',
-    'universal-credit': 'UNIVERSAL CREDIT ASSESSMENT SUMMARY',
-    'payslip': 'STATEMENT OF EARNINGS',
-    'credit-score': 'CREDIT SCORE REPORT',
-    'job-rejection': 'APPLICATION OUTCOME LETTER',
-    'rent-reference': 'TENANCY REFERENCE LETTER',
-    'school-behaviour': 'SCHOOL BEHAVIOUR REPORT',
-    'college-degree': 'UNIVERSITY DEGREE CERTIFICATE'
-  }
-  
-  return titles[slug] || 'OFFICIAL DOCUMENT'
 }
 
 /**
