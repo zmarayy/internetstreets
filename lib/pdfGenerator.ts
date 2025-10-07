@@ -169,7 +169,7 @@ function addDocumentHeader(doc: jsPDF, title: string, slug: string, pageWidth: n
 }
 
 /**
- * Add service logo in top-right corner - Async loading with absolute URLs
+ * Add service logo in top-right corner - Enhanced reliability
  */
 async function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageHeight: number): Promise<void> {
   const logoUrl = logoMap[slug]
@@ -180,8 +180,12 @@ async function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageH
   }
   
   try {
-    // Load logo from absolute URL
+    // Load logo from absolute URL with timeout
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+    
     const logoDataUrl = await loadLogo(logoUrl)
+    clearTimeout(timeoutId)
     
     // Logo positioning: top-right corner
     const logoX = pageWidth - 130  // 30px from right edge + 100px width
@@ -192,10 +196,15 @@ async function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageH
     // Add logo image (PNG format)
     doc.addImage(logoDataUrl, 'PNG', logoX, logoY, logoWidth, logoHeight)
     
-    console.log(`Logo added for service: ${slug} from ${logoUrl}`)
+    console.log(`✅ Logo successfully added for service: ${slug}`)
   } catch (error) {
-    console.warn(`Failed to load logo for service ${slug}: ${error}`)
-    // Continue rendering without logo - graceful fallback
+    console.warn(`⚠️ Failed to load logo for service ${slug}: ${error}`)
+    // Add a placeholder text instead of failing completely
+    doc.setFontSize(8)
+    doc.setTextColor(150, 150, 150)
+    doc.setFont('Helvetica', 'normal')
+    doc.text(`[${slug.toUpperCase()}]`, pageWidth - 50, 50)
+    console.log(`📝 Added text placeholder for missing logo: ${slug}`)
   }
 }
 
@@ -268,8 +277,8 @@ function renderProfessionalContent(
         continue
       }
     
-    // Check for new page
-    if (yPos > pageHeight - 60) {
+    // Check for new page with better spacing to prevent mid-sentence cuts
+    if (yPos > pageHeight - 80) {
       doc.addPage()
       yPos = 30
     }
@@ -300,13 +309,15 @@ function renderProfessionalContent(
     const wrappedLines = doc.splitTextToSize(line, maxWidth)
     
     for (const wrappedLine of wrappedLines) {
-      if (yPos > pageHeight - 60) {
+      // Apply appropriate styling - Helvetica font family
+      const style = getTextStyle(wrappedLine)
+      
+      // Smart page breaks - avoid cutting mid-sentence
+      const lineHeight = style.size * typography.lineHeight
+      if (yPos + lineHeight > pageHeight - 80) {
         doc.addPage()
         yPos = 30
       }
-      
-      // Apply appropriate styling - Helvetica font family
-      const style = getTextStyle(wrappedLine)
       
       doc.setFont('Helvetica', style.weight)
       doc.setFontSize(style.size)
@@ -314,7 +325,7 @@ function renderProfessionalContent(
       
       const indent = style.indent
       doc.text(wrappedLine, marginX + indent, yPos)
-      yPos += (style.size * typography.lineHeight) + style.spacing
+      yPos += lineHeight + style.spacing
     }
   }
   

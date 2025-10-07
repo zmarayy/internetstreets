@@ -11,18 +11,29 @@ export function cleanGeneratedText(text: string): string {
     .replace(/---+/g, '') // Remove horizontal rules
     .replace(/###?\s*/g, '') // Remove heading markdown
     
-    // Remove novelty markers
+    // Remove novelty markers and placeholders
     .replace(/\(Fictional\)/gi, '')
     .replace(/\(FAKE\)/gi, '')
     .replace(/\(NOT REAL\)/gi, '')
     .replace(/\[REDACTED\]/gi, '')
     .replace(/\[CLASSIFIED\]/gi, '')
     .replace(/\[CONFIDENTIAL\]/gi, '')
+    .replace(/\[Insert Current Date\]/gi, '') // Remove date placeholders
+    .replace(/\[DATE\]/gi, '')
+    .replace(/\[PLACEHOLDER\]/gi, '')
+    .replace(/\[.*?\]/g, '') // Remove any remaining bracketed placeholders
     
-    // Remove watermark text
+    // Remove watermark text and disclaimers from body
     .replace(/INTERNET STREETS ENTERTAINMENT/gi, '')
     .replace(/NOT A REAL DOCUMENT/gi, '')
     .replace(/FOR ENTERTAINMENT ONLY/gi, '')
+    .replace(/This is a fictional document/gi, '')
+    .replace(/For entertainment purposes only/gi, '')
+    
+    // Remove duplicated field headers (common AI pattern)
+    .replace(/Subject Information:\s*\n\s*Name:.*?\n\s*Date of Birth:.*?\n\s*City:.*?\n\s*Occupation:.*?\n/gi, '')
+    .replace(/Subject Details:\s*\n\s*Name:.*?\n\s*DOB:.*?\n\s*Location:.*?\n/gi, '')
+    .replace(/Personal Information:\s*\n\s*Full Name:.*?\n\s*Date of Birth:.*?\n/gi, '')
     
     // Clean up extra whitespace
     .replace(/\n\s*\n\s*\n/g, '\n\n') // Max 2 line breaks
