@@ -114,10 +114,10 @@ export async function renderServiceToPdf(
   const textWithDate = cleanedText.replace(/\[Insert Current Date\]/gi, today)
   const { title, content, metadata } = formatTextForPdf(textWithDate)
   
-  let yPos = marginY + 20  // Optimized top margin
+  let yPos = marginY + 15  // Adjusted top margin to align with logo
   
-  // Add service logo in top-right corner (async loading)
-  await addServiceLogo(doc, slug, pageWidth, pageHeight)
+  // Add service logo in top-right corner (first page only)
+  await addServiceLogo(doc, slug, pageWidth, pageHeight, true)
   
   // Add professional document header
   yPos = addDocumentHeader(doc, title, slug, pageWidth, yPos)
@@ -171,9 +171,14 @@ function addDocumentHeader(doc: jsPDF, title: string, slug: string, pageWidth: n
 }
 
 /**
- * Add service logo in top-right corner - Node.js compatible
+ * Add service logo in top-right corner - First page only, proper alignment
  */
-async function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageHeight: number): Promise<void> {
+async function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageHeight: number, isFirstPage: boolean = true): Promise<void> {
+  // Only add logo on first page
+  if (!isFirstPage) {
+    return
+  }
+  
   const logoUrl = logoMap[slug]
   
   if (!logoUrl) {
@@ -185,23 +190,23 @@ async function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageH
     // Load logo from absolute URL (Node.js compatible)
     const logoDataUrl = await loadLogo(logoUrl)
     
-    // Logo positioning: top-right corner
-    const logoX = pageWidth - 130  // 30px from right edge + 100px width
-    const logoY = 40                // 40px from top
-    const logoWidth = 100
-    const logoHeight = 100
+    // Logo positioning: top-right corner, properly aligned
+    const logoX = pageWidth - 60  // ~20mm from right edge
+    const logoY = 20              // ~20mm from top edge
+    const logoWidth = 40          // Realistic size (40px)
+    const logoHeight = 40         // Maintain aspect ratio
     
     // Add logo image (PNG format)
     doc.addImage(logoDataUrl, 'PNG', logoX, logoY, logoWidth, logoHeight)
     
-    console.log(`✅ Logo successfully added for service: ${slug}`)
+    console.log(`✅ Logo successfully added for service: ${slug} (first page only)`)
   } catch (error) {
     console.warn(`⚠️ Failed to load logo for service ${slug}: ${error}`)
     // Add a placeholder text instead of failing completely
     doc.setFontSize(8)
     doc.setTextColor(150, 150, 150)
     doc.setFont('Helvetica', 'normal')
-    doc.text(`[${slug.toUpperCase()}]`, pageWidth - 50, 50)
+    doc.text(`[${slug.toUpperCase()}]`, pageWidth - 30, 25)
     console.log(`📝 Added text placeholder for missing logo: ${slug}`)
   }
 }
