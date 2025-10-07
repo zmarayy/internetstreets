@@ -1,50 +1,26 @@
 import ServiceForm from '@/components/ServiceForm'
+import { getService } from '@/lib/services'
 
 export default function PayslipPage() {
-  const fields = [
-    {
-      name: 'fullName',
-      label: 'Full Name',
-      type: 'text' as const,
-      required: true,
-      placeholder: 'John Doe'
-    },
-    {
-      name: 'companyName',
-      label: 'Company Name',
-      type: 'text' as const,
-      required: true,
-      placeholder: 'Tech Corp Ltd'
-    },
-    {
-      name: 'jobTitle',
-      label: 'Job Title',
-      type: 'text' as const,
-      required: true,
-      placeholder: 'Software Developer'
-    },
-    {
-      name: 'salary',
-      label: 'Annual Salary (£)',
-      type: 'number' as const,
-      required: true,
-      placeholder: '50000'
-    },
-    {
-      name: 'payPeriod',
-      label: 'Pay Period',
-      type: 'text' as const,
-      required: true,
-      placeholder: 'Monthly'
-    }
-  ]
+  const service = getService('payslip')
+  
+  if (!service) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-neon-pink mb-4">Service Not Found</h1>
+          <p className="text-gray-300">The requested service could not be found.</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="glitch-text text-4xl font-bold text-neon-pink mb-4">
-            Fake Payslip Generator
+            {service.name}
           </h1>
           <p className="text-xl text-gray-300">
             Create realistic payslips for novelty purposes.
@@ -52,10 +28,11 @@ export default function PayslipPage() {
         </div>
 
         <ServiceForm
-          serviceId="payslip"
-          serviceName="Fake Payslip Generator"
-          fields={fields}
+          serviceId={service.slug}
+          serviceName={service.name}
+          fields={service.fields}
           description="Generate a professional-looking payslip with detailed salary breakdown, deductions, and company information. Perfect for novelty purposes, creative projects, or educational use."
+          price={service.price}
         />
       </div>
     </div>

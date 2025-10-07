@@ -1,56 +1,26 @@
 import ServiceForm from '@/components/ServiceForm'
+import { getService } from '@/lib/services'
 
 export default function CollegeDegreePage() {
-  const fields = [
-    {
-      name: 'fullName',
-      label: 'Full Name',
-      type: 'text' as const,
-      required: true,
-      placeholder: 'John Doe'
-    },
-    {
-      name: 'dateOfBirth',
-      label: 'Date of Birth',
-      type: 'date' as const,
-      required: true
-    },
-    {
-      name: 'universityName',
-      label: 'University Name',
-      type: 'text' as const,
-      required: true,
-      placeholder: 'University of London'
-    },
-    {
-      name: 'degreeType',
-      label: 'Degree Type',
-      type: 'text' as const,
-      required: true,
-      placeholder: 'Bachelor of Science'
-    },
-    {
-      name: 'subject',
-      label: 'Subject',
-      type: 'text' as const,
-      required: true,
-      placeholder: 'Computer Science'
-    },
-    {
-      name: 'graduationYear',
-      label: 'Graduation Year',
-      type: 'number' as const,
-      required: true,
-      placeholder: '2023'
-    }
-  ]
+  const service = getService('college-degree')
+  
+  if (!service) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-neon-yellow mb-4">Service Not Found</h1>
+          <p className="text-gray-300">The requested service could not be found.</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="glitch-text text-4xl font-bold text-neon-yellow mb-4">
-            Fake College Degree Generator
+            {service.name}
           </h1>
           <p className="text-xl text-gray-300">
             Create fake diplomas and certificates.
@@ -58,10 +28,11 @@ export default function CollegeDegreePage() {
         </div>
 
         <ServiceForm
-          serviceId="college-degree"
-          serviceName="Fake College Degree Generator"
-          fields={fields}
+          serviceId={service.slug}
+          serviceName={service.name}
+          fields={service.fields}
           description="Generate a realistic college degree certificate with university branding, official seals, and detailed academic information. For novelty and entertainment purposes only."
+          price={service.price}
         />
       </div>
     </div>
