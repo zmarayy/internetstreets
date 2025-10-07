@@ -63,18 +63,20 @@ const typography = {
 }
 
 /**
- * Load logo from absolute URL and convert to data URL
+ * Load logo from absolute URL and convert to data URL (Node.js compatible)
  */
 async function loadLogo(url: string): Promise<string> {
   try {
     const res = await fetch(url)
-    const blob = await res.blob()
-    const dataUrl = await new Promise<string>((resolve) => {
-      const reader = new FileReader()
-      reader.onload = () => resolve(reader.result as string)
-      reader.readAsDataURL(blob)
-    })
-    return dataUrl
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`)
+    }
+    
+    const arrayBuffer = await res.arrayBuffer()
+    const base64 = Buffer.from(arrayBuffer).toString('base64')
+    const contentType = res.headers.get('content-type') || 'image/png'
+    
+    return `data:${contentType};base64,${base64}`
   } catch (error) {
     console.warn(`Failed to load logo from ${url}:`, error)
     throw error
@@ -169,7 +171,7 @@ function addDocumentHeader(doc: jsPDF, title: string, slug: string, pageWidth: n
 }
 
 /**
- * Add service logo in top-right corner - Enhanced reliability
+ * Add service logo in top-right corner - Node.js compatible
  */
 async function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageHeight: number): Promise<void> {
   const logoUrl = logoMap[slug]
@@ -180,12 +182,8 @@ async function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageH
   }
   
   try {
-    // Load logo from absolute URL with timeout
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
-    
+    // Load logo from absolute URL (Node.js compatible)
     const logoDataUrl = await loadLogo(logoUrl)
-    clearTimeout(timeoutId)
     
     // Logo positioning: top-right corner
     const logoX = pageWidth - 130  // 30px from right edge + 100px width
