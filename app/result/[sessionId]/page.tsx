@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useParams } from 'next/navigation'
-import { Loader2, Download, Share2, FileText } from 'lucide-react'
+import { Loader2, Download, FileText } from 'lucide-react'
 
 interface ResultStatus {
   status: 'processing' | 'ready' | 'error'
@@ -78,15 +78,6 @@ export default function ResultPage() {
     }
   }
 
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href)
-      alert('Link copied to clipboard! Share it with others.')
-    } catch (error) {
-      console.error('Failed to copy link:', error)
-      alert('Failed to copy link. Please copy manually.')
-    }
-  }
 
   const handlePreviewInNewTab = () => {
     if (pdfUrl) {
@@ -228,14 +219,6 @@ export default function ResultPage() {
           >
             <Download className="mr-2" size={20} />
             Download PDF
-          </button>
-          
-          <button
-            onClick={handleShare}
-            className="flex items-center justify-center bg-neon-purple hover:bg-neon-purple/80 text-white font-bold py-4 px-8 rounded-lg transition-colors duration-300 neon-glow"
-          >
-            <Share2 className="mr-2" size={20} />
-            Share Link
           </button>
         </div>
 
