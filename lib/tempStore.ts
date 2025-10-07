@@ -116,6 +116,8 @@ export async function storeDocumentBySessionId(
     
     memoryStore.set(sessionId, document)
     console.log(`[TempStore] Stored document ${sessionId} at ${new Date().toISOString()}, expires at ${new Date(expiresAt).toISOString()}`)
+    console.log(`[TempStore] Current store size after storage: ${memoryStore.size}`)
+    console.log(`[TempStore] Available keys after storage: ${Array.from(memoryStore.keys()).join(', ')}`)
     
   } catch (error) {
     console.error('Failed to store document by sessionId:', error)
@@ -133,6 +135,8 @@ export async function retrieveDocumentBySessionId(sessionId: string): Promise<{
 } | null> {
   try {
     console.log(`[TempStore] Retrieving document for sessionId: ${sessionId}`)
+    console.log(`[TempStore] Current store size: ${memoryStore.size}`)
+    console.log(`[TempStore] Available keys: ${Array.from(memoryStore.keys()).join(', ')}`)
     
     const doc = memoryStore.get(sessionId)
     
@@ -148,7 +152,7 @@ export async function retrieveDocumentBySessionId(sessionId: string): Promise<{
       return null
     }
     
-    console.log(`[TempStore] Retrieved document ${sessionId} successfully`)
+    console.log(`[TempStore] Retrieved document ${sessionId} successfully (${doc.pdfBuffer.length} bytes)`)
     return {
       pdfBuffer: doc.pdfBuffer,
       mimeType: doc.mimeType,

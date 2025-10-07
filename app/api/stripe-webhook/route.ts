@@ -4,25 +4,13 @@ import { validateAndGenerateText } from '@/lib/validateText'
 import { buildPrompt, validateRequiredFields } from '@/lib/promptBuilder'
 import { generateServiceBrand } from '@/lib/brand'
 import { storeDocumentBySessionId } from '@/lib/tempStore'
+import { generationStatus } from '@/lib/generationStatus'
 import { logger, generateTraceId, GenerationStep } from '@/lib/logger'
 import { renderServiceToPdf } from '@/lib/pdfGenerator'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-10-16',
 })
-
-// Store generation status for polling
-const generationStatus = new Map<string, {
-  status: 'processing' | 'repairing' | 'ready' | 'error'
-  sessionId: string
-  traceId: string
-  error?: string
-  documentId?: string
-  previewUrl?: string
-  downloadUrl?: string
-  serviceName?: string
-  repairAttempted?: boolean
-}>()
 
 /**
  * Generate document after successful payment (async processing)
@@ -264,6 +252,3 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json(status)
 }
-
-// Export generationStatus for admin/debugging
-export { generationStatus }

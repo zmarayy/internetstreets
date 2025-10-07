@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generationStatus } from '../../stripe-webhook/route'
+import { generationStatus } from '@/lib/generationStatus'
 
 /**
  * Get generation result for a session
