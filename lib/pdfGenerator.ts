@@ -20,6 +20,22 @@ export interface PlainTextDocument {
 }
 
 /**
+ * Logo mapping for all services
+ */
+const logoMap: Record<string, string> = {
+  'fbi-file': '/assets/logos/fbi-file.png',
+  'nsa-surveillance': '/assets/logos/nsa-surveillance.png',
+  'criminal-record': '/assets/logos/criminal-record.png',
+  'universal-credit': '/assets/logos/universal-credit.png',
+  'payslip': '/assets/logos/payslip.png',
+  'credit-score': '/assets/logos/credit-score.png',
+  'job-rejection': '/assets/logos/job-rejection.png',
+  'rent-reference': '/assets/logos/rent-reference.png',
+  'school-behaviour': '/assets/logos/school-behaviour.png',
+  'college-degree': '/assets/logos/college-degree.png'
+}
+
+/**
  * Render a professional document to PDF
  */
 export async function renderServiceToPdf(
@@ -45,10 +61,8 @@ export async function renderServiceToPdf(
   
   let yPos = 40
   
-  // Add minimal header with optional seal
-  if (brand && shouldShowSeal(slug)) {
-    addMinimalSeal(doc, brand, pageWidth, 25)
-  }
+  // Add service logo in top-right corner
+  addServiceLogo(doc, slug, pageWidth, pageHeight)
   
   // Add document title (clean, no fictional markers)
   doc.setFontSize(16)
@@ -78,25 +92,31 @@ export async function renderServiceToPdf(
 }
 
 /**
- * Add minimal seal/logo for appropriate documents
+ * Add service logo in top-right corner
  */
-function addMinimalSeal(doc: jsPDF, brand: GeneratedBrand, pageWidth: number, yPos: number): void {
-  const sealX = pageWidth - 50
-  const sealY = yPos
+function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageHeight: number): void {
+  const logoUrl = logoMap[slug]
   
-  // Simple circular seal
-  doc.setFillColor(240, 240, 240)
-  doc.circle(sealX, sealY, 15, 'F')
+  if (!logoUrl) {
+    console.log(`No logo found for service: ${slug}`)
+    return
+  }
   
-  // Seal border
-  doc.setDrawColor(200, 200, 200)
-  doc.circle(sealX, sealY, 15, 'S')
-  
-  // Minimal text
-  doc.setFontSize(6)
-  doc.setTextColor(100, 100, 100)
-  doc.text(brand.text, sealX, sealY - 3, { align: 'center' })
-  doc.text('OFFICIAL', sealX, sealY + 3, { align: 'center' })
+  try {
+    // Logo positioning: top-right corner
+    const logoX = pageWidth - 130  // 30px from right edge + 100px width
+    const logoY = 40                // 40px from top
+    const logoWidth = 100
+    const logoHeight = 100
+    
+    // Add logo image
+    doc.addImage(logoUrl, 'PNG', logoX, logoY, logoWidth, logoHeight)
+    
+    console.log(`Logo added for service: ${slug} at ${logoUrl}`)
+  } catch (error) {
+    console.log(`Failed to load logo for service ${slug}: ${error}`)
+    // Continue rendering without logo - graceful fallback
+  }
 }
 
 /**
@@ -338,14 +358,6 @@ function addProfessionalFooter(doc: jsPDF, pageWidth: number, pageHeight: number
     const dateStr = now.toLocaleDateString('en-GB')
     doc.text(dateStr, 20, pageHeight - 15)
   }
-}
-
-/**
- * Determine if document should show a seal
- */
-function shouldShowSeal(slug: string): boolean {
-  const sealServices = ['fbi-file', 'nsa-surveillance', 'criminal-record', 'universal-credit']
-  return sealServices.includes(slug)
 }
 
 /**
