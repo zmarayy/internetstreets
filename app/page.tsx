@@ -178,6 +178,15 @@ export default function HomePage() {
           </p>
         </div>
       </section>
+
+      {/* SEO Footer Text */}
+      <section className="py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-xs text-gray-500 mt-8 mb-6">
+            <strong>About Internet Streets:</strong> Internet Streets is the AI Black Marketplace — a creative entertainment platform where users can generate realistic, AI-powered novelty documents and parody reports. All content is fictional and made for fun.
+          </p>
+        </div>
+      </section>
       </div>
     </>
   )

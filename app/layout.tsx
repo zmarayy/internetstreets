@@ -5,12 +5,12 @@ import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://internetstreets.uk'),
-  title: 'Internet Streets - The AI Black Market | Novelty Document Generator',
-  description: 'Generate realistic FBI files, payslips, degrees, and official documents for novelty purposes. AI-powered document creation with professional templates. Entertainment only.',
-  keywords: 'AI document generator, novelty documents, FBI file generator, fake payslip, fake degree, entertainment documents, AI black market',
-  authors: [{ name: 'Internet Streets' }],
-  creator: 'Internet Streets',
-  publisher: 'Internet Streets',
+  title: 'Internet Streets – AI Black Marketplace',
+  description: 'Internet Streets is the AI Black Marketplace — generate hyper-realistic AI-powered documents, parody files, and creative novelty reports instantly. Purely for entertainment.',
+  keywords: 'Internet Streets, AI Black Marketplace, AI entertainment, parody documents, fake reports, novelty PDFs, AI tools, internetstreets.uk',
+  authors: [{ name: 'Internet Streets Entertainment' }],
+  creator: 'Internet Streets Entertainment',
+  publisher: 'Internet Streets Entertainment',
   robots: {
     index: true,
     follow: true,
@@ -21,19 +21,6 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://internetstreets.uk',
-    siteName: 'Internet Streets',
-    title: 'Internet Streets - The AI Black Market',
-    description: 'Generate realistic documents for novelty purposes. FBI files, payslips, degrees, and more. Entertainment only.',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Internet Streets - The AI Black Market',
-    description: 'Generate realistic documents for novelty purposes. Entertainment only.',
   },
   verification: {
     google: 'your-google-verification-code', // Add your actual verification code
@@ -47,6 +34,30 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* Structured Data Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Internet Streets",
+              "url": "https://internetstreets.uk",
+              "description": "Internet Streets – The AI Black Marketplace for creative, realistic, and entertaining digital document generation.",
+              "publisher": {
+                "@type": "Organization",
+                "name": "Internet Streets Entertainment"
+              },
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://internetstreets.uk/?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-grow">
