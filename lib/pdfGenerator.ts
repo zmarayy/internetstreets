@@ -20,19 +20,19 @@ export interface PlainTextDocument {
 }
 
 /**
- * Logo mapping for all services
+ * Logo mapping for all services - supports multiple formats
  */
-const logoMap: Record<string, string> = {
-  'fbi-file': '/assets/logos/fbi-file.png',
-  'nsa-surveillance': '/assets/logos/nsa-surveillance.png',
-  'criminal-record': '/assets/logos/criminal-record.png',
-  'universal-credit': '/assets/logos/universal-credit.png',
-  'payslip': '/assets/logos/payslip.png',
-  'credit-score': '/assets/logos/credit-score.png',
-  'job-rejection': '/assets/logos/job-rejection.png',
-  'rent-reference': '/assets/logos/rent-reference.png',
-  'school-behaviour': '/assets/logos/school-behaviour.png',
-  'college-degree': '/assets/logos/college-degree.png'
+const logoMap: Record<string, string[]> = {
+  'fbi-file': ['/assets/logos/fbi-file.png', '/assets/logos/fbi-file.jpg', '/assets/logos/fbi-file.webp', '/assets/logos/fbi-file.svg'],
+  'nsa-surveillance': ['/assets/logos/nsa-surveillance.png', '/assets/logos/nsa-surveillance.jpg', '/assets/logos/nsa-surveillance.webp', '/assets/logos/nsa-surveillance.svg'],
+  'criminal-record': ['/assets/logos/criminal-record.png', '/assets/logos/criminal-record.jpg', '/assets/logos/criminal-record.webp', '/assets/logos/criminal-record.svg'],
+  'universal-credit': ['/assets/logos/universal-credit.png', '/assets/logos/universal-credit.jpg', '/assets/logos/universal-credit.webp', '/assets/logos/universal-credit.svg'],
+  'payslip': ['/assets/logos/payslip.png', '/assets/logos/payslip.jpg', '/assets/logos/payslip.webp', '/assets/logos/payslip.svg'],
+  'credit-score': ['/assets/logos/credit-score.png', '/assets/logos/credit-score.jpg', '/assets/logos/credit-score.webp', '/assets/logos/credit-score.svg'],
+  'job-rejection': ['/assets/logos/job-rejection.png', '/assets/logos/job-rejection.jpg', '/assets/logos/job-rejection.webp', '/assets/logos/job-rejection.svg'],
+  'rent-reference': ['/assets/logos/rent-reference.png', '/assets/logos/rent-reference.jpg', '/assets/logos/rent-reference.webp', '/assets/logos/rent-reference.svg'],
+  'school-behaviour': ['/assets/logos/school-behaviour.png', '/assets/logos/school-behaviour.jpg', '/assets/logos/school-behaviour.webp', '/assets/logos/school-behaviour.svg'],
+  'college-degree': ['/assets/logos/college-degree.png', '/assets/logos/college-degree.jpg', '/assets/logos/college-degree.webp', '/assets/logos/college-degree.svg']
 }
 
 /**
@@ -92,29 +92,45 @@ export async function renderServiceToPdf(
 }
 
 /**
- * Add service logo in top-right corner
+ * Add service logo in top-right corner - tries multiple formats
  */
 function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageHeight: number): void {
-  const logoUrl = logoMap[slug]
+  const logoUrls = logoMap[slug]
   
-  if (!logoUrl) {
+  if (!logoUrls || logoUrls.length === 0) {
     console.log(`No logo found for service: ${slug}`)
     return
   }
   
-  try {
-    // Logo positioning: top-right corner
-    const logoX = pageWidth - 130  // 30px from right edge + 100px width
-    const logoY = 40                // 40px from top
-    const logoWidth = 100
-    const logoHeight = 100
-    
-    // Add logo image
-    doc.addImage(logoUrl, 'PNG', logoX, logoY, logoWidth, logoHeight)
-    
-    console.log(`Logo added for service: ${slug} at ${logoUrl}`)
-  } catch (error) {
-    console.log(`Failed to load logo for service ${slug}: ${error}`)
+  let logoAdded = false
+  
+  // Try each format until one works
+  for (const logoUrl of logoUrls) {
+    try {
+      // Logo positioning: top-right corner
+      const logoX = pageWidth - 130  // 30px from right edge + 100px width
+      const logoY = 40                // 40px from top
+      const logoWidth = 100
+      const logoHeight = 100
+      
+      // Determine format from URL
+      const format = logoUrl.split('.').pop()?.toUpperCase() || 'PNG'
+      
+      // Add logo image
+      doc.addImage(logoUrl, format as any, logoX, logoY, logoWidth, logoHeight)
+      
+      console.log(`Logo added for service: ${slug} at ${logoUrl} (${format})`)
+      logoAdded = true
+      break // Success, stop trying other formats
+      
+    } catch (error) {
+      console.log(`Failed to load logo ${logoUrl} for service ${slug}: ${error}`)
+      // Continue to next format
+    }
+  }
+  
+  if (!logoAdded) {
+    console.log(`No working logo found for service: ${slug}`)
     // Continue rendering without logo - graceful fallback
   }
 }
