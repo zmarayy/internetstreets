@@ -1,6 +1,6 @@
 /**
  * Professional PDF Generator for Internet Streets
- * Fixed structure with trusted inputs and clean rendering
+ * Refined typography and layout for realism and polish
  */
 
 import jsPDF from 'jspdf'
@@ -36,6 +36,28 @@ const logoMap: Record<string, string> = {
 }
 
 /**
+ * Typographic System
+ */
+const typography = {
+  title: { size: 14, weight: 'bold' as const, align: 'center' as const },
+  sectionHeader: { size: 11, weight: 'bold' as const, spacingBefore: 10, spacingAfter: 4 },
+  body: { size: 10, weight: 'normal' as const, lineHeight: 1.3, align: 'justify' as const },
+  monospace: { size: 9, weight: 'normal' as const, font: 'Courier' as const },
+  footer: { size: 9, weight: 'normal' as const }
+}
+
+/**
+ * Page Layout
+ */
+const layout = {
+  marginTop: 25,    // 25mm top
+  marginSides: 20,  // 20mm sides
+  marginBottom: 25, // 25mm bottom
+  sectionSpacing: 10, // 10px before new section
+  footerPadding: 15   // 15px from bottom
+}
+
+/**
  * Render a professional document to PDF
  */
 export async function renderServiceToPdf(
@@ -46,20 +68,8 @@ export async function renderServiceToPdf(
 ): Promise<Buffer> {
   const doc = new jsPDF()
   
-  // Consistent typography and margins
-  doc.setFont('Helvetica', 'normal')
-  doc.setFontSize(10)
-  doc.setLineHeightFactor(1.25)
-  
   const pageHeight = doc.internal.pageSize.height
   const pageWidth = doc.internal.pageSize.width
-  const marginX = 20
-  const marginY = 25
-  const maxW = pageWidth - marginX * 2
-  
-  // Professional background
-  doc.setFillColor(248, 248, 248)
-  doc.rect(0, 0, pageWidth, pageHeight, 'F')
   
   // Clean and structure text based on service type
   let cleanedText: string
@@ -80,9 +90,12 @@ export async function renderServiceToPdf(
     cleanedText = cleanGeneric(document.text)
   }
   
-  let yPos = marginY + 15
+  // Normalize line breaks before rendering
+  cleanedText = cleanedText.replace(/\n{3,}/g, '\n\n')
   
-  // Add service logo (first page only, small and top-right)
+  let yPos = layout.marginTop + 15
+  
+  // Add service logo (first page only)
   await addLogoFirstPage(doc, slug, pageWidth)
   
   // Add document header based on service type
@@ -92,8 +105,13 @@ export async function renderServiceToPdf(
     yPos = addGenericHeader(doc, slug, pageWidth, yPos)
   }
   
+  // Add visual separation line under title
+  doc.setDrawColor(210)
+  doc.line(layout.marginSides, yPos - 5, pageWidth - layout.marginSides, yPos - 5)
+  yPos += 10
+  
   // Render main content with proper paragraph handling
-  yPos = renderContent(doc, cleanedText, yPos, pageWidth, pageHeight, marginX, marginY, maxW)
+  yPos = renderContent(doc, cleanedText, yPos, pageWidth, pageHeight)
   
   // Add professional footer to all pages (AFTER content is laid out)
   renderFooter(doc, pageWidth, pageHeight)
@@ -105,22 +123,17 @@ export async function renderServiceToPdf(
  * Add FBI-specific header with trusted subject block
  */
 function addFBIHeader(doc: jsPDF, inputs: FBIInputs, pageWidth: number, yPos: number): number {
-  // Title - 12pt bold uppercase
+  // Title - 14pt bold uppercase, centered
   doc.setFont('Helvetica', 'bold')
-  doc.setFontSize(12)
-  doc.text('FEDERAL BUREAU OF INVESTIGATION — INTELLIGENCE DOSSIER', 20, yPos)
-  yPos += 8
-  
-  // Divider line
-  doc.setDrawColor(200)
-  doc.line(20, yPos, pageWidth - 20, yPos)
-  yPos += 10
+  doc.setFontSize(typography.title.size)
+  doc.text('FEDERAL BUREAU OF INVESTIGATION — INTELLIGENCE DOSSIER', pageWidth / 2, yPos, { align: 'center' })
+  yPos += 15
   
   // Case ref and date - 10pt normal
   doc.setFont('Helvetica', 'normal')
-  doc.setFontSize(10)
+  doc.setFontSize(typography.body.size)
   const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
-  doc.text(`CASE REF: ${generateCaseRef('FBI')}    DATE: ${today}`, 20, yPos)
+  doc.text(`CASE REF: ${generateCaseRef('FBI')}    DATE: ${today}`, layout.marginSides, yPos)
   yPos += 15
   
   // Subject info (trusted inputs only, no AI parsing)
@@ -139,11 +152,11 @@ function addFBIHeader(doc: jsPDF, inputs: FBIInputs, pageWidth: number, yPos: nu
   ]
   
   subjLines.forEach(line => {
-    doc.text(line, 20, yPos)
+    doc.text(line, layout.marginSides, yPos)
     yPos += 6
   })
   
-  yPos += 10
+  yPos += layout.sectionSpacing
   return yPos
 }
 
@@ -165,22 +178,17 @@ function addGenericHeader(doc: jsPDF, slug: string, pageWidth: number, yPos: num
   
   const title = serviceNames[slug] || 'DOCUMENT'
   
-  // Title - 12pt bold uppercase
+  // Title - 14pt bold uppercase, centered
   doc.setFont('Helvetica', 'bold')
-  doc.setFontSize(12)
-  doc.text(title, 20, yPos)
-  yPos += 8
-  
-  // Divider line
-  doc.setDrawColor(200)
-  doc.line(20, yPos, pageWidth - 20, yPos)
-  yPos += 15
+  doc.setFontSize(typography.title.size)
+  doc.text(title, pageWidth / 2, yPos, { align: 'center' })
+  yPos += 20
   
   return yPos
 }
 
 /**
- * Add logo first page only - small and top-right
+ * Add logo first page only - 38px width, positioned top-right
  */
 async function addLogoFirstPage(doc: jsPDF, slug: string, pageWidth: number): Promise<void> {
   const logoUrl = logoMap[slug]
@@ -194,14 +202,14 @@ async function addLogoFirstPage(doc: jsPDF, slug: string, pageWidth: number): Pr
     // Load logo from absolute URL (Node.js compatible)
     const logoDataUrl = await loadImageBase64(logoUrl, 'image/png')
     
-    // Small logo positioning: top-right corner
-    const logoW = 42
-    const logoH = 42
-    const logoX = pageWidth - 20 - logoW  // 20px right margin
-    const logoY = 20                      // 20px top margin
+    // Logo positioning: top-right corner, 38px width
+    const logoWidth = 38
+    const logoHeight = 38  // Auto height, maintain aspect ratio
+    const logoX = pageWidth - 60  // X = pageWidth - 60
+    const logoY = 22             // Y = 22
     
     // Add logo image (PNG format)
-    doc.addImage(logoDataUrl, 'PNG', logoX, logoY, logoW, logoH)
+    doc.addImage(logoDataUrl, 'PNG', logoX, logoY, logoWidth, logoHeight)
     
     console.log(`✅ Logo successfully added for service: ${slug} (first page only)`)
   } catch (error) {
@@ -223,10 +231,7 @@ function renderContent(
   content: string, 
   startY: number, 
   pageWidth: number, 
-  pageHeight: number,
-  marginX: number,
-  marginY: number,
-  maxW: number
+  pageHeight: number
 ): number {
   const lines = content.split('\n')
   let yPos = startY
@@ -240,12 +245,18 @@ function renderContent(
     
     // Check for section headers
     if (isSectionHeader(line)) {
-      yPos = drawSectionHeader(doc, line, yPos, pageWidth, pageHeight, marginX, marginY)
+      yPos = drawSectionHeader(doc, line, yPos, pageWidth, pageHeight)
+      continue
+    }
+    
+    // Check for table/monospace content
+    if (isTableOrMonospace(line)) {
+      yPos = drawMonospaceLine(doc, line, yPos, pageWidth, pageHeight)
       continue
     }
     
     // Handle regular text as paragraphs
-    yPos = drawParagraph(doc, line, yPos, pageWidth, pageHeight, marginX, marginY, maxW)
+    yPos = drawParagraph(doc, line, yPos, pageWidth, pageHeight)
   }
   
   return yPos
@@ -259,52 +270,88 @@ function drawSectionHeader(
   title: string, 
   yPos: number, 
   pageWidth: number, 
-  pageHeight: number,
-  marginX: number,
-  marginY: number
+  pageHeight: number
 ): number {
   // Check for new page
-  if (yPos > pageHeight - marginY - 30) {
+  if (yPos > pageHeight - layout.marginBottom - 30) {
     doc.addPage()
-    yPos = marginY
+    yPos = layout.marginTop
   }
   
-  yPos += 10
+  yPos += typography.sectionHeader.spacingBefore
   doc.setFont('Helvetica', 'bold')
-  doc.setFontSize(11)
-  doc.text(title.toUpperCase(), marginX, yPos)
-  yPos += 8
+  doc.setFontSize(typography.sectionHeader.size)
+  doc.text(title.toUpperCase(), layout.marginSides, yPos)
+  yPos += typography.sectionHeader.spacingAfter
   doc.setFont('Helvetica', 'normal')
-  doc.setFontSize(10)
+  doc.setFontSize(typography.body.size)
   
   return yPos
 }
 
 /**
- * Draw paragraph with proper wrapping - 10pt normal
+ * Draw paragraph with justified alignment - 10pt normal
  */
 function drawParagraph(
   doc: jsPDF, 
   text: string, 
   yPos: number, 
   pageWidth: number, 
-  pageHeight: number,
-  marginX: number,
-  marginY: number,
-  maxW: number
+  pageHeight: number
 ): number {
+  const maxW = pageWidth - layout.marginSides * 2
   const lines = doc.splitTextToSize(text, maxW)
   
   for (const line of lines) {
     // Check for new page
-    if (yPos > pageHeight - marginY - 16) {
+    if (yPos > pageHeight - layout.marginBottom - layout.footerPadding) {
       doc.addPage()
-      yPos = marginY
+      yPos = layout.marginTop
     }
     
-    doc.text(line, marginX, yPos)
-    yPos += 5
+    doc.text(line, layout.marginSides, yPos, { align: 'justify' })
+    yPos += typography.body.lineHeight * 4 // Convert line height to points
   }
+  
+  return yPos
+}
+
+/**
+ * Draw monospace line for tables/logs - 9pt Courier
+ */
+function drawMonospaceLine(
+  doc: jsPDF, 
+  text: string, 
+  yPos: number, 
+  pageWidth: number, 
+  pageHeight: number
+): number {
+  // Check for new page
+  if (yPos > pageHeight - layout.marginBottom - layout.footerPadding) {
+    doc.addPage()
+    yPos = layout.marginTop
+  }
+  
+  doc.setFont('Courier', 'normal')
+  doc.setFontSize(typography.monospace.size)
+  
+  const maxW = pageWidth - layout.marginSides * 2
+  const lines = doc.splitTextToSize(text, maxW)
+  
+  for (const line of lines) {
+    // Check for new page
+    if (yPos > pageHeight - layout.marginBottom - layout.footerPadding) {
+      doc.addPage()
+      yPos = layout.marginTop
+    }
+    
+    doc.text(line, layout.marginSides, yPos)
+    yPos += 4
+  }
+  
+  // Reset to body font
+  doc.setFont('Helvetica', 'normal')
+  doc.setFontSize(typography.body.size)
   
   return yPos
 }
@@ -332,6 +379,16 @@ function isSectionHeader(line: string): boolean {
 }
 
 /**
+ * Check if line is table or monospace content
+ */
+function isTableOrMonospace(line: string): boolean {
+  return line.startsWith('|') || 
+         /^\d+\.\s/.test(line) || 
+         /^\s*[-•]\s/.test(line) ||
+         /^\s*\d{4}-\d{2}-\d{2}/.test(line) // Date patterns
+}
+
+/**
  * Render footer after content is laid out
  */
 function renderFooter(doc: jsPDF, pageWidth: number, pageHeight: number): void {
@@ -342,15 +399,21 @@ function renderFooter(doc: jsPDF, pageWidth: number, pageHeight: number): void {
     const w = pageWidth
     const h = pageHeight
     
+    // Add visual separation line above footer on page 1
+    if (i === 1) {
+      doc.setDrawColor(210)
+      doc.line(layout.marginSides, h - layout.footerPadding - 5, w - layout.marginSides, h - layout.footerPadding - 5)
+    }
+    
     // Timestamp (left), disclaimer (center), page number (right)
     const ts = new Date().toLocaleString('en-GB', { hour12: false })
     doc.setFont('Helvetica', 'normal')
-    doc.setFontSize(9)
+    doc.setFontSize(typography.footer.size)
     doc.setTextColor(85)
     
-    doc.text(`Generated ${ts}`, 20, h - 12)
-    doc.text('Internet Streets Entertainment – Not a Real Document.', w / 2, h - 12, { align: 'center' })
-    doc.text(`Page ${i} of ${pages}`, w - 20, h - 12, { align: 'right' })
+    doc.text(`Generated ${ts}`, layout.marginSides, h - layout.footerPadding)
+    doc.text('Internet Streets Entertainment – Not a Real Document.', w / 2, h - layout.footerPadding, { align: 'center' })
+    doc.text(`Page ${i} of ${pages}`, w - layout.marginSides, h - layout.footerPadding, { align: 'right' })
   }
 }
 

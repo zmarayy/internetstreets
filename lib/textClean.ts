@@ -15,15 +15,15 @@ export interface CleanResult {
 }
 
 /**
- * Sanitize single line input to prevent body text absorption
+ * Sanitize single line input to prevent field contamination
  */
 export function sanitizeSingleLine(v?: string): string {
   if (!v) return ''
-  return v.replace(/\r?\n/g, ' ').trim().slice(0, 80)
+  return v.replace(/\r?\n/g, ' ').replace(/[^\w\s.,'-]/g, '').trim() || ''
 }
 
 /**
- * Clean body text - remove duplicate headers and subject blocks
+ * Clean body text - remove duplicate headers, subject blocks, and empty placeholders
  */
 export function cleanBody(text: string): string {
   let t = text
@@ -37,6 +37,10 @@ export function cleanBody(text: string): string {
   t = t.replace(/^FEDERAL BUREAU OF INVESTIGATION.*\n/gi, '')
   t = t.replace(/^Subject Information[\s\S]*?(?=^\S|\Z)/gmi, '')
   t = t.replace(/^Subject:\s.*$/gmi, '')
+  
+  // Remove empty placeholder lines
+  t = t.replace(/^(Name|DOB|City|Occupation):\s*$/gmi, '')
+  t = t.replace(/^(Name|Date of Birth|City|Occupation):\s*$/gmi, '')
 
   // Normalize section headers we expect
   t = t.replace(/^\s*Executive Summary\s*$/gmi, 'EXECUTIVE SUMMARY')
@@ -48,7 +52,7 @@ export function cleanBody(text: string): string {
   // Fix double list markers like "1.  - "
   t = t.replace(/^(\d+)\.\s*-\s+/gmi, '$1. ')
 
-  // Collapse triples
+  // Normalize line breaks and compress excessive whitespace
   t = t.replace(/\n{3,}/g, '\n\n')
 
   return t
