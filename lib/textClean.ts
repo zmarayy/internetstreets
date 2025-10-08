@@ -15,43 +15,53 @@ export interface CleanResult {
 }
 
 /**
+ * Sanitize single line input to prevent body text absorption
+ */
+export function sanitizeSingleLine(v?: string): string {
+  if (!v) return ''
+  return v.replace(/\r?\n/g, ' ').trim().slice(0, 80)
+}
+
+/**
+ * Clean body text - remove duplicate headers and subject blocks
+ */
+export function cleanBody(text: string): string {
+  let t = text
+    .replace(/\*\*/g, '')                  // no markdown bold
+    .replace(/^-{3,}$/gm, '')              // no hr lines
+    .replace(/Internet Streets.*Page \d+ of \d+/gi, '') // strip leaked footers
+    .replace(/\[(?:Insert )?Current Date\]/gi, '')      // strip placeholders
+    .trim()
+
+  // Remove repeated top banners or subject blocks from AI text
+  t = t.replace(/^FEDERAL BUREAU OF INVESTIGATION.*\n/gi, '')
+  t = t.replace(/^Subject Information[\s\S]*?(?=^\S|\Z)/gmi, '')
+  t = t.replace(/^Subject:\s.*$/gmi, '')
+
+  // Normalize section headers we expect
+  t = t.replace(/^\s*Executive Summary\s*$/gmi, 'EXECUTIVE SUMMARY')
+       .replace(/^\s*Key Findings\s*$/gmi, 'KEY FINDINGS')
+       .replace(/^\s*Surveillance Activity Log\s*$/gmi, 'SURVEILLANCE ACTIVITY LOG')
+       .replace(/^\s*Analyst Notes?\s*$/gmi, 'ANALYST NOTES')
+       .replace(/^\s*Threat Assessment.*$/gmi, 'THREAT ASSESSMENT & RECOMMENDATION')
+
+  // Fix double list markers like "1.  - "
+  t = t.replace(/^(\d+)\.\s*-\s+/gmi, '$1. ')
+
+  // Collapse triples
+  t = t.replace(/\n{3,}/g, '\n\n')
+
+  return t
+}
+
+/**
  * Clean and structure FBI text with deduplication
  */
 export function cleanAndStructureFBI(text: string, inputs: FBIInputs): CleanResult {
-  let t = text
-    // Strip markdown & separators
-    .replace(/\*\*/g, '')
-    .replace(/^-{3,}$/gm, '')
-    
-    // Kill any inline footer artifacts that crept into body
-    .replace(/Internet Streets Entertainment.*Page \d+ of \d+/gi, '')
-    
-    // Remove placeholders
-    .replace(/\[(?:Insert )?Current Date\]/gi, '')
-    .replace(/\[Analyst Name\]/gi, 'Analyst Unit 42')
-    .replace(/\[.*?\]/g, '') // Remove any remaining bracketed placeholders
-    
-    // Collapse duplicated standalone labels (e.g. "Date of Birth" on its own)
-    .replace(/^(Name|Date of Birth|City|Occupation)\s*$/gmi, '')
-    
-    // Collapse multiple blank lines
-    .replace(/\n{3,}/g, '\n\n')
-    .trim()
-
-  // Ensure we render the subject block from trusted inputs once, not from AI text.
-  // Remove any repeated "Subject:" or "Subject Information" blocks in AI body:
-  t = t.replace(/^Subject Information[\s\S]*?(?=^\S|\Z)/gmi, '')
-       .replace(/^Subject:\s.*$/gmi, '')
-
-  // Normalize common section headers to consistent forms we will detect:
-  t = t
-    .replace(/^\s*Executive Summary\s*$/gmi, 'EXECUTIVE SUMMARY')
-    .replace(/^\s*Key Findings\s*$/gmi, 'KEY FINDINGS')
-    .replace(/^\s*Surveillance Activity Log\s*$/gmi, 'SURVEILLANCE ACTIVITY LOG')
-    .replace(/^\s*Analyst Notes?\s*$/gmi, 'ANALYST NOTES')
-    .replace(/^\s*Threat Assessment.*$/gmi, 'THREAT ASSESSMENT & RECOMMENDATION')
-
-  return { body: t, inputs }
+  // Clean the body text first
+  const cleanedBody = cleanBody(text)
+  
+  return { body: cleanedBody, inputs }
 }
 
 /**

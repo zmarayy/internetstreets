@@ -1,12 +1,12 @@
 /**
  * Professional PDF Generator for Internet Streets
- * Clean, structured document generation with proper footers
+ * Fixed structure with trusted inputs and clean rendering
  */
 
 import jsPDF from 'jspdf'
 import { GeneratedBrand } from '@/lib/brand'
 import { SanitizedInputs } from '@/lib/promptBuilder'
-import { cleanAndStructureFBI, cleanGeneric, generateCaseRef, loadImageBase64, FBIInputs } from '@/lib/textClean'
+import { cleanAndStructureFBI, cleanGeneric, generateCaseRef, loadImageBase64, sanitizeSingleLine, FBIInputs } from '@/lib/textClean'
 
 export interface PlainTextDocument {
   text: string
@@ -36,32 +36,6 @@ const logoMap: Record<string, string> = {
 }
 
 /**
- * Professional color scheme
- */
-const colors = {
-  background: [248, 248, 248] as [number, number, number], // #f8f8f8
-  text: [0, 0, 0] as [number, number, number], // #000
-  textSecondary: [60, 60, 60] as [number, number, number], // #3c3c3c
-  textMuted: [120, 120, 120] as [number, number, number], // #787878
-  border: [170, 170, 170] as [number, number, number], // #aaaaaa
-  divider: [204, 204, 204] as [number, number, number], // #ccc
-  footer: [85, 85, 85] as [number, number, number] // #555
-}
-
-/**
- * Typography settings - Optimized for page count
- */
-const typography = {
-  title: { size: 12, weight: 'bold' as const },
-  sectionHeader: { size: 11, weight: 'bold' as const },
-  body: { size: 10, weight: 'normal' as const },
-  small: { size: 9, weight: 'normal' as const },
-  lineHeight: 1.25,
-  sectionSpacing: 8,
-  headerMargin: 5
-}
-
-/**
  * Render a professional document to PDF
  */
 export async function renderServiceToPdf(
@@ -72,7 +46,7 @@ export async function renderServiceToPdf(
 ): Promise<Buffer> {
   const doc = new jsPDF()
   
-  // Professional styling - Helvetica with tighter defaults
+  // Consistent typography and margins
   doc.setFont('Helvetica', 'normal')
   doc.setFontSize(10)
   doc.setLineHeightFactor(1.25)
@@ -81,9 +55,10 @@ export async function renderServiceToPdf(
   const pageWidth = doc.internal.pageSize.width
   const marginX = 20
   const marginY = 25
+  const maxW = pageWidth - marginX * 2
   
   // Professional background
-  doc.setFillColor(colors.background[0], colors.background[1], colors.background[2])
+  doc.setFillColor(248, 248, 248)
   doc.rect(0, 0, pageWidth, pageHeight, 'F')
   
   // Clean and structure text based on service type
@@ -93,10 +68,10 @@ export async function renderServiceToPdf(
   if (slug === 'fbi-file' && document.metadata) {
     // FBI-specific cleaning with inputs
     inputs = {
-      fullName: document.metadata.name || 'Unknown Subject',
-      dateOfBirth: document.metadata.dob || 'Unknown',
-      city: document.metadata.city || 'Unknown',
-      occupation: document.metadata.companyName || 'Unknown'
+      fullName: sanitizeSingleLine(document.metadata.name),
+      dateOfBirth: sanitizeSingleLine(document.metadata.dob),
+      city: sanitizeSingleLine(document.metadata.city),
+      occupation: sanitizeSingleLine(document.metadata.companyName)
     }
     const result = cleanAndStructureFBI(document.text, inputs)
     cleanedText = result.body
@@ -107,8 +82,8 @@ export async function renderServiceToPdf(
   
   let yPos = marginY + 15
   
-  // Add service logo (first page only)
-  await addServiceLogo(doc, slug, pageWidth, pageHeight)
+  // Add service logo (first page only, small and top-right)
+  await addLogoFirstPage(doc, slug, pageWidth)
   
   // Add document header based on service type
   if (slug === 'fbi-file' && inputs) {
@@ -118,19 +93,19 @@ export async function renderServiceToPdf(
   }
   
   // Render main content with proper paragraph handling
-  yPos = renderContent(doc, cleanedText, yPos, pageWidth, pageHeight, marginX, marginY)
+  yPos = renderContent(doc, cleanedText, yPos, pageWidth, pageHeight, marginX, marginY, maxW)
   
   // Add professional footer to all pages (AFTER content is laid out)
-  addProfessionalFooter(doc, pageWidth, pageHeight, marginX)
+  renderFooter(doc, pageWidth, pageHeight)
   
   return Buffer.from(doc.output('arraybuffer'))
 }
 
 /**
- * Add FBI-specific header with subject block
+ * Add FBI-specific header with trusted subject block
  */
 function addFBIHeader(doc: jsPDF, inputs: FBIInputs, pageWidth: number, yPos: number): number {
-  // Title + case ref line
+  // Title - 12pt bold uppercase
   doc.setFont('Helvetica', 'bold')
   doc.setFontSize(12)
   doc.text('FEDERAL BUREAU OF INVESTIGATION — INTELLIGENCE DOSSIER', 20, yPos)
@@ -141,19 +116,26 @@ function addFBIHeader(doc: jsPDF, inputs: FBIInputs, pageWidth: number, yPos: nu
   doc.line(20, yPos, pageWidth - 20, yPos)
   yPos += 10
   
-  // Case ref and date
+  // Case ref and date - 10pt normal
   doc.setFont('Helvetica', 'normal')
   doc.setFontSize(10)
   const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
   doc.text(`CASE REF: ${generateCaseRef('FBI')}    DATE: ${today}`, 20, yPos)
   yPos += 15
   
-  // Subject info (deduped, from inputs)
+  // Subject info (trusted inputs only, no AI parsing)
+  const subj = {
+    name: sanitizeSingleLine(inputs.fullName),
+    dob: sanitizeSingleLine(inputs.dateOfBirth),
+    city: sanitizeSingleLine(inputs.city),
+    occupation: sanitizeSingleLine(inputs.occupation)
+  }
+  
   const subjLines = [
-    `Name: ${inputs.fullName}`,
-    `Date of Birth: ${inputs.dateOfBirth}`,
-    `City: ${inputs.city}`,
-    `Occupation: ${inputs.occupation}`
+    `Name: ${subj.name}`,
+    `Date of Birth: ${subj.dob}`,
+    `City: ${subj.city}`,
+    `Occupation: ${subj.occupation}`
   ]
   
   subjLines.forEach(line => {
@@ -183,6 +165,7 @@ function addGenericHeader(doc: jsPDF, slug: string, pageWidth: number, yPos: num
   
   const title = serviceNames[slug] || 'DOCUMENT'
   
+  // Title - 12pt bold uppercase
   doc.setFont('Helvetica', 'bold')
   doc.setFontSize(12)
   doc.text(title, 20, yPos)
@@ -197,9 +180,9 @@ function addGenericHeader(doc: jsPDF, slug: string, pageWidth: number, yPos: num
 }
 
 /**
- * Add service logo (first page only)
+ * Add logo first page only - small and top-right
  */
-async function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageHeight: number): Promise<void> {
+async function addLogoFirstPage(doc: jsPDF, slug: string, pageWidth: number): Promise<void> {
   const logoUrl = logoMap[slug]
   
   if (!logoUrl) {
@@ -211,23 +194,23 @@ async function addServiceLogo(doc: jsPDF, slug: string, pageWidth: number, pageH
     // Load logo from absolute URL (Node.js compatible)
     const logoDataUrl = await loadImageBase64(logoUrl, 'image/png')
     
-    // Logo positioning: top-right corner
-    const logoX = pageWidth - 130  // ~20mm from right edge
-    const logoY = 28               // ~20mm from top edge
-    const logoWidth = 90           // Realistic size
-    const logoHeight = 90          // Maintain aspect ratio
+    // Small logo positioning: top-right corner
+    const logoW = 42
+    const logoH = 42
+    const logoX = pageWidth - 20 - logoW  // 20px right margin
+    const logoY = 20                      // 20px top margin
     
     // Add logo image (PNG format)
-    doc.addImage(logoDataUrl, 'PNG', logoX, logoY, logoWidth, logoHeight)
+    doc.addImage(logoDataUrl, 'PNG', logoX, logoY, logoW, logoH)
     
-    console.log(`✅ Logo successfully added for service: ${slug}`)
+    console.log(`✅ Logo successfully added for service: ${slug} (first page only)`)
   } catch (error) {
     console.warn(`⚠️ Failed to load logo for service ${slug}: ${error}`)
     // Add a placeholder text instead of failing completely
     doc.setFontSize(8)
     doc.setTextColor(150, 150, 150)
     doc.setFont('Helvetica', 'normal')
-    doc.text(`[${slug.toUpperCase()}]`, pageWidth - 30, 35)
+    doc.text(`[${slug.toUpperCase()}]`, pageWidth - 30, 25)
     console.log(`📝 Added text placeholder for missing logo: ${slug}`)
   }
 }
@@ -242,7 +225,8 @@ function renderContent(
   pageWidth: number, 
   pageHeight: number,
   marginX: number,
-  marginY: number
+  marginY: number,
+  maxW: number
 ): number {
   const lines = content.split('\n')
   let yPos = startY
@@ -261,14 +245,14 @@ function renderContent(
     }
     
     // Handle regular text as paragraphs
-    yPos = drawParagraph(doc, line, yPos, pageWidth, pageHeight, marginX, marginY)
+    yPos = drawParagraph(doc, line, yPos, pageWidth, pageHeight, marginX, marginY, maxW)
   }
   
   return yPos
 }
 
 /**
- * Draw section header
+ * Draw section header - 11pt bold uppercase
  */
 function drawSectionHeader(
   doc: jsPDF, 
@@ -297,7 +281,7 @@ function drawSectionHeader(
 }
 
 /**
- * Draw paragraph with proper wrapping
+ * Draw paragraph with proper wrapping - 10pt normal
  */
 function drawParagraph(
   doc: jsPDF, 
@@ -306,14 +290,14 @@ function drawParagraph(
   pageWidth: number, 
   pageHeight: number,
   marginX: number,
-  marginY: number
+  marginY: number,
+  maxW: number
 ): number {
-  const maxW = pageWidth - marginX * 2
   const lines = doc.splitTextToSize(text, maxW)
   
   for (const line of lines) {
     // Check for new page
-    if (yPos > pageHeight - marginY - 18) {
+    if (yPos > pageHeight - marginY - 16) {
       doc.addPage()
       yPos = marginY
     }
@@ -348,25 +332,25 @@ function isSectionHeader(line: string): boolean {
 }
 
 /**
- * Add professional footer to all pages (AFTER content is laid out)
+ * Render footer after content is laid out
  */
-function addProfessionalFooter(doc: jsPDF, pageWidth: number, pageHeight: number, marginX: number): void {
-  const pageCount = doc.getNumberOfPages()
+function renderFooter(doc: jsPDF, pageWidth: number, pageHeight: number): void {
+  const pages = doc.getNumberOfPages()
   
-  for (let i = 1; i <= pageCount; i++) {
+  for (let i = 1; i <= pages; i++) {
     doc.setPage(i)
     const w = pageWidth
     const h = pageHeight
     
     // Timestamp (left), disclaimer (center), page number (right)
     const ts = new Date().toLocaleString('en-GB', { hour12: false })
-    doc.setFontSize(9)
-    doc.setTextColor(colors.footer[0], colors.footer[1], colors.footer[2])
     doc.setFont('Helvetica', 'normal')
+    doc.setFontSize(9)
+    doc.setTextColor(85)
     
-    doc.text(`Generated ${ts}`, marginX, h - 12)
+    doc.text(`Generated ${ts}`, 20, h - 12)
     doc.text('Internet Streets Entertainment – Not a Real Document.', w / 2, h - 12, { align: 'center' })
-    doc.text(`Page ${i} of ${pageCount}`, w - marginX, h - 12, { align: 'right' })
+    doc.text(`Page ${i} of ${pages}`, w - 20, h - 12, { align: 'right' })
   }
 }
 
