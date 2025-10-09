@@ -67,7 +67,7 @@ async function processDocumentGeneration(
     }
 
     // Call OpenAI with retry logic (reduced retries for faster failure)
-    console.log(`[${traceId}] Starting plain text generation for ${slug}`)
+    console.log(`[${traceId}] 🔄 Starting OpenAI generation for ${slug}`)
     const generationResult = await validateAndGenerateText(
       promptResult.prompt!,
       promptResult.metadata!.temperature,
@@ -92,16 +92,20 @@ async function processDocumentGeneration(
       throw new Error(`Generation failed: ${generationResult.error}`)
     }
 
+    console.log(`[${traceId}] ✅ OpenAI generation successful! Response length: ${generationResult.data?.length || 0} characters`)
     logger.generationStep('Plain text generated and validated', traceId, GenerationStep.JSON_VALIDATED, sessionId, slug)
 
     // Generate brand/seal
+    console.log(`[${traceId}] 🎨 Generating brand/seal for ${slug}`)
     const brand = generateServiceBrand(slug, inputs.companyName || inputs.fullName)
     
     // Extract basic metadata from the text
+    console.log(`[${traceId}] 📊 Extracting metadata from generated text`)
     const { extractBasicFields } = await import('@/lib/promptBuilder')
     const metadata = extractBasicFields(generationResult.data!)
 
     // Render PDF from plain text
+    console.log(`[${traceId}] 📄 Starting PDF rendering...`)
     const pdfBuffer = await renderServiceToPdf(
       slug,
       { text: generationResult.data!, metadata },
@@ -109,10 +113,13 @@ async function processDocumentGeneration(
       promptResult.sanitizedInputs
     )
 
+    console.log(`[${traceId}] ✅ PDF rendering completed! Size: ${pdfBuffer.length} bytes`)
     logger.generationStep(`PDF rendered (${pdfBuffer.length} bytes)`, traceId, GenerationStep.PDF_RENDERED, sessionId, slug)
 
     // Convert PDF to base64 for direct return
+    console.log(`[${traceId}] 🔄 Converting PDF to base64...`)
     const pdfBase64 = pdfBuffer.toString('base64')
+    console.log(`[${traceId}] ✅ Base64 conversion completed! Length: ${pdfBase64.length} characters`)
 
     logger.generationSuccess(traceId, sessionId, slug, sessionId)
 
@@ -125,10 +132,13 @@ async function processDocumentGeneration(
       serviceName: metadata.name || slug
     })
 
+    console.log(`[${traceId}] 🎉 Document generation COMPLETED successfully!`)
     return { success: true, pdfBase64 }
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    console.log(`[${traceId}] 💥 ERROR in document generation: ${errorMessage}`)
+    console.log(`[${traceId}] 🔍 Error stack:`, error instanceof Error ? error.stack : 'No stack trace')
     
     logger.generationFailed(
       `Document generation failed: ${errorMessage}`,
@@ -147,6 +157,7 @@ async function processDocumentGeneration(
       error: errorMessage
     })
 
+    console.log(`[${traceId}] ❌ Generation status set to ERROR`)
     return { success: false, error: errorMessage }
   }
 }
@@ -154,6 +165,7 @@ async function processDocumentGeneration(
 export async function POST(request: NextRequest) {
   console.log('🔔 Webhook received - processing request')
   const body = await request.text()
+  console.log(`📊 Request body length: ${body.length} characters`)
   const signature = request.headers.get('stripe-signature')!
 
   let event: Stripe.Event
@@ -164,14 +176,16 @@ export async function POST(request: NextRequest) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     )
+    console.log(`✅ Webhook signature verified`)
     console.log(`🔔 Webhook event type: ${event.type}`)
   } catch (err) {
-    console.error('Webhook signature verification failed:', err)
+    console.error('❌ Webhook signature verification failed:', err)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
+    console.log(`💳 Payment completed for session ${session.id}`)
 
     try {
       // Extract service data from session metadata
@@ -179,17 +193,25 @@ export async function POST(request: NextRequest) {
       const inputs = JSON.parse(session.metadata?.inputs || '{}')
       const customerEmail = session.customer_email
 
+      console.log(`📋 Service slug: ${slug}`)
+      console.log(`📝 Inputs:`, inputs)
+      console.log(`👤 Customer email: ${customerEmail || 'Not provided'}`)
+
       if (!slug) {
+        console.log(`❌ No service slug in session metadata`)
         throw new Error('No service slug in session metadata')
       }
 
       // Validate required inputs
+      console.log(`🔍 Validating required fields for ${slug}`)
       const fieldValidation = validateRequiredFields(slug, inputs)
       if (!fieldValidation.valid) {
+        console.log(`❌ Missing required fields: ${fieldValidation.missing.join(', ')}`)
         throw new Error(`Missing required fields: ${fieldValidation.missing.join(', ')}`)
       }
+      console.log(`✅ Field validation passed`)
 
-      console.log(`Payment completed for session ${session.id}, service: ${slug}`)
+      console.log(`🚀 Starting document generation for session ${session.id}, service: ${slug}`)
       
       // Generate document synchronously with timeout
       const result = await Promise.race([
@@ -199,7 +221,10 @@ export async function POST(request: NextRequest) {
         )
       ])
       
+      console.log(`📊 Generation result:`, result.success ? 'SUCCESS' : 'FAILED')
+      
       if (result.success && 'pdfBase64' in result) {
+        console.log(`✅ Returning successful response with PDF`)
         return NextResponse.json({ 
           success: true, 
           sessionId: session.id,
@@ -208,6 +233,7 @@ export async function POST(request: NextRequest) {
           message: 'Document generated successfully'
         })
       } else {
+        console.log(`❌ Returning failed response:`, result.error)
         return NextResponse.json({ 
           success: false, 
           sessionId: session.id,
@@ -218,6 +244,8 @@ export async function POST(request: NextRequest) {
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      console.log(`💥 CRITICAL ERROR in webhook handler: ${errorMessage}`)
+      console.log(`🔍 Error details:`, error)
       console.error('Webhook processing error:', errorMessage)
       
       return NextResponse.json(

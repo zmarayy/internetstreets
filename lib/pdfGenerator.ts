@@ -58,7 +58,7 @@ const layout = {
 }
 
 /**
- * Render a professional document to PDF
+ * Render a professional document to PDF - Detailed logging
  */
 export async function renderServiceToPdf(
   slug: string, 
@@ -66,16 +66,22 @@ export async function renderServiceToPdf(
   brand?: GeneratedBrand,
   sanitizedInputs?: SanitizedInputs
 ): Promise<Buffer> {
+  console.log(`📄 Starting PDF generation for service: ${slug}`)
+  console.log(`📊 Document text length: ${document.text.length} characters`)
+  
   const doc = new jsPDF()
   
   const pageHeight = doc.internal.pageSize.height
   const pageWidth = doc.internal.pageSize.width
+  
+  console.log(`📐 Page dimensions: ${pageWidth}x${pageHeight}`)
   
   // Clean and structure text based on service type
   let cleanedText: string
   let inputs: FBIInputs | null = null
   
   if (slug === 'fbi-file' && document.metadata) {
+    console.log(`🔍 Processing FBI file with metadata:`, document.metadata)
     // FBI-specific cleaning with inputs
     inputs = {
       fullName: sanitizeSingleLine(document.metadata.name),
@@ -85,23 +91,30 @@ export async function renderServiceToPdf(
     }
     const result = cleanAndStructureFBI(document.text, inputs)
     cleanedText = result.body
+    console.log(`🧹 Cleaned FBI text length: ${cleanedText.length} characters`)
   } else {
+    console.log(`🔍 Processing generic service: ${slug}`)
     // Generic cleaning for other services
     cleanedText = cleanGeneric(document.text)
+    console.log(`🧹 Cleaned generic text length: ${cleanedText.length} characters`)
   }
   
   // Normalize line breaks before rendering
   cleanedText = cleanedText.replace(/\n{3,}/g, '\n\n')
+  console.log(`📝 Final text length after normalization: ${cleanedText.length} characters`)
   
   let yPos = layout.marginTop + 15
   
   // Add service logo (first page only)
+  console.log(`🖼️ Adding logo for service: ${slug}`)
   await addLogoFirstPage(doc, slug, pageWidth)
   
   // Add document header based on service type
   if (slug === 'fbi-file' && inputs) {
+    console.log(`📋 Adding FBI header with subject block`)
     yPos = addFBIHeader(doc, inputs, pageWidth, yPos)
   } else {
+    console.log(`📋 Adding generic header for ${slug}`)
     yPos = addGenericHeader(doc, slug, pageWidth, yPos)
   }
   
@@ -111,13 +124,19 @@ export async function renderServiceToPdf(
   yPos += 10
   
   // Render main content with proper paragraph handling
+  console.log(`📝 Rendering content starting at Y position: ${yPos}`)
   yPos = renderContent(doc, cleanedText, yPos, pageWidth, pageHeight)
+  console.log(`📝 Content rendering completed at Y position: ${yPos}`)
   
   // Add professional footer to all pages (AFTER content is laid out)
+  console.log(`📄 Adding footer to all pages`)
   renderFooter(doc, pageWidth, pageHeight)
   
   // Return PDF buffer (compression handled by jsPDF internally)
-  return Buffer.from(doc.output('arraybuffer'))
+  const pdfBuffer = Buffer.from(doc.output('arraybuffer'))
+  console.log(`✅ PDF generation completed! Size: ${pdfBuffer.length} bytes`)
+  
+  return pdfBuffer
 }
 
 /**

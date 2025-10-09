@@ -59,10 +59,14 @@ function validateTextQuality(text: string): { valid: boolean; issues: string[] }
 }
 
 /**
- * Generate single attempt with OpenAI - Optimized for speed
+ * Generate single attempt with OpenAI - Detailed logging for debugging
  */
 async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string): Promise<ValidationResult> {
   try {
+    console.log(`[${traceId}] 🔄 OpenAI attempt ${attempt.attemptNumber}: Making API call to OpenAI`)
+    console.log(`[${traceId}] 📝 Prompt length: ${attempt.prompt.length} characters`)
+    console.log(`[${traceId}] ⚙️ Settings: temp=${attempt.temperature}, max_tokens=${attempt.maxTokens}`)
+    
     const startTime = Date.now()
     
     const response = await openai.chat.completions.create({
@@ -81,12 +85,12 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
     const duration = Date.now() - startTime
     const rawResponse = response.choices[0]?.message?.content?.trim() || ''
     
-    // Minimal logging for performance
-    if (duration > 5000) {
-      console.log(`[${traceId}] Slow OpenAI response: ${duration}ms, ${rawResponse.length} chars`)
-    }
+    console.log(`[${traceId}] ✅ OpenAI API call completed in ${duration}ms`)
+    console.log(`[${traceId}] 📊 Response length: ${rawResponse.length} characters`)
+    console.log(`[${traceId}] 📄 Response preview: ${rawResponse.substring(0, 200)}...`)
     
     if (!rawResponse) {
+      console.log(`[${traceId}] ❌ Empty response from OpenAI`)
       return {
         success: false,
         error: 'Empty response from OpenAI',
@@ -95,9 +99,11 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
       }
     }
 
+    console.log(`[${traceId}] 🔍 Validating text quality...`)
     // Validate text quality
     const qualityCheck = validateTextQuality(rawResponse)
     if (!qualityCheck.valid) {
+      console.log(`[${traceId}] ❌ Text quality validation failed: ${qualityCheck.issues.join(', ')}`)
       return {
         success: false,
         error: `Text quality issues: ${qualityCheck.issues.join(', ')}`,
@@ -106,6 +112,7 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
       }
     }
 
+    console.log(`[${traceId}] ✅ Text quality validation passed`)
     return {
       success: true,
       data: rawResponse,
@@ -115,6 +122,8 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    console.log(`[${traceId}] ❌ OpenAI API call failed: ${errorMessage}`)
+    console.log(`[${traceId}] 🔍 Error type: ${error instanceof Error ? error.constructor.name : typeof error}`)
     
     return {
       success: false,
@@ -126,7 +135,7 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
 }
 
 /**
- * Validate and generate plain text with optimized retry logic
+ * Validate and generate plain text with detailed logging
  */
 export async function validateAndGenerateText(
   prompt: string,
@@ -136,6 +145,8 @@ export async function validateAndGenerateText(
   maxRetries: number = 2 // Reduced from 3 to 2
 ): Promise<ValidationResult> {
   const startTime = Date.now()
+  console.log(`[${traceId}] 🚀 Starting OpenAI generation for ${serviceSlug}`)
+  console.log(`[${traceId}] 📋 Max retries: ${maxRetries}`)
   
   // Create attempts with optimized settings
   const attempts: GenerationAttempt[] = []
@@ -149,18 +160,23 @@ export async function validateAndGenerateText(
   }
 
   for (const attempt of attempts) {
+    console.log(`[${traceId}] 🔄 Starting attempt ${attempt.attemptNumber}/${maxRetries}`)
+    
     const result = await generateSingleAttempt(attempt, traceId)
     
     if (result.success) {
       const totalTime = Date.now() - startTime
-      if (totalTime > 10000) {
-        console.log(`[${traceId}] OpenAI generation completed in ${totalTime}ms`)
-      }
+      console.log(`[${traceId}] ✅ OpenAI generation SUCCESS in ${totalTime}ms`)
+      console.log(`[${traceId}] 📊 Final response length: ${result.data?.length || 0} characters`)
       return result
     }
     
+    console.log(`[${traceId}] ❌ Attempt ${attempt.attemptNumber} failed: ${result.error}`)
+    
     // If this was the last attempt, return the failure
     if (attempt.attemptNumber === maxRetries) {
+      const totalTime = Date.now() - startTime
+      console.log(`[${traceId}] 💥 ALL ATTEMPTS FAILED after ${totalTime}ms`)
       return {
         success: false,
         error: `All validation attempts failed. Last error: ${result.error}`,
@@ -169,10 +185,12 @@ export async function validateAndGenerateText(
       }
     }
     
+    console.log(`[${traceId}] ⏳ Waiting 500ms before next attempt...`)
     // Reduced wait time between attempts
     await new Promise(resolve => setTimeout(resolve, 500)) // Reduced from 1000ms
   }
 
+  console.log(`[${traceId}] 💥 Unexpected error in validation loop`)
   return {
     success: false,
     error: 'Unexpected error in validation loop',
