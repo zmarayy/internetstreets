@@ -7,8 +7,8 @@ import OpenAI from 'openai'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  timeout: 15000, // 15 second timeout for entire request
-  maxRetries: 1   // Reduce retries at SDK level
+  timeout: 10000, // Reduced to 10 seconds for faster failure
+  maxRetries: 0   // No retries at SDK level - we handle retries manually
 })
 
 export interface ValidationResult {
@@ -59,17 +59,25 @@ function validateTextQuality(text: string): { valid: boolean; issues: string[] }
 }
 
 /**
- * Generate single attempt with OpenAI - Detailed logging for debugging
+ * Generate single attempt with OpenAI - Enhanced timeout debugging
  */
 async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string): Promise<ValidationResult> {
   try {
     console.log(`[${traceId}] 🔄 OpenAI attempt ${attempt.attemptNumber}: Making API call to OpenAI`)
     console.log(`[${traceId}] 📝 Prompt length: ${attempt.prompt.length} characters`)
     console.log(`[${traceId}] ⚙️ Settings: temp=${attempt.temperature}, max_tokens=${attempt.maxTokens}`)
+    console.log(`[${traceId}] 🔑 API Key present: ${process.env.OPENAI_API_KEY ? 'YES' : 'NO'}`)
     
     const startTime = Date.now()
     
-    const response = await openai.chat.completions.create({
+    // Add manual timeout wrapper
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => {
+        reject(new Error(`Manual timeout after 8 seconds`))
+      }, 8000)
+    })
+    
+    const apiCallPromise = openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         {
@@ -78,9 +86,13 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
         }
       ],
       temperature: attempt.temperature,
-      max_tokens: 1200, // Reduced from 2000 for faster generation
-      stream: false // Ensure no streaming overhead
+      max_tokens: 1200,
+      stream: false
     })
+    
+    console.log(`[${traceId}] ⏱️ Starting API call with 8-second manual timeout...`)
+    
+    const response = await Promise.race([apiCallPromise, timeoutPromise])
 
     const duration = Date.now() - startTime
     const rawResponse = response.choices[0]?.message?.content?.trim() || ''
@@ -125,6 +137,11 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
     console.log(`[${traceId}] ❌ OpenAI API call failed: ${errorMessage}`)
     console.log(`[${traceId}] 🔍 Error type: ${error instanceof Error ? error.constructor.name : typeof error}`)
     
+    // Check if it's a timeout error
+    if (errorMessage.includes('timeout')) {
+      console.log(`[${traceId}] ⏰ TIMEOUT ERROR - API call took too long`)
+    }
+    
     return {
       success: false,
       error: `OpenAI generation failed: ${errorMessage}`,
@@ -142,11 +159,60 @@ export async function validateAndGenerateText(
   temperature: number = 0.7,
   serviceSlug: string,
   traceId: string,
-  maxRetries: number = 2 // Reduced from 3 to 2
+  maxRetries: number = 1 // Reduced to 1 for faster failure
 ): Promise<ValidationResult> {
   const startTime = Date.now()
   console.log(`[${traceId}] 🚀 Starting OpenAI generation for ${serviceSlug}`)
   console.log(`[${traceId}] 📋 Max retries: ${maxRetries}`)
+  
+  // TEST MODE: Bypass OpenAI for debugging
+  if (process.env.TEST_MODE === 'true') {
+    console.log(`[${traceId}] 🧪 TEST MODE: Bypassing OpenAI API call`)
+    const mockResponse = `FEDERAL BUREAU OF INVESTIGATION — INTELLIGENCE DOSSIER
+
+CASE REF: FBI-2024-001234 DATE: ${new Date().toLocaleDateString('en-GB')}
+
+Subject Information:
+Name: Test Subject
+Date of Birth: 1990-01-01
+City: Test City
+Occupation: Test Occupation
+
+EXECUTIVE SUMMARY
+This is a test document generated in test mode. The subject has been under investigation for potential activities that require further monitoring and analysis.
+
+KEY FINDINGS
+• Subject exhibits patterns consistent with routine behavior
+• No immediate threats identified at this time
+• Continued surveillance recommended
+• Additional intelligence gathering required
+• Subject maintains low profile in community
+
+SURVEILLANCE ACTIVITY LOG
+1. 2024-01-15 09:30 - Subject observed leaving residence
+2. 2024-01-15 14:20 - Subject visited local business district
+3. 2024-01-16 08:45 - Subject engaged in routine activities
+4. 2024-01-16 16:30 - Subject returned to residence
+5. 2024-01-17 10:15 - Subject met with unidentified individual
+6. 2024-01-17 15:45 - Subject conducted routine errands
+7. 2024-01-18 09:00 - Subject maintained normal schedule
+8. 2024-01-18 17:20 - Subject concluded daily activities
+
+ANALYST NOTES
+Based on current intelligence gathering, the subject appears to be maintaining a normal routine. No suspicious activities have been observed that would warrant immediate intervention. Continued monitoring is recommended to establish patterns and identify any potential threats.
+
+THREAT ASSESSMENT & RECOMMENDATION
+Current threat level: LOW
+Recommendation: Continue surveillance operations and maintain current monitoring protocols.`
+    
+    console.log(`[${traceId}] ✅ Test mode response generated (${mockResponse.length} chars)`)
+    return {
+      success: true,
+      data: mockResponse,
+      retries: 0,
+      rawResponse: mockResponse
+    }
+  }
   
   // Create attempts with optimized settings
   const attempts: GenerationAttempt[] = []
