@@ -103,11 +103,12 @@ export async function renderServiceToPdf(
   cleanedText = cleanedText.replace(/\n{3,}/g, '\n\n')
   console.log(`📝 Final text length after normalization: ${cleanedText.length} characters`)
   
-  let yPos = layout.marginTop + 15
-  
-  // Add service logo (first page only)
+  // Add service logo (first page only) - positioned first
   console.log(`🖼️ Adding logo for service: ${slug}`)
   await addLogoFirstPage(doc, slug, pageWidth)
+  
+  // Start content below logo - adjust Y position to be below logo
+  let yPos = layout.marginTop + 60 // Increased from 15 to 60 to clear logo
   
   // Add document header based on service type
   if (slug === 'fbi-file' && inputs) {
@@ -227,11 +228,11 @@ async function addLogoFirstPage(doc: jsPDF, slug: string, pageWidth: number): Pr
       )
     ]) as string
     
-    // Logo positioning: top-right corner, 38px width
-    const logoWidth = 38
-    const logoHeight = 38  // Auto height, maintain aspect ratio
-    const logoX = pageWidth - 60  // X = pageWidth - 60
-    const logoY = 22             // Y = 22
+    // Logo positioning: top-right corner, smaller size to avoid overlap
+    const logoWidth = 30
+    const logoHeight = 30  // Smaller to avoid title overlap
+    const logoX = pageWidth - layout.marginSides - logoWidth  // Right margin
+    const logoY = layout.marginTop + 5  // Top margin
     
     // Add logo image (PNG format)
     doc.addImage(logoDataUrl, 'PNG', logoX, logoY, logoWidth, logoHeight)

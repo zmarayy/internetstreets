@@ -38,9 +38,15 @@ export function cleanBody(text: string): string {
   t = t.replace(/^Subject Information[\s\S]*?(?=^\S|\Z)/gmi, '')
   t = t.replace(/^Subject:\s.*$/gmi, '')
   
-  // Remove empty placeholder lines
+  // Remove empty placeholder lines and contaminated lines
   t = t.replace(/^(Name|DOB|City|Occupation):\s*$/gmi, '')
   t = t.replace(/^(Name|Date of Birth|City|Occupation):\s*$/gmi, '')
+  t = t.replace(/^(Name|DOB|City|Occupation):\s*is a front for.*$/gmi, '') // Remove contaminated lines
+  t = t.replace(/^(Name|Date of Birth|City|Occupation):\s*is a front for.*$/gmi, '') // Remove contaminated lines
+  
+  // Remove any remaining subject information blocks that might be duplicated
+  t = t.replace(/^Subject Information[\s\S]*?(?=\n\n|\n[A-Z]|\Z)/gmi, '')
+  t = t.replace(/^Subject:\s*[\s\S]*?(?=\n\n|\n[A-Z]|\Z)/gmi, '')
 
   // Normalize section headers we expect
   t = t.replace(/^\s*Executive Summary\s*$/gmi, 'EXECUTIVE SUMMARY')
