@@ -1,12 +1,14 @@
 /**
- * Plain Text Validation and Retry Logic
+ * Plain Text Validation and Retry Logic - Optimized for Speed
  * Handles OpenAI response validation for natural text documents
  */
 
 import OpenAI from 'openai'
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
+  timeout: 15000, // 15 second timeout for entire request
+  maxRetries: 1   // Reduce retries at SDK level
 })
 
 export interface ValidationResult {
@@ -57,14 +59,11 @@ function validateTextQuality(text: string): { valid: boolean; issues: string[] }
 }
 
 /**
- * Generate single attempt with OpenAI
+ * Generate single attempt with OpenAI - Optimized for speed
  */
 async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string): Promise<ValidationResult> {
   try {
-    console.log(`[${traceId}] OpenAI attempt ${attempt.attemptNumber}: generating plain text response`)
-    
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 60000) // 60 second timeout
+    const startTime = Date.now()
     
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
@@ -75,14 +74,17 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
         }
       ],
       temperature: attempt.temperature,
-      max_tokens: attempt.maxTokens
+      max_tokens: 1200, // Reduced from 2000 for faster generation
+      stream: false // Ensure no streaming overhead
     })
 
-    clearTimeout(timeoutId)
-    
+    const duration = Date.now() - startTime
     const rawResponse = response.choices[0]?.message?.content?.trim() || ''
-    console.log(`[${traceId}] OpenAI response length: ${rawResponse.length} chars`)
-    console.log(`[${traceId}] OpenAI response preview: ${rawResponse.substring(0, 200)}...`)
+    
+    // Minimal logging for performance
+    if (duration > 5000) {
+      console.log(`[${traceId}] Slow OpenAI response: ${duration}ms, ${rawResponse.length} chars`)
+    }
     
     if (!rawResponse) {
       return {
@@ -96,7 +98,6 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
     // Validate text quality
     const qualityCheck = validateTextQuality(rawResponse)
     if (!qualityCheck.valid) {
-      console.log(`[${traceId}] Text quality validation failed: ${qualityCheck.issues.join(', ')}`)
       return {
         success: false,
         error: `Text quality issues: ${qualityCheck.issues.join(', ')}`,
@@ -105,7 +106,6 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
       }
     }
 
-    console.log(`[${traceId}] Plain text validation successful`)
     return {
       success: true,
       data: rawResponse,
@@ -115,7 +115,6 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    console.error(`[${traceId}] OpenAI generation error:`, errorMessage)
     
     return {
       success: false,
@@ -127,44 +126,41 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
 }
 
 /**
- * Validate and generate plain text with retry logic
+ * Validate and generate plain text with optimized retry logic
  */
 export async function validateAndGenerateText(
   prompt: string,
   temperature: number = 0.7,
   serviceSlug: string,
   traceId: string,
-  maxRetries: number = 3
+  maxRetries: number = 2 // Reduced from 3 to 2
 ): Promise<ValidationResult> {
-  console.log(`[${traceId}] Starting plain text generation for ${serviceSlug}`)
+  const startTime = Date.now()
   
+  // Create attempts with optimized settings
   const attempts: GenerationAttempt[] = []
-  
-  // Create attempts with varying temperature for retries
   for (let i = 1; i <= maxRetries; i++) {
     attempts.push({
       prompt,
-      temperature: i === 1 ? temperature : Math.min(temperature + (i * 0.1), 0.9),
-      maxTokens: 2000, // Increased for longer documents
+      temperature: i === 1 ? temperature : Math.min(temperature + 0.1, 0.8), // Smaller temp increase
+      maxTokens: 1200, // Reduced for faster generation
       attemptNumber: i
     })
   }
 
   for (const attempt of attempts) {
-    console.log(`[${traceId}] Attempt ${attempt.attemptNumber}/${maxRetries}`)
-    
     const result = await generateSingleAttempt(attempt, traceId)
     
     if (result.success) {
-      console.log(`[${traceId}] Plain text generation successful on attempt ${attempt.attemptNumber}`)
+      const totalTime = Date.now() - startTime
+      if (totalTime > 10000) {
+        console.log(`[${traceId}] OpenAI generation completed in ${totalTime}ms`)
+      }
       return result
     }
     
-    console.log(`[${traceId}] Attempt ${attempt.attemptNumber} failed: ${result.error}`)
-    
     // If this was the last attempt, return the failure
     if (attempt.attemptNumber === maxRetries) {
-      console.error(`[${traceId}] All ${maxRetries} attempts failed`)
       return {
         success: false,
         error: `All validation attempts failed. Last error: ${result.error}`,
@@ -173,8 +169,8 @@ export async function validateAndGenerateText(
       }
     }
     
-    // Wait before next attempt
-    await new Promise(resolve => setTimeout(resolve, 1000 * attempt.attemptNumber))
+    // Reduced wait time between attempts
+    await new Promise(resolve => setTimeout(resolve, 500)) // Reduced from 1000ms
   }
 
   return {
