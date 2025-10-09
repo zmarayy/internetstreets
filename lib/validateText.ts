@@ -7,7 +7,7 @@ import OpenAI from 'openai'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  timeout: 10000, // Reduced to 10 seconds for faster failure
+  timeout: 20000, // Increased to 20 seconds
   maxRetries: 0   // No retries at SDK level - we handle retries manually
 })
 
@@ -73,12 +73,16 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
     // Add manual timeout wrapper
     const timeoutPromise = new Promise<never>((_, reject) => {
       setTimeout(() => {
-        reject(new Error(`Manual timeout after 8 seconds`))
-      }, 8000)
+        reject(new Error(`Manual timeout after 15 seconds`))
+      }, 15000)
     })
     
+    // Try different models based on attempt number
+    const model = attempt.attemptNumber === 1 ? 'gpt-4o-mini' : 'gpt-3.5-turbo'
+    console.log(`[${traceId}] 🤖 Using model: ${model}`)
+    
     const apiCallPromise = openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: model,
       messages: [
         {
           role: 'system',
@@ -90,7 +94,7 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
       stream: false
     })
     
-    console.log(`[${traceId}] ⏱️ Starting API call with 8-second manual timeout...`)
+    console.log(`[${traceId}] ⏱️ Starting API call with 15-second manual timeout...`)
     
     const response = await Promise.race([apiCallPromise, timeoutPromise])
 
@@ -159,7 +163,7 @@ export async function validateAndGenerateText(
   temperature: number = 0.7,
   serviceSlug: string,
   traceId: string,
-  maxRetries: number = 1 // Reduced to 1 for faster failure
+  maxRetries: number = 2 // Back to 2 retries with different models
 ): Promise<ValidationResult> {
   const startTime = Date.now()
   console.log(`[${traceId}] 🚀 Starting OpenAI generation for ${serviceSlug}`)
