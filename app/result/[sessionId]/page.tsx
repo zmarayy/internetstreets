@@ -20,7 +20,7 @@ export default function ResultPage() {
   const [resultStatus, setResultStatus] = useState<ResultStatus>({ status: 'processing' })
   const [isLoading, setIsLoading] = useState(true)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
-  const [pollInterval, setPollInterval] = useState(2000) // Start with 2 seconds
+  const [pollInterval, setPollInterval] = useState(1000) // Start with 1 second for faster response
 
   useEffect(() => {
     if (!sessionId) return
@@ -50,8 +50,8 @@ export default function ResultPage() {
           setResultStatus({ status: 'error', error: data.error || data.message })
           setIsLoading(false)
         } else {
-          // Still processing, poll again with exponential backoff
-          const nextInterval = Math.min(pollInterval * 1.5, 5000) // Cap at 5 seconds
+          // Still processing, poll again with faster intervals
+          const nextInterval = Math.min(pollInterval * 1.2, 3000) // Cap at 3 seconds, faster growth
           setPollInterval(nextInterval)
           setTimeout(pollResult, nextInterval)
         }
@@ -135,7 +135,7 @@ export default function ResultPage() {
             {resultStatus.serviceName || 'Processing your request'}
           </p>
           <p className="text-gray-400">
-            This usually takes 10-30 seconds. Please don't close this page.
+            This usually takes 5-15 seconds. Please don't close this page.
           </p>
           <div className="mt-8 text-sm text-gray-500">
             <p>📄 Document will be ready for immediate download</p>

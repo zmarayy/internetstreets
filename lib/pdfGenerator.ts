@@ -116,6 +116,7 @@ export async function renderServiceToPdf(
   // Add professional footer to all pages (AFTER content is laid out)
   renderFooter(doc, pageWidth, pageHeight)
   
+  // Return PDF buffer (compression handled by jsPDF internally)
   return Buffer.from(doc.output('arraybuffer'))
 }
 
@@ -188,7 +189,7 @@ function addGenericHeader(doc: jsPDF, slug: string, pageWidth: number, yPos: num
 }
 
 /**
- * Add logo first page only - 38px width, positioned top-right
+ * Add logo first page only - 38px width, positioned top-right (Optimized)
  */
 async function addLogoFirstPage(doc: jsPDF, slug: string, pageWidth: number): Promise<void> {
   const logoUrl = logoMap[slug]
@@ -199,8 +200,13 @@ async function addLogoFirstPage(doc: jsPDF, slug: string, pageWidth: number): Pr
   }
   
   try {
-    // Load logo from absolute URL (Node.js compatible)
-    const logoDataUrl = await loadImageBase64(logoUrl, 'image/png')
+    // Load logo from absolute URL (Node.js compatible) with timeout
+    const logoDataUrl = await Promise.race([
+      loadImageBase64(logoUrl, 'image/png'),
+      new Promise<string>((_, reject) => 
+        setTimeout(() => reject(new Error('Logo load timeout')), 2000)
+      )
+    ]) as string
     
     // Logo positioning: top-right corner, 38px width
     const logoWidth = 38
@@ -214,12 +220,8 @@ async function addLogoFirstPage(doc: jsPDF, slug: string, pageWidth: number): Pr
     console.log(`✅ Logo successfully added for service: ${slug} (first page only)`)
   } catch (error) {
     console.warn(`⚠️ Failed to load logo for service ${slug}: ${error}`)
-    // Add a placeholder text instead of failing completely
-    doc.setFontSize(8)
-    doc.setTextColor(150, 150, 150)
-    doc.setFont('Helvetica', 'normal')
-    doc.text(`[${slug.toUpperCase()}]`, pageWidth - 30, 25)
-    console.log(`📝 Added text placeholder for missing logo: ${slug}`)
+    // Skip logo entirely for faster generation
+    console.log(`📝 Skipping logo for faster generation: ${slug}`)
   }
 }
 

@@ -66,14 +66,14 @@ async function processDocumentGeneration(
       )
     }
 
-    // Call OpenAI with retry logic
+    // Call OpenAI with retry logic (reduced retries for faster failure)
     console.log(`[${traceId}] Starting plain text generation for ${slug}`)
     const generationResult = await validateAndGenerateText(
       promptResult.prompt!,
       promptResult.metadata!.temperature,
       slug,
       traceId,
-      3 // Max retries
+      2 // Reduced retries for faster response
     )
 
     if (!generationResult.success) {
@@ -191,10 +191,15 @@ export async function POST(request: NextRequest) {
 
       console.log(`Payment completed for session ${session.id}, service: ${slug}`)
       
-      // Generate document synchronously and return PDF directly
-      const result = await processDocumentGeneration(session.id, slug, inputs, customerEmail || undefined)
+      // Generate document synchronously with timeout
+      const result = await Promise.race([
+        processDocumentGeneration(session.id, slug, inputs, customerEmail || undefined),
+        new Promise<{ success: boolean; error?: string }>((_, reject) =>
+          setTimeout(() => reject(new Error('Generation timeout after 30 seconds')), 30000)
+        )
+      ])
       
-      if (result.success) {
+      if (result.success && 'pdfBase64' in result) {
         return NextResponse.json({ 
           success: true, 
           sessionId: session.id,
@@ -206,7 +211,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ 
           success: false, 
           sessionId: session.id,
-          error: result.error,
+          error: result.error || 'Generation failed',
           message: 'Document generation failed'
         })
       }

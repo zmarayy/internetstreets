@@ -100,16 +100,32 @@ export function generateCaseRef(prefix: string): string {
 }
 
 /**
- * Load image as base64 data URL (Node.js compatible)
+ * Load image as base64 data URL (Node.js compatible) - Optimized with caching
  */
+const logoCache = new Map<string, string>()
+
 export async function loadImageBase64(url: string, mime = 'image/png'): Promise<string> {
+  // Check cache first
+  if (logoCache.has(url)) {
+    return logoCache.get(url)!
+  }
+  
   try {
-    const res = await fetch(url)
+    const res = await fetch(url, {
+      headers: {
+        'Cache-Control': 'max-age=3600', // Cache for 1 hour
+        'User-Agent': 'InternetStreets-PDF-Generator/1.0'
+      }
+    })
     if (!res.ok) {
       throw new Error(`Logo fetch failed: ${url} - ${res.status} ${res.statusText}`)
     }
     const buf = Buffer.from(await res.arrayBuffer())
-    return `data:${mime};base64,` + buf.toString('base64')
+    const dataUrl = `data:${mime};base64,` + buf.toString('base64')
+    
+    // Cache the result
+    logoCache.set(url, dataUrl)
+    return dataUrl
   } catch (error) {
     console.warn(`Failed to load image from ${url}:`, error)
     throw error
