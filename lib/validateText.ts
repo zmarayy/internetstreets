@@ -42,18 +42,16 @@ function validateTextQuality(text: string): { valid: boolean; issues: string[] }
     issues.push('Empty response')
   }
   
-  // Check for obvious AI artifacts (code blocks)
+  // Check for obvious AI artifacts (code blocks) - but clean them instead of rejecting
   if (text.includes('```') || text.includes('```json') || text.includes('```markdown')) {
-    issues.push('Response contains code blocks instead of plain text')
+    // Don't reject, just note that we'll clean it
+    console.log('Response contains code blocks - will clean automatically')
   }
   
   // Check for JSON-like structure (basic check)
   if (text.trim().startsWith('{') && text.trim().endsWith('}')) {
     issues.push('Response appears to be JSON instead of plain text')
   }
-  
-  // REMOVED: All structural checks - accept any natural language text
-  // No more checks for headings, document structure, etc.
   
   return { valid: issues.length === 0, issues }
 }
@@ -99,7 +97,16 @@ async function generateSingleAttempt(attempt: GenerationAttempt, traceId: string
     const response = await Promise.race([apiCallPromise, timeoutPromise])
 
     const duration = Date.now() - startTime
-    const rawResponse = response.choices[0]?.message?.content?.trim() || ''
+    let rawResponse = response.choices[0]?.message?.content?.trim() || ''
+    
+    // Clean code blocks automatically
+    if (rawResponse.includes('```')) {
+      console.log(`[${traceId}] 🧹 Cleaning code blocks from response`)
+      rawResponse = rawResponse
+        .replace(/```[a-zA-Z]*\n?/g, '') // Remove opening code blocks
+        .replace(/```\n?/g, '') // Remove closing code blocks
+        .trim()
+    }
     
     console.log(`[${traceId}] ✅ OpenAI API call completed in ${duration}ms`)
     console.log(`[${traceId}] 📊 Response length: ${rawResponse.length} characters`)
